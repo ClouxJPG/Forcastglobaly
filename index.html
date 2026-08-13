@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MapsGL Weather Map</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.0/mapbox-gl.js"></script>
+  <link href="https://cdn.aerisapi.com/sdk/js/mapsgl/latest/aerisweather.mapsgl.css" rel="stylesheet" />
+  <script src="https://cdn.aerisapi.com/sdk/js/mapsgl/latest/aerisweather.mapsgl.js"></script>
+</head>
+<body>
+  <div id="map" style="height: 100vh;"></div>
+  <script>
+    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
+
+    const map = new mapboxgl.Map({
+      container: document.getElementById('map'),
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [37.6895, 55.7648],
+      zoom: 4.57,
+      projection: 'mercator'
+    });
+
+    const account = new aerisweather.mapsgl.Account('4mhK1fxpZtcksX4VLWP5o', 'rMkWxaeYP2XMPPD9cpD8Lf7zJhErYNunVQzWtzz9');
+    const controller = new aerisweather.mapsgl.MapboxMapController(map, { account });
+
+    controller.on('load', () => {
+      controller.addWeatherLayer('radar');
+      controller.addWeatherLayer('boundaries');
+    });
+  </script>
+</body>
+</html>
