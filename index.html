@@ -1,34 +1,679 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MapsGL Weather Map</title>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.0/mapbox-gl.js"></script>
-  <link href="https://cdn.aerisapi.com/sdk/js/mapsgl/latest/aerisweather.mapsgl.css" rel="stylesheet" />
-  <script src="https://cdn.aerisapi.com/sdk/js/mapsgl/latest/aerisweather.mapsgl.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Метео — погода</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#07111f;
+    color:white;
+    min-height:100vh;
+}
+
+.app{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    padding:18px;
+}
+
+/* HEADER */
+
+header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:700;
+}
+
+.logo span{
+    opacity:.5;
+}
+
+.location{
+    font-size:14px;
+    opacity:.7;
+}
+
+/* SEARCH */
+
+.search{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.search input{
+    flex:1;
+    height:50px;
+    border:none;
+    outline:none;
+    border-radius:15px;
+    padding:0 16px;
+    background:#101f33;
+    color:white;
+    font-size:16px;
+}
+
+.search input::placeholder{
+    color:#8090a5;
+}
+
+.search button{
+    width:52px;
+    border:none;
+    border-radius:15px;
+    background:#2387ff;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
+
+/* MAIN WEATHER */
+
+.current{
+    background:linear-gradient(145deg,#102a49,#0b1728);
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:16px;
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.current-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.city{
+    font-size:25px;
+    font-weight:650;
+}
+
+.date{
+    margin-top:5px;
+    color:#91a2b8;
+    font-size:14px;
+}
+
+.weather-icon{
+    font-size:58px;
+}
+
+.temperature{
+    font-size:72px;
+    font-weight:700;
+    margin-top:10px;
+}
+
+.description{
+    font-size:18px;
+    color:#c5d0df;
+    margin-top:-5px;
+}
+
+/* DETAILS */
+
+.details{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:25px;
+}
+
+.detail{
+    background:rgba(255,255,255,.055);
+    border-radius:15px;
+    padding:14px;
+}
+
+.detail-title{
+    color:#8495aa;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.detail-value{
+    font-size:16px;
+    font-weight:600;
+}
+
+/* FORECAST */
+
+.section-title{
+    font-size:20px;
+    font-weight:650;
+    margin:25px 0 12px;
+}
+
+.forecast{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:5px;
+}
+
+.forecast::-webkit-scrollbar{
+    display:none;
+}
+
+.day{
+    min-width:110px;
+    background:#101f33;
+    border-radius:18px;
+    padding:15px;
+    text-align:center;
+}
+
+.day-name{
+    color:#9cacc0;
+    font-size:13px;
+}
+
+.day-icon{
+    font-size:32px;
+    margin:12px 0;
+}
+
+.day-temp{
+    font-size:18px;
+    font-weight:650;
+}
+
+.day-rain{
+    color:#62aaff;
+    font-size:12px;
+    margin-top:7px;
+}
+
+/* LOADING */
+
+.loading{
+    text-align:center;
+    padding:40px 0;
+    color:#91a2b8;
+}
+
+/* ERROR */
+
+.error{
+    background:#35151b;
+    color:#ff8d9b;
+    border-radius:15px;
+    padding:15px;
+    display:none;
+    margin-bottom:15px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .app{
+        padding:14px;
+    }
+
+    .details{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .temperature{
+        font-size:62px;
+    }
+
+    .current{
+        padding:20px;
+    }
+}
+</style>
 </head>
+
 <body>
-  <div id="map" style="height: 100vh;"></div>
-  <script>
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
 
-    const map = new mapboxgl.Map({
-      container: document.getElementById('map'),
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [37.6895, 55.7648],
-      zoom: 4.57,
-      projection: 'mercator'
+<div class="app">
+
+<header>
+    <div class="logo">Метео<span>•</span></div>
+    <div class="location" id="locationStatus">Погода</div>
+</header>
+
+<div class="search">
+    <input
+        id="cityInput"
+        type="text"
+        placeholder="Введите город..."
+        value="Уфа"
+    >
+    <button onclick="searchCity()">⌕</button>
+</div>
+
+<div class="error" id="error"></div>
+
+<div id="weather">
+    <div class="loading">Загрузка погоды...</div>
+</div>
+
+</div>
+
+<script>
+
+const weatherCodes = {
+
+    0:["☀️","Ясно"],
+    1:["🌤️","Преимущественно ясно"],
+    2:["⛅","Переменная облачность"],
+    3:["☁️","Пасмурно"],
+
+    45:["🌫️","Туман"],
+    48:["🌫️","Изморозь"],
+
+    51:["🌦️","Морось"],
+    53:["🌦️","Морось"],
+    55:["🌧️","Сильная морось"],
+
+    56:["🌧️","Ледяная морось"],
+    57:["🌧️","Сильная ледяная морось"],
+
+    61:["🌧️","Небольшой дождь"],
+    63:["🌧️","Дождь"],
+    65:["🌧️","Сильный дождь"],
+
+    66:["🌧️","Ледяной дождь"],
+    67:["🌧️","Сильный ледяной дождь"],
+
+    71:["🌨️","Небольшой снег"],
+    73:["🌨️","Снег"],
+    75:["❄️","Сильный снег"],
+
+    77:["🌨️","Снежные зерна"],
+
+    80:["🌦️","Ливень"],
+    81:["🌧️","Сильный ливень"],
+    82:["⛈️","Очень сильный ливень"],
+
+    85:["🌨️","Снегопад"],
+    86:["❄️","Сильный снегопад"],
+
+    95:["⛈️","Гроза"],
+    96:["⛈️","Гроза с градом"],
+    99:["⛈️","Сильная гроза с градом"]
+};
+
+
+function getWeather(code){
+
+    return weatherCodes[code] || ["🌡️","Неизвестно"];
+
+}
+
+
+function formatDate(date){
+
+    return date.toLocaleDateString("ru-RU",{
+        weekday:"long",
+        day:"numeric",
+        month:"long"
     });
 
-    const account = new aerisweather.mapsgl.Account('4mhK1fxpZtcksX4VLWP5o', 'rMkWxaeYP2XMPPD9cpD8Lf7zJhErYNunVQzWtzz9');
-    const controller = new aerisweather.mapsgl.MapboxMapController(map, { account });
+}
 
-    controller.on('load', () => {
-      controller.addWeatherLayer('radar');
-      controller.addWeatherLayer('boundaries');
+
+function getDayName(date,index){
+
+    if(index === 0) return "Сегодня";
+
+    return date.toLocaleDateString("ru-RU",{
+        weekday:"short"
     });
-  </script>
+
+}
+
+
+async function searchCity(){
+
+    const city =
+        document.getElementById("cityInput").value.trim();
+
+    if(!city) return;
+
+    showLoading();
+
+    try{
+
+        const geoURL =
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ru&format=json`;
+
+        const geoResponse =
+            await fetch(geoURL);
+
+        const geoData =
+            await geoResponse.json();
+
+        if(!geoData.results || !geoData.results.length){
+
+            throw new Error("Город не найден");
+
+        }
+
+        const place =
+            geoData.results[0];
+
+        await loadWeather(
+            place.latitude,
+            place.longitude,
+            place.name,
+            place.country
+        );
+
+    }catch(error){
+
+        showError(error.message);
+
+    }
+
+}
+
+
+async function loadWeather(lat,lon,city,country){
+
+    const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m` +
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum` +
+        `&timezone=auto`;
+
+    const response =
+        await fetch(url);
+
+    if(!response.ok){
+
+        throw new Error("Не удалось получить погоду");
+
+    }
+
+    const data =
+        await response.json();
+
+    renderWeather(
+        data,
+        city,
+        country
+    );
+
+}
+
+
+function renderWeather(data,city,country){
+
+    const current =
+        data.current;
+
+    const daily =
+        data.daily;
+
+    const weather =
+        getWeather(current.weather_code);
+
+    const currentDate =
+        new Date();
+
+    document.getElementById("locationStatus").textContent =
+        country || "";
+
+    let html = `
+
+        <div class="current">
+
+            <div class="current-top">
+
+                <div>
+
+                    <div class="city">
+                        ${city}
+                    </div>
+
+                    <div class="date">
+                        ${formatDate(currentDate)}
+                    </div>
+
+                </div>
+
+                <div class="weather-icon">
+                    ${weather[0]}
+                </div>
+
+            </div>
+
+            <div class="temperature">
+                ${Math.round(current.temperature_2m)}°
+            </div>
+
+            <div class="description">
+                ${weather[1]}
+            </div>
+
+            <div class="details">
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Ощущается
+                    </div>
+
+                    <div class="detail-value">
+                        ${Math.round(current.apparent_temperature)}°
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Влажность
+                    </div>
+
+                    <div class="detail-value">
+                        ${current.relative_humidity_2m}%
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Ветер
+                    </div>
+
+                    <div class="detail-value">
+                        ${Math.round(current.wind_speed_10m)} км/ч
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Давление
+                    </div>
+
+                    <div class="detail-value">
+                        ${Math.round(current.pressure_msl)} hPa
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Осадки
+                    </div>
+
+                    <div class="detail-value">
+                        ${current.precipitation} мм
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Макс.
+                    </div>
+
+                    <div class="detail-value">
+                        ${Math.round(daily.temperature_2m_max[0])}°
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Мин.
+                    </div>
+
+                    <div class="detail-value">
+                        ${Math.round(daily.temperature_2m_min[0])}°
+                    </div>
+
+                </div>
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        Вероятность дождя
+                    </div>
+
+                    <div class="detail-value">
+                        ${daily.precipitation_probability_max[0]}%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section-title">
+            Прогноз на 7 дней
+        </div>
+
+        <div class="forecast">
+    `;
+
+
+    for(let i=0;i<7;i++){
+
+        const date =
+            new Date(
+                daily.time[i] + "T12:00:00"
+            );
+
+        const dayWeather =
+            getWeather(
+                daily.weather_code[i]
+            );
+
+        html += `
+
+            <div class="day">
+
+                <div class="day-name">
+                    ${getDayName(date,i)}
+                </div>
+
+                <div class="day-icon">
+                    ${dayWeather[0]}
+                </div>
+
+                <div class="day-temp">
+                    ${Math.round(daily.temperature_2m_max[i])}°
+                    /
+                    ${Math.round(daily.temperature_2m_min[i])}°
+                </div>
+
+                <div class="day-rain">
+                    💧 ${daily.precipitation_probability_max[i]}%
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    html += `
+
+        </div>
+
+    `;
+
+    document.getElementById("weather").innerHTML =
+        html;
+
+}
+
+
+function showLoading(){
+
+    document.getElementById("error").style.display =
+        "none";
+
+    document.getElementById("weather").innerHTML =
+        `<div class="loading">Загрузка погоды...</div>`;
+
+}
+
+
+function showError(message){
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent =
+        message;
+
+    error.style.display =
+        "block";
+
+    document.getElementById("weather").innerHTML =
+        "";
+
+}
+
+
+document
+    .getElementById("cityInput")
+    .addEventListener("keydown",function(e){
+
+        if(e.key === "Enter"){
+
+            searchCity();
+
+        }
+
+    });
+
+
+searchCity();
+
+</script>
+
 </body>
 </html>
