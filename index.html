@@ -4,27 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Метео — погода</title>
+<title>Метео — прогноз погоды</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    background:#07101c;
+    color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
 body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:#07111f;
-    color:white;
-    min-height:100vh;
+    overflow-x:hidden;
 }
 
 .app{
     width:100%;
-    max-width:900px;
+    max-width:1000px;
     margin:auto;
-    padding:18px;
+    padding:16px;
 }
 
 /* HEADER */
@@ -33,29 +40,29 @@ header{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:20px;
+    margin-bottom:18px;
 }
 
 .logo{
     font-size:25px;
-    font-weight:700;
+    font-weight:750;
 }
 
 .logo span{
-    opacity:.5;
+    color:#268cff;
 }
 
-.location{
-    font-size:14px;
-    opacity:.7;
+.location-status{
+    color:#91a1b5;
+    font-size:13px;
 }
 
 /* SEARCH */
 
 .search{
     display:flex;
-    gap:10px;
-    margin-bottom:20px;
+    gap:9px;
+    margin-bottom:16px;
 }
 
 .search input{
@@ -65,66 +72,80 @@ header{
     outline:none;
     border-radius:15px;
     padding:0 16px;
-    background:#101f33;
+    background:#101d2d;
     color:white;
     font-size:16px;
 }
 
 .search input::placeholder{
-    color:#8090a5;
+    color:#718198;
 }
 
 .search button{
     width:52px;
+    height:50px;
     border:none;
     border-radius:15px;
-    background:#2387ff;
+    background:#2588ff;
     color:white;
-    font-size:20px;
+    font-size:23px;
     cursor:pointer;
 }
 
-/* MAIN WEATHER */
+/* ERROR */
+
+.error{
+    display:none;
+    background:#35151d;
+    color:#ff9aa7;
+    padding:14px;
+    border-radius:14px;
+    margin-bottom:15px;
+}
+
+/* CURRENT WEATHER */
 
 .current{
-    background:linear-gradient(145deg,#102a49,#0b1728);
-    border-radius:25px;
-    padding:25px;
-    margin-bottom:16px;
+    background:linear-gradient(145deg,#112c4a,#091523);
     border:1px solid rgba(255,255,255,.06);
+    border-radius:24px;
+    padding:23px;
+    margin-bottom:16px;
 }
 
 .current-top{
     display:flex;
-    justify-content:space-between;
     align-items:flex-start;
+    justify-content:space-between;
 }
 
 .city{
-    font-size:25px;
-    font-weight:650;
+    font-size:26px;
+    font-weight:700;
 }
 
 .date{
     margin-top:5px;
-    color:#91a2b8;
+    color:#8ea0b6;
     font-size:14px;
+    text-transform:capitalize;
 }
 
 .weather-icon{
-    font-size:58px;
+    font-size:55px;
 }
 
 .temperature{
+    margin-top:5px;
     font-size:72px;
+    line-height:1;
     font-weight:700;
-    margin-top:10px;
 }
 
 .description{
+    margin-top:8px;
     font-size:18px;
     color:#c5d0df;
-    margin-top:-5px;
 }
 
 /* DETAILS */
@@ -132,40 +153,42 @@ header{
 .details{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:10px;
+    gap:9px;
     margin-top:25px;
 }
 
 .detail{
-    background:rgba(255,255,255,.055);
-    border-radius:15px;
-    padding:14px;
+    background:rgba(255,255,255,.05);
+    border-radius:14px;
+    padding:13px;
 }
 
 .detail-title{
-    color:#8495aa;
+    color:#7f91a8;
     font-size:12px;
     margin-bottom:6px;
 }
 
 .detail-value{
-    font-size:16px;
-    font-weight:600;
+    font-size:15px;
+    font-weight:650;
+}
+
+/* SECTION */
+
+.section-title{
+    font-size:20px;
+    font-weight:700;
+    margin:23px 0 11px;
 }
 
 /* FORECAST */
 
-.section-title{
-    font-size:20px;
-    font-weight:650;
-    margin:25px 0 12px;
-}
-
 .forecast{
     display:flex;
-    gap:10px;
+    gap:9px;
     overflow-x:auto;
-    padding-bottom:5px;
+    padding-bottom:3px;
 }
 
 .forecast::-webkit-scrollbar{
@@ -173,59 +196,164 @@ header{
 }
 
 .day{
-    min-width:110px;
-    background:#101f33;
-    border-radius:18px;
-    padding:15px;
+    min-width:112px;
+    background:#101d2d;
+    border-radius:17px;
+    padding:14px;
     text-align:center;
 }
 
 .day-name{
-    color:#9cacc0;
+    color:#9aaabe;
     font-size:13px;
 }
 
 .day-icon{
     font-size:32px;
-    margin:12px 0;
+    margin:11px 0;
 }
 
 .day-temp{
-    font-size:18px;
+    font-size:17px;
     font-weight:650;
 }
 
 .day-rain{
-    color:#62aaff;
+    color:#5ea8ff;
     font-size:12px;
     margin-top:7px;
 }
 
-/* LOADING */
+/* MAP */
 
-.loading{
-    text-align:center;
-    padding:40px 0;
-    color:#91a2b8;
+.map-container{
+    position:relative;
+    width:100%;
+    height:520px;
+    border-radius:22px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.08);
+    background:#070d15;
 }
 
-/* ERROR */
+#map{
+    width:100%;
+    height:100%;
+}
 
-.error{
-    background:#35151b;
-    color:#ff8d9b;
-    border-radius:15px;
-    padding:15px;
-    display:none;
-    margin-bottom:15px;
+/* DARK MAP */
+
+.leaflet-container{
+    background:#070d15;
+}
+
+.map-panel{
+    position:absolute;
+    z-index:1000;
+    top:12px;
+    right:12px;
+
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+
+    padding:7px;
+
+    background:rgba(5,11,20,.92);
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;
+}
+
+.map-button{
+    border:none;
+    background:#111f31;
+    color:#b8c5d5;
+    padding:9px 12px;
+    border-radius:9px;
+    font-size:13px;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.map-button.active{
+    background:#2689ff;
+    color:white;
+}
+
+/* LEGEND */
+
+.legend{
+    position:absolute;
+    z-index:1000;
+    left:12px;
+    bottom:12px;
+
+    background:rgba(5,11,20,.92);
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:13px;
+
+    padding:11px 13px;
+
+    font-size:12px;
+    color:#d8e0eb;
+}
+
+.legend-title{
+    font-weight:650;
+    margin-bottom:7px;
+}
+
+.gradient{
+    width:160px;
+    height:9px;
+    border-radius:8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2c7bb6,
+            #abd9e9,
+            #ffffbf,
+            #fdae61,
+            #d7191c
+        );
+}
+
+.legend-labels{
+    width:160px;
+    display:flex;
+    justify-content:space-between;
+    margin-top:4px;
+    color:#91a0b3;
+}
+
+/* LEAFLET CONTROLS */
+
+.leaflet-control-zoom a{
+    background:#0d1928!important;
+    color:#fff!important;
+    border-color:#26374b!important;
+}
+
+.leaflet-control-attribution{
+    background:rgba(5,11,20,.8)!important;
+    color:#718198!important;
+}
+
+.leaflet-control-attribution a{
+    color:#6daaff!important;
 }
 
 /* MOBILE */
 
-@media(max-width:600px){
+@media(max-width:650px){
 
     .app{
-        padding:14px;
+        padding:12px;
     }
 
     .details{
@@ -237,7 +365,22 @@ header{
     }
 
     .current{
-        padding:20px;
+        padding:19px;
+    }
+
+    .map-container{
+        height:430px;
+        border-radius:19px;
+    }
+
+    .map-panel{
+        top:8px;
+        right:8px;
+    }
+
+    .map-button{
+        padding:8px 9px;
+        font-size:12px;
     }
 }
 </style>
@@ -248,27 +391,101 @@ header{
 <div class="app">
 
 <header>
-    <div class="logo">Метео<span>•</span></div>
-    <div class="location" id="locationStatus">Погода</div>
+    <div class="logo">
+        Метео<span>•</span>
+    </div>
+
+    <div class="location-status" id="locationStatus">
+        Погода
+    </div>
 </header>
 
+
 <div class="search">
+
     <input
         id="cityInput"
         type="text"
-        placeholder="Введите город..."
         value="Уфа"
+        placeholder="Введите город..."
     >
+
     <button onclick="searchCity()">⌕</button>
+
 </div>
+
 
 <div class="error" id="error"></div>
 
+
 <div id="weather">
-    <div class="loading">Загрузка погоды...</div>
+    <div class="loading">
+        Загрузка погоды...
+    </div>
+</div>
+
+
+<div class="section-title">
+    Карта прогнозов
+</div>
+
+
+<div class="map-container">
+
+    <div id="map"></div>
+
+
+    <div class="map-panel">
+
+        <button
+            class="map-button active"
+            id="tempButton"
+            onclick="changeMapLayer('temperature')"
+        >
+            🌡 Температура
+        </button>
+
+        <button
+            class="map-button"
+            id="rainButton"
+            onclick="changeMapLayer('rain')"
+        >
+            🌧 Осадки
+        </button>
+
+        <button
+            class="map-button"
+            id="windButton"
+            onclick="changeMapLayer('wind')"
+        >
+            💨 Ветер
+        </button>
+
+    </div>
+
+
+    <div class="legend" id="legend">
+
+        <div class="legend-title">
+            Температура
+        </div>
+
+        <div class="gradient"></div>
+
+        <div class="legend-labels">
+            <span>−30°</span>
+            <span>0°</span>
+            <span>+30°</span>
+        </div>
+
+    </div>
+
 </div>
 
 </div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
@@ -312,101 +529,517 @@ const weatherCodes = {
     95:["⛈️","Гроза"],
     96:["⛈️","Гроза с градом"],
     99:["⛈️","Сильная гроза с градом"]
+
 };
 
 
 function getWeather(code){
-
     return weatherCodes[code] || ["🌡️","Неизвестно"];
-
 }
 
 
-function formatDate(date){
+/* MAP */
 
-    return date.toLocaleDateString("ru-RU",{
-        weekday:"long",
-        day:"numeric",
-        month:"long"
-    });
+let map;
 
+let currentLat = 54.7388;
+let currentLon = 55.9721;
+
+let currentMapLayer = "temperature";
+
+let mapCanvasLayer = null;
+
+
+function initMap(){
+
+    map = L.map("map",{
+        zoomControl:true,
+        attributionControl:true
+    }).setView(
+        [currentLat,currentLon],
+        5
+    );
+
+    /*
+       ТЁМНАЯ КАРТА CARTO
+    */
+
+    L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+            maxZoom:20,
+            attribution:"© OpenStreetMap © CARTO",
+            subdomains:"abcd"
+        }
+    ).addTo(map);
+
+    updateForecastMap();
 }
 
 
-function getDayName(date,index){
+/* FORECAST MAP */
 
-    if(index === 0) return "Сегодня";
+async function updateForecastMap(){
 
-    return date.toLocaleDateString("ru-RU",{
-        weekday:"short"
-    });
+    if(!map) return;
 
+    if(mapCanvasLayer){
+        mapCanvasLayer.remove();
+        mapCanvasLayer=null;
+    }
+
+    try{
+
+        const center=map.getCenter();
+
+        const lat=center.lat;
+        const lon=center.lng;
+
+        const gridSize=9;
+        const points=[];
+
+        for(let y=0;y<gridSize;y++){
+
+            for(let x=0;x<gridSize;x++){
+
+                const pLat=
+                    lat+((y-4)*1.8);
+
+                const pLon=
+                    lon+((x-4)*2.8);
+
+                points.push([pLat,pLon]);
+            }
+        }
+
+        const requests=points.map(point=>{
+
+            return fetch(
+                `https://api.open-meteo.com/v1/forecast?latitude=${point[0]}&longitude=${point[1]}&current=temperature_2m,precipitation,wind_speed_10m`
+            ).then(r=>r.json());
+
+        });
+
+        const results=
+            await Promise.all(requests);
+
+        const canvas=
+            document.createElement("canvas");
+
+        const rect=
+            map.getContainer().getBoundingClientRect();
+
+        canvas.width=rect.width;
+        canvas.height=rect.height;
+
+        canvas.style.position="absolute";
+        canvas.style.left="0";
+        canvas.style.top="0";
+        canvas.style.pointerEvents="none";
+        canvas.style.zIndex="300";
+
+        map.getPanes()
+            .overlayPane
+            .appendChild(canvas);
+
+        const ctx=
+            canvas.getContext("2d");
+
+
+        function draw(){
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            for(let i=0;i<points.length;i++){
+
+                const result=results[i];
+
+                if(!result.current)
+                    continue;
+
+                const pos=
+                    map.latLngToContainerPoint(
+                        points[i]
+                    );
+
+                let value;
+
+                if(currentMapLayer==="temperature"){
+                    value=result.current.temperature_2m;
+                }
+                else if(currentMapLayer==="rain"){
+                    value=result.current.precipitation;
+                }
+                else{
+                    value=result.current.wind_speed_10m;
+                }
+
+                const radius=105;
+
+                let color;
+
+                if(currentMapLayer==="temperature"){
+                    color=temperatureColor(value);
+                }
+                else if(currentMapLayer==="rain"){
+                    color=rainColor(value);
+                }
+                else{
+                    color=windColor(value);
+                }
+
+                const gradient=
+                    ctx.createRadialGradient(
+                        pos.x,
+                        pos.y,
+                        0,
+                        pos.x,
+                        pos.y,
+                        radius
+                    );
+
+                gradient.addColorStop(
+                    0,
+                    color
+                );
+
+                gradient.addColorStop(
+                    1,
+                    "rgba(0,0,0,0)"
+                );
+
+                ctx.fillStyle=gradient;
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    pos.x,
+                    pos.y,
+                    radius,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+            }
+        }
+
+
+        draw();
+
+        map.on(
+            "move zoom resize",
+            draw
+        );
+
+
+        mapCanvasLayer={
+            canvas:canvas,
+
+            remove:function(){
+
+                map.off(
+                    "move zoom resize",
+                    draw
+                );
+
+                canvas.remove();
+            }
+        };
+
+    }
+    catch(error){
+
+        console.log(
+            "Ошибка карты:",
+            error
+        );
+
+    }
 }
 
+
+/* COLORS */
+
+function temperatureColor(t){
+
+    if(t<=-20)
+        return "rgba(40,90,190,.65)";
+
+    if(t<=-10)
+        return "rgba(70,145,230,.65)";
+
+    if(t<=0)
+        return "rgba(90,190,235,.65)";
+
+    if(t<=10)
+        return "rgba(150,220,170,.65)";
+
+    if(t<=20)
+        return "rgba(250,220,80,.65)";
+
+    if(t<=30)
+        return "rgba(245,145,55,.65)";
+
+    return "rgba(220,45,40,.65)";
+}
+
+
+function rainColor(r){
+
+    if(r<=0)
+        return "rgba(0,0,0,0)";
+
+    if(r<0.5)
+        return "rgba(80,180,255,.35)";
+
+    if(r<2)
+        return "rgba(30,130,255,.5)";
+
+    if(r<5)
+        return "rgba(30,80,220,.6)";
+
+    if(r<10)
+        return "rgba(150,50,230,.65)";
+
+    return "rgba(220,40,120,.7)";
+}
+
+
+function windColor(w){
+
+    if(w<10)
+        return "rgba(80,190,160,.35)";
+
+    if(w<20)
+        return "rgba(80,210,100,.5)";
+
+    if(w<30)
+        return "rgba(245,210,60,.6)";
+
+    if(w<40)
+        return "rgba(245,130,50,.65)";
+
+    return "rgba(220,45,45,.7)";
+}
+
+
+/* MAP BUTTONS */
+
+function changeMapLayer(layer){
+
+    currentMapLayer=layer;
+
+    document
+        .querySelectorAll(".map-button")
+        .forEach(button=>{
+            button.classList.remove("active");
+        });
+
+
+    if(layer==="temperature"){
+
+        document
+            .getElementById("tempButton")
+            .classList.add("active");
+
+        document
+            .getElementById("legend")
+            .innerHTML=`
+
+                <div class="legend-title">
+                    Температура
+                </div>
+
+                <div class="gradient"></div>
+
+                <div class="legend-labels">
+                    <span>−30°</span>
+                    <span>0°</span>
+                    <span>+30°</span>
+                </div>
+
+            `;
+    }
+
+
+    if(layer==="rain"){
+
+        document
+            .getElementById("rainButton")
+            .classList.add("active");
+
+        document
+            .getElementById("legend")
+            .innerHTML=`
+
+                <div class="legend-title">
+                    Осадки
+                </div>
+
+                <div
+                    class="gradient"
+                    style="
+                        background:
+                        linear-gradient(
+                            90deg,
+                            #55bfff,
+                            #206cff,
+                            #7930df,
+                            #dc2878
+                        );
+                    "
+                ></div>
+
+                <div class="legend-labels">
+                    <span>0 мм</span>
+                    <span>5 мм</span>
+                    <span>10+ мм</span>
+                </div>
+
+            `;
+    }
+
+
+    if(layer==="wind"){
+
+        document
+            .getElementById("windButton")
+            .classList.add("active");
+
+        document
+            .getElementById("legend")
+            .innerHTML=`
+
+                <div class="legend-title">
+                    Ветер
+                </div>
+
+                <div
+                    class="gradient"
+                    style="
+                        background:
+                        linear-gradient(
+                            90deg,
+                            #50c09f,
+                            #54d26a,
+                            #f5d23c,
+                            #f58232,
+                            #dc2d2d
+                        );
+                    "
+                ></div>
+
+                <div class="legend-labels">
+                    <span>0</span>
+                    <span>20</span>
+                    <span>40+ км/ч</span>
+                </div>
+
+            `;
+    }
+
+
+    updateForecastMap();
+}
+
+
+/* SEARCH */
 
 async function searchCity(){
 
-    const city =
-        document.getElementById("cityInput").value.trim();
+    const city=
+        document
+            .getElementById("cityInput")
+            .value
+            .trim();
 
-    if(!city) return;
+    if(!city)
+        return;
 
     showLoading();
 
     try{
 
-        const geoURL =
+        const url=
             `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ru&format=json`;
 
-        const geoResponse =
-            await fetch(geoURL);
+        const response=
+            await fetch(url);
 
-        const geoData =
-            await geoResponse.json();
+        const data=
+            await response.json();
 
-        if(!geoData.results || !geoData.results.length){
+        if(
+            !data.results ||
+            !data.results.length
+        ){
 
-            throw new Error("Город не найден");
-
+            throw new Error(
+                "Город не найден"
+            );
         }
 
-        const place =
-            geoData.results[0];
+        const place=data.results[0];
+
+        currentLat=place.latitude;
+        currentLon=place.longitude;
+
+        map.setView(
+            [currentLat,currentLon],
+            7
+        );
 
         await loadWeather(
-            place.latitude,
-            place.longitude,
+            currentLat,
+            currentLon,
             place.name,
             place.country
         );
 
-    }catch(error){
-
-        showError(error.message);
+        updateForecastMap();
 
     }
+    catch(error){
 
+        showError(
+            error.message
+        );
+    }
 }
 
 
-async function loadWeather(lat,lon,city,country){
+/* WEATHER */
 
-    const url =
-        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m` +
-        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum` +
+async function loadWeather(
+    lat,
+    lon,
+    city,
+    country
+){
+
+    const url=
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`+
+        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m`+
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum`+
         `&timezone=auto`;
 
-    const response =
+    const response=
         await fetch(url);
 
     if(!response.ok){
 
-        throw new Error("Не удалось получить погоду");
-
+        throw new Error(
+            "Не удалось получить погоду"
+        );
     }
 
-    const data =
+    const data=
         await response.json();
 
     renderWeather(
@@ -414,28 +1047,34 @@ async function loadWeather(lat,lon,city,country){
         city,
         country
     );
-
 }
 
 
-function renderWeather(data,city,country){
+/* RENDER */
 
-    const current =
-        data.current;
+function renderWeather(
+    data,
+    city,
+    country
+){
 
-    const daily =
-        data.daily;
+    const current=data.current;
+    const daily=data.daily;
 
-    const weather =
-        getWeather(current.weather_code);
+    const weather=
+        getWeather(
+            current.weather_code
+        );
 
-    const currentDate =
-        new Date();
+    document
+        .getElementById("locationStatus")
+        .textContent=
+            country || "";
 
-    document.getElementById("locationStatus").textContent =
-        country || "";
 
-    let html = `
+    const now=new Date();
+
+    let html=`
 
         <div class="current">
 
@@ -448,7 +1087,7 @@ function renderWeather(data,city,country){
                     </div>
 
                     <div class="date">
-                        ${formatDate(currentDate)}
+                        ${formatDate(now)}
                     </div>
 
                 </div>
@@ -459,119 +1098,119 @@ function renderWeather(data,city,country){
 
             </div>
 
+
             <div class="temperature">
-                ${Math.round(current.temperature_2m)}°
+                ${Math.round(
+                    current.temperature_2m
+                )}°
             </div>
+
 
             <div class="description">
                 ${weather[1]}
             </div>
 
+
             <div class="details">
 
                 <div class="detail">
-
                     <div class="detail-title">
                         Ощущается
                     </div>
-
                     <div class="detail-value">
-                        ${Math.round(current.apparent_temperature)}°
+                        ${Math.round(
+                            current.apparent_temperature
+                        )}°
                     </div>
-
                 </div>
 
-                <div class="detail">
 
+                <div class="detail">
                     <div class="detail-title">
                         Влажность
                     </div>
-
                     <div class="detail-value">
                         ${current.relative_humidity_2m}%
                     </div>
-
                 </div>
 
-                <div class="detail">
 
+                <div class="detail">
                     <div class="detail-title">
                         Ветер
                     </div>
-
                     <div class="detail-value">
-                        ${Math.round(current.wind_speed_10m)} км/ч
+                        ${Math.round(
+                            current.wind_speed_10m
+                        )} км/ч
                     </div>
-
                 </div>
 
-                <div class="detail">
 
+                <div class="detail">
                     <div class="detail-title">
                         Давление
                     </div>
-
                     <div class="detail-value">
-                        ${Math.round(current.pressure_msl)} hPa
+                        ${Math.round(
+                            current.pressure_msl
+                        )} hPa
                     </div>
-
                 </div>
 
-                <div class="detail">
 
+                <div class="detail">
                     <div class="detail-title">
                         Осадки
                     </div>
-
                     <div class="detail-value">
                         ${current.precipitation} мм
                     </div>
-
                 </div>
 
+
                 <div class="detail">
-
                     <div class="detail-title">
-                        Макс.
+                        Максимум
                     </div>
-
                     <div class="detail-value">
-                        ${Math.round(daily.temperature_2m_max[0])}°
+                        ${Math.round(
+                            daily.temperature_2m_max[0]
+                        )}°
                     </div>
-
                 </div>
 
+
                 <div class="detail">
-
                     <div class="detail-title">
-                        Мин.
+                        Минимум
                     </div>
-
                     <div class="detail-value">
-                        ${Math.round(daily.temperature_2m_min[0])}°
+                        ${Math.round(
+                            daily.temperature_2m_min[0]
+                        )}°
                     </div>
-
                 </div>
 
+
                 <div class="detail">
-
                     <div class="detail-title">
-                        Вероятность дождя
+                        Вероятность осадков
                     </div>
-
                     <div class="detail-value">
                         ${daily.precipitation_probability_max[0]}%
                     </div>
-
                 </div>
 
             </div>
 
         </div>
 
+
         <div class="section-title">
             Прогноз на 7 дней
         </div>
+
 
         <div class="forecast">
     `;
@@ -579,22 +1218,33 @@ function renderWeather(data,city,country){
 
     for(let i=0;i<7;i++){
 
-        const date =
+        const date=
             new Date(
-                daily.time[i] + "T12:00:00"
+                daily.time[i]+"T12:00:00"
             );
 
-        const dayWeather =
+        const dayWeather=
             getWeather(
                 daily.weather_code[i]
             );
 
-        html += `
+        const dayName=
+            i===0
+                ? "Сегодня"
+                : date.toLocaleDateString(
+                    "ru-RU",
+                    {
+                        weekday:"short"
+                    }
+                );
+
+
+        html+=`
 
             <div class="day">
 
                 <div class="day-name">
-                    ${getDayName(date,i)}
+                    ${dayName}
                 </div>
 
                 <div class="day-icon">
@@ -602,75 +1252,101 @@ function renderWeather(data,city,country){
                 </div>
 
                 <div class="day-temp">
-                    ${Math.round(daily.temperature_2m_max[i])}°
+                    ${Math.round(
+                        daily.temperature_2m_max[i]
+                    )}°
                     /
-                    ${Math.round(daily.temperature_2m_min[i])}°
+                    ${Math.round(
+                        daily.temperature_2m_min[i]
+                    )}°
                 </div>
 
                 <div class="day-rain">
-                    💧 ${daily.precipitation_probability_max[i]}%
+                    💧
+                    ${daily.precipitation_probability_max[i]}%
                 </div>
 
             </div>
 
         `;
-
     }
 
 
-    html += `
-
+    html+=`
         </div>
-
     `;
 
-    document.getElementById("weather").innerHTML =
-        html;
 
+    document
+        .getElementById("weather")
+        .innerHTML=
+            html;
+}
+
+
+/* HELPERS */
+
+function formatDate(date){
+
+    return date.toLocaleDateString(
+        "ru-RU",
+        {
+            weekday:"long",
+            day:"numeric",
+            month:"long"
+        }
+    );
 }
 
 
 function showLoading(){
 
-    document.getElementById("error").style.display =
-        "none";
+    document
+        .getElementById("error")
+        .style.display="none";
 
-    document.getElementById("weather").innerHTML =
-        `<div class="loading">Загрузка погоды...</div>`;
-
+    document
+        .getElementById("weather")
+        .innerHTML=`
+            <div class="loading">
+                Загрузка погоды...
+            </div>
+        `;
 }
 
 
 function showError(message){
 
-    const error =
-        document.getElementById("error");
+    const error=
+        document
+            .getElementById("error");
 
-    error.textContent =
-        message;
+    error.textContent=message;
+    error.style.display="block";
 
-    error.style.display =
-        "block";
-
-    document.getElementById("weather").innerHTML =
-        "";
-
+    document
+        .getElementById("weather")
+        .innerHTML="";
 }
 
 
 document
     .getElementById("cityInput")
-    .addEventListener("keydown",function(e){
+    .addEventListener(
+        "keydown",
+        function(event){
 
-        if(e.key === "Enter"){
-
-            searchCity();
+            if(event.key==="Enter"){
+                searchCity();
+            }
 
         }
+    );
 
-    });
 
+/* START */
 
+initMap();
 searchCity();
 
 </script>
