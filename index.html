@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Метео — прогноз погоды</title>
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no">
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<title>Meteo Forecast</title>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
 <style>
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
+    width:100%;
     min-height:100%;
-    background:#060d16;
-    color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#060b12;
+    color:white;
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
 }
 
 body{
@@ -29,21 +46,24 @@ body{
 
 .app{
     width:100%;
-    max-width:1050px;
+    max-width:1100px;
     margin:auto;
     padding:14px;
 }
+
+
+/* HEADER */
 
 header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:16px;
+    margin-bottom:15px;
 }
 
 .logo{
-    font-size:25px;
-    font-weight:750;
+    font-size:26px;
+    font-weight:800;
 }
 
 .logo span{
@@ -51,9 +71,12 @@ header{
 }
 
 .location-status{
-    color:#899bb0;
+    color:#8799ad;
     font-size:13px;
 }
+
+
+/* SEARCH */
 
 .search{
     display:flex;
@@ -64,83 +87,92 @@ header{
 .search input{
     flex:1;
     height:50px;
-    border:0;
-    outline:0;
+    border:none;
+    outline:none;
     border-radius:15px;
     padding:0 16px;
-    background:#101c2a;
-    color:#fff;
+    background:#101a27;
+    color:white;
     font-size:16px;
 }
 
 .search input::placeholder{
-    color:#6f8196;
+    color:#6e8094;
 }
 
 .search button{
     width:52px;
-    height:50px;
-    border:0;
+    border:none;
     border-radius:15px;
-    background:#2689ff;
-    color:#fff;
+    background:#268cff;
+    color:white;
     font-size:23px;
 }
 
+
+/* ERROR */
+
 .error{
     display:none;
-    padding:13px;
-    margin-bottom:14px;
-    border-radius:14px;
     background:#35151d;
-    color:#ff9daa;
+    color:#ff9ba7;
+    padding:13px;
+    border-radius:14px;
+    margin-bottom:14px;
 }
 
+
+/* CURRENT */
+
 .current{
-    background:linear-gradient(145deg,#112d4c,#091521);
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:24px;
     padding:22px;
+    border-radius:24px;
+    background:
+    linear-gradient(
+        145deg,
+        #112d4c,
+        #09141f
+    );
+    border:1px solid rgba(255,255,255,.06);
 }
 
 .current-top{
     display:flex;
     justify-content:space-between;
-    align-items:flex-start;
 }
 
 .city{
-    font-size:26px;
-    font-weight:700;
+    font-size:27px;
+    font-weight:750;
 }
 
 .date{
     margin-top:5px;
-    color:#899bb0;
+    color:#8b9caf;
     font-size:14px;
-    text-transform:capitalize;
 }
 
 .weather-icon{
-    font-size:53px;
+    font-size:52px;
 }
 
 .temperature{
-    margin-top:7px;
+    margin-top:10px;
     font-size:70px;
     line-height:1;
-    font-weight:700;
+    font-weight:750;
 }
 
 .description{
     margin-top:8px;
-    color:#c3cedb;
+    color:#c4cfda;
     font-size:18px;
 }
 
 .details{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:
+    repeat(4,1fr);
     gap:9px;
     margin-top:24px;
 }
@@ -152,7 +184,7 @@ header{
 }
 
 .detail-title{
-    color:#7f91a7;
+    color:#7e91a7;
     font-size:12px;
     margin-bottom:6px;
 }
@@ -162,10 +194,13 @@ header{
     font-weight:650;
 }
 
+
+/* FORECAST */
+
 .section-title{
     font-size:20px;
-    font-weight:700;
-    margin:23px 0 11px;
+    font-weight:750;
+    margin:24px 0 11px;
 }
 
 .forecast{
@@ -179,15 +214,15 @@ header{
 }
 
 .day{
-    min-width:112px;
-    background:#101c2a;
-    border-radius:17px;
+    min-width:115px;
     padding:14px;
     text-align:center;
+    border-radius:17px;
+    background:#101a27;
 }
 
 .day-name{
-    color:#9aaabd;
+    color:#9aabba;
     font-size:13px;
 }
 
@@ -197,24 +232,26 @@ header{
 }
 
 .day-temp{
-    font-size:17px;
+    font-size:16px;
     font-weight:650;
 }
 
 .day-rain{
     margin-top:7px;
-    color:#62aaff;
+    color:#61aaff;
     font-size:12px;
 }
 
+
+/* PREVIEW MAP */
+
 .map-preview{
     position:relative;
-    height:250px;
-    width:100%;
+    height:280px;
+    border-radius:22px;
     overflow:hidden;
-    border-radius:21px;
+    background:#070d15;
     border:1px solid rgba(255,255,255,.08);
-    background:#070e17;
 }
 
 #previewMap{
@@ -224,39 +261,41 @@ header{
 
 .preview-label{
     position:absolute;
+    z-index:1000;
     left:12px;
     top:12px;
-    z-index:1000;
     padding:7px 10px;
     border-radius:9px;
-    background:rgba(5,12,21,.88);
-    backdrop-filter:blur(10px);
-    color:#cbd6e2;
+    background:rgba(4,10,17,.9);
+    color:#d3dce6;
     font-size:12px;
 }
 
 .open-map{
     position:absolute;
+    z-index:1000;
     right:10px;
     bottom:10px;
-    z-index:1000;
     border:0;
-    border-radius:10px;
-    padding:9px 13px;
-    background:rgba(5,12,21,.94);
-    color:#fff;
+    border-radius:11px;
+    padding:10px 14px;
+    background:rgba(4,10,17,.95);
+    color:white;
     font-size:13px;
     font-weight:650;
 }
 
+
+/* FULL MAP */
+
 .fullscreen-map{
     display:none;
     position:fixed;
-    inset:0;
     z-index:99999;
+    inset:0;
     width:100vw;
     height:100vh;
-    background:#060c14;
+    background:#060b12;
 }
 
 .fullscreen-map.open{
@@ -270,129 +309,224 @@ header{
     height:100%;
 }
 
+
+/* TOP MAP PANEL */
+
 .map-top{
     position:absolute;
     z-index:10000;
-    top:12px;
-    left:12px;
-    right:12px;
+
+    top:10px;
+    left:10px;
+    right:10px;
+
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
-    gap:10px;
+
+    gap:8px;
+
     pointer-events:none;
 }
 
 .map-layers{
     display:flex;
     gap:5px;
+
+    max-width:
+    calc(100% - 100px);
+
+    overflow-x:auto;
+
     padding:6px;
-    background:rgba(5,12,21,.92);
+
+    border-radius:14px;
+
+    background:
+    rgba(4,10,17,.93);
+
     backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:13px;
+
     pointer-events:auto;
 }
 
-.layer{
-    border:0;
-    border-radius:9px;
-    padding:9px 11px;
-    background:#111f30;
-    color:#aebdce;
-    font-size:12px;
-    white-space:nowrap;
-}
-
-.layer.active{
-    background:#2689ff;
-    color:#fff;
-}
-
-.close-map{
-    border:0;
-    border-radius:11px;
-    padding:10px 14px;
-    background:rgba(5,12,21,.94);
-    color:#fff;
-    font-size:13px;
-    font-weight:650;
-    pointer-events:auto;
-}
-
-.map-info{
-    position:absolute;
-    z-index:10000;
-    left:12px;
-    bottom:12px;
-    min-width:180px;
-    padding:11px 13px;
-    background:rgba(5,12,21,.92);
-    backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:13px;
-    pointer-events:none;
-}
-
-.map-info-title{
-    font-size:12px;
-    color:#9aabba;
-    margin-bottom:6px;
-}
-
-.map-gradient{
-    width:180px;
-    height:9px;
-    border-radius:10px;
-}
-
-.map-values{
-    width:180px;
-    display:flex;
-    justify-content:space-between;
-    margin-top:4px;
-    color:#8495a9;
-    font-size:10px;
-}
-
-.map-loading{
-    position:absolute;
-    z-index:10001;
-    top:75px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:9px 13px;
-    border-radius:11px;
-    background:rgba(5,12,21,.92);
-    font-size:12px;
-    color:#c7d2df;
+.map-layers::-webkit-scrollbar{
     display:none;
 }
 
-.loading{
-    text-align:center;
-    padding:40px 0;
-    color:#899bb0;
+.layer{
+    flex-shrink:0;
+
+    border:none;
+
+    border-radius:9px;
+
+    padding:9px 11px;
+
+    background:#111d2c;
+
+    color:#aebdce;
+
+    font-size:12px;
 }
 
+.layer.active{
+    background:#268cff;
+    color:white;
+}
+
+.close-map{
+    flex-shrink:0;
+
+    border:none;
+
+    border-radius:11px;
+
+    padding:10px 13px;
+
+    background:
+    rgba(4,10,17,.95);
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:650;
+
+    pointer-events:auto;
+}
+
+
+/* LOADING */
+
+.map-loading{
+    display:none;
+
+    position:absolute;
+
+    z-index:10001;
+
+    top:72px;
+    left:50%;
+
+    transform:
+    translateX(-50%);
+
+    padding:9px 14px;
+
+    border-radius:11px;
+
+    background:
+    rgba(4,10,17,.94);
+
+    color:#d2dce7;
+
+    font-size:12px;
+}
+
+
+/* LEGEND */
+
+.legend{
+    position:absolute;
+
+    z-index:10000;
+
+    left:12px;
+    bottom:12px;
+
+    min-width:210px;
+
+    padding:13px;
+
+    border-radius:14px;
+
+    background:
+    rgba(4,10,17,.94);
+
+    backdrop-filter:blur(12px);
+
+    border:
+    1px solid
+    rgba(255,255,255,.1);
+
+    pointer-events:none;
+}
+
+.legend-title{
+    color:#dce5ee;
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+.legend-gradient{
+    width:210px;
+    height:10px;
+    border-radius:10px;
+}
+
+.legend-values{
+    display:flex;
+    justify-content:space-between;
+    width:210px;
+
+    margin-top:5px;
+
+    color:#8799ad;
+
+    font-size:10px;
+}
+
+
+/* WIND ARROWS */
+
+.wind-arrow{
+    position:absolute;
+
+    transform:
+    translate(-50%,-50%);
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:900;
+
+    text-shadow:
+    0 1px 3px black,
+    0 0 4px black;
+
+    pointer-events:none;
+
+    z-index:600;
+}
+
+
+/* LEAFLET */
+
 .leaflet-container{
-    background:#060d15;
+    background:#060b12;
 }
 
 .leaflet-control-zoom a{
-    background:#101c2b!important;
-    color:#fff!important;
-    border-color:#293b50!important;
+    background:#111d2c!important;
+    color:white!important;
+    border-color:#293a4d!important;
 }
 
 .leaflet-control-attribution{
-    background:rgba(5,12,21,.8)!important;
-    color:#718196!important;
+    background:
+    rgba(4,10,17,.8)!important;
+
+    color:#6f8195!important;
 }
 
 .leaflet-control-attribution a{
-    color:#71aaff!important;
+    color:#73aaff!important;
 }
+
+
+/* MOBILE */
 
 @media(max-width:650px){
 
@@ -401,7 +535,8 @@ header{
     }
 
     .details{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+        repeat(2,1fr);
     }
 
     .temperature{
@@ -409,18 +544,18 @@ header{
     }
 
     .map-preview{
-        height:220px;
+        height:240px;
     }
 
     .map-top{
-        left:8px;
-        right:8px;
-        top:8px;
+        top:7px;
+        left:7px;
+        right:7px;
     }
 
     .map-layers{
-        max-width:calc(100% - 105px);
-        overflow-x:auto;
+        max-width:
+        calc(100% - 95px);
     }
 
     .layer{
@@ -431,175 +566,217 @@ header{
         padding:9px 10px;
     }
 
-    .map-info{
-        left:8px;
-        bottom:8px;
+    .legend{
+        left:7px;
+        bottom:7px;
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="app">
+
 
 <header>
 
-    <div class="logo">
-        Метео<span>•</span>
-    </div>
+<div class="logo">
+Метео<span>•</span>
+</div>
 
-    <div
-        class="location-status"
-        id="locationStatus"
-    >
-        Город не выбран
-    </div>
+<div
+id="locationStatus"
+class="location-status"
+>
+Город не выбран
+</div>
 
 </header>
 
 
 <div class="search">
 
-    <input
-        id="cityInput"
-        value="Уфа"
-        placeholder="Введите город..."
-    >
+<input
+id="cityInput"
+value="Уфа"
+placeholder="Введите город..."
+>
 
-    <button onclick="searchCity()">
-        ⌕
-    </button>
+<button
+onclick="searchCity()"
+>
+⌕
+</button>
 
 </div>
 
 
 <div
-    class="error"
-    id="error"
+id="error"
+class="error"
 ></div>
 
 
 <div id="weather">
 
-    <div class="loading">
-        Загрузка прогноза...
-    </div>
+<div class="loading">
+Загрузка прогноза...
+</div>
 
 </div>
 
 
 <div class="section-title">
-    Карта прогнозов
+Карта прогнозов
 </div>
 
 
 <div class="map-preview">
 
-    <div id="previewMap"></div>
+<div id="previewMap"></div>
 
-    <div class="preview-label">
-        Реальный DWD ICON Global
-    </div>
+<div class="preview-label">
+DWD ICON-EU • ~7 км
+</div>
 
-    <button
-        class="open-map"
-        onclick="openForecastMap()"
-    >
-        Открыть карту
-    </button>
+<button
+class="open-map"
+onclick="openForecastMap()"
+>
+Открыть карту
+</button>
 
 </div>
+
+
+</div>
+
+
+<!-- FULL MAP -->
+
+<div
+id="fullscreenMap"
+class="fullscreen-map"
+>
+
+
+<div id="forecastMap"></div>
+
+
+<div class="map-top">
+
+
+<div class="map-layers">
+
+
+<button
+id="temperatureLayer"
+class="layer active"
+onclick="setLayer('temperature')"
+>
+🌡 Температура
+</button>
+
+
+<button
+id="precipitationLayer"
+class="layer"
+onclick="setLayer('precipitation')"
+>
+🌧 Осадки
+</button>
+
+
+<button
+id="windLayer"
+class="layer"
+onclick="setLayer('wind')"
+>
+💨 Ветер
+</button>
+
+
+<button
+id="cloudLayer"
+class="layer"
+onclick="setLayer('cloud')"
+>
+☁️ Облачность
+</button>
+
+
+<button
+id="pressureLayer"
+class="layer"
+onclick="setLayer('pressure')"
+>
+🔽 Давление
+</button>
+
+
+</div>
+
+
+<button
+class="close-map"
+onclick="closeForecastMap()"
+>
+Закрыть
+</button>
+
 
 </div>
 
 
 <div
-    class="fullscreen-map"
-    id="fullscreenMap"
+id="mapLoading"
+class="map-loading"
 >
-
-    <div id="forecastMap"></div>
-
-
-    <div class="map-top">
-
-        <div class="map-layers">
-
-            <button
-                class="layer active"
-                id="temperatureLayer"
-                onclick="setLayer('temperature')"
-            >
-                🌡 Температура
-            </button>
-
-            <button
-                class="layer"
-                id="precipitationLayer"
-                onclick="setLayer('precipitation')"
-            >
-                🌧 Осадки
-            </button>
-
-            <button
-                class="layer"
-                id="windLayer"
-                onclick="setLayer('wind')"
-            >
-                💨 Ветер
-            </button>
-
-        </div>
+Загрузка ICON-EU...
+</div>
 
 
-        <button
-            class="close-map"
-            onclick="closeForecastMap()"
-        >
-            Закрыть карту
-        </button>
+<div class="legend">
 
-    </div>
-
-
-    <div
-        class="map-loading"
-        id="mapLoading"
-    >
-        Загрузка ICON...
-    </div>
+<div
+id="legendTitle"
+class="legend-title"
+>
+Температура, °C
+</div>
 
 
-    <div class="map-info">
+<div
+id="legendGradient"
+class="legend-gradient"
+></div>
 
-        <div
-            class="map-info-title"
-            id="mapInfoTitle"
-        >
-            Температура, °C
-        </div>
 
-        <div
-            class="map-gradient"
-            id="mapGradient"
-        ></div>
-
-        <div
-            class="map-values"
-            id="mapValues"
-        >
-            <span>−30°</span>
-            <span>0°</span>
-            <span>+30°</span>
-        </div>
-
-    </div>
+<div
+id="legendValues"
+class="legend-values"
+>
+<span>−30°</span>
+<span>0°</span>
+<span>+30°</span>
+</div>
 
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</div>
+
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
 
 <script>
 
@@ -653,7 +830,9 @@ const weatherCodes={
 
 function getWeather(code){
 
-return weatherCodes[code] || ["🌡️","Неизвестно"];
+return weatherCodes[code]
+||
+["🌡️","Неизвестно"];
 
 }
 
@@ -671,31 +850,42 @@ let marker;
 
 let selectedLayer="temperature";
 
-let gridData=null;
+let gridData=[];
 let gridMeta=null;
 
 let forecastCanvas=null;
 
+let windArrows=[];
+
 let renderToken=0;
 
-const gridRows=17;
-const gridCols=17;
+
+/*
+    31 x 31 = 961 точка.
+
+    Это намного плотнее предыдущих 17 x 17.
+*/
+
+const gridRows=31;
+const gridCols=31;
 
 
 /* =========================================================
-   MAPS
+   MAP INITIALIZATION
 ========================================================= */
 
 function createMaps(){
 
-previewMap=L.map(
+previewMap=
+L.map(
 "previewMap",
 {
 zoomControl:false,
 attributionControl:false,
 scrollWheelZoom:false
 }
-).setView(
+)
+.setView(
 [latitude,longitude],
 5
 );
@@ -706,18 +896,22 @@ L.tileLayer(
 {
 maxZoom:20,
 subdomains:"abcd",
-attribution:"© OpenStreetMap © CARTO"
+attribution:
+"© OpenStreetMap © CARTO"
 }
-).addTo(previewMap);
+)
+.addTo(previewMap);
 
 
-forecastMap=L.map(
+forecastMap=
+L.map(
 "forecastMap",
 {
 zoomControl:true,
 attributionControl:true
 }
-).setView(
+)
+.setView(
 [latitude,longitude],
 5
 );
@@ -728,18 +922,27 @@ L.tileLayer(
 {
 maxZoom:20,
 subdomains:"abcd",
-attribution:"© OpenStreetMap © CARTO"
+attribution:
+"© OpenStreetMap © CARTO"
 }
-).addTo(forecastMap);
+)
+.addTo(forecastMap);
 
+
+/*
+    При перемещении карты
+    обновляем ICON поле.
+*/
 
 forecastMap.on(
 "moveend",
-()=>{
+function(){
 
 if(
 document
-.getElementById("fullscreenMap")
+.getElementById(
+"fullscreenMap"
+)
 .classList
 .contains("open")
 ){
@@ -748,8 +951,7 @@ loadForecastGrid();
 
 }
 
-}
-);
+});
 
 }
 
@@ -766,17 +968,21 @@ forecastMap.removeLayer(marker);
 
 }
 
+
 marker=
 L.circleMarker(
 [latitude,longitude],
 {
 radius:6,
-color:"#fff",
+color:"#ffffff",
 weight:2,
 fillColor:"#268cff",
 fillOpacity:1
 }
-).addTo(forecastMap);
+)
+.addTo(
+forecastMap
+);
 
 }
 
@@ -788,12 +994,15 @@ fillOpacity:1
 function openForecastMap(){
 
 document
-.getElementById("fullscreenMap")
+.getElementById(
+"fullscreenMap"
+)
 .classList
 .add("open");
 
 
-setTimeout(()=>{
+setTimeout(
+function(){
 
 forecastMap.invalidateSize();
 
@@ -806,7 +1015,9 @@ updateMarker();
 
 loadForecastGrid();
 
-},100);
+},
+100
+);
 
 }
 
@@ -818,10 +1029,23 @@ loadForecastGrid();
 function closeForecastMap(){
 
 document
-.getElementById("fullscreenMap")
+.getElementById(
+"fullscreenMap"
+)
 .classList
 .remove("open");
 
+
+clearMapGraphics();
+
+}
+
+
+/* =========================================================
+   CLEAR GRAPHICS
+========================================================= */
+
+function clearMapGraphics(){
 
 if(forecastCanvas){
 
@@ -830,6 +1054,13 @@ forecastCanvas.remove();
 forecastCanvas=null;
 
 }
+
+
+windArrows.forEach(
+arrow=>arrow.remove()
+);
+
+windArrows=[];
 
 }
 
@@ -841,17 +1072,21 @@ forecastCanvas=null;
 function showMapLoading(show){
 
 document
-.getElementById("mapLoading")
+.getElementById(
+"mapLoading"
+)
 .style.display=
 show
-?"block"
-:"none";
+?
+"block"
+:
+"none";
 
 }
 
 
 /* =========================================================
-   GET VALUE
+   LAYER VALUE
 ========================================================= */
 
 function getGridValue(item){
@@ -860,21 +1095,48 @@ if(!item)
 return null;
 
 
-if(selectedLayer==="temperature")
+if(
+selectedLayer===
+"temperature"
+)
 return item.temperature;
 
 
-if(selectedLayer==="precipitation")
+if(
+selectedLayer===
+"precipitation"
+)
 return item.precipitation;
 
 
+if(
+selectedLayer===
+"wind"
+)
 return item.wind;
+
+
+if(
+selectedLayer===
+"cloud"
+)
+return item.cloud;
+
+
+if(
+selectedLayer===
+"pressure"
+)
+return item.pressure;
+
+
+return null;
 
 }
 
 
 /* =========================================================
-   COLORS
+   COLOR SCALE
 ========================================================= */
 
 function colorFor(
@@ -884,108 +1146,182 @@ layer
 
 if(
 value===null ||
+value===undefined ||
 !isFinite(value)
 ){
 
-return [
-0,0,0,0
-];
+return [0,0,0,0];
 
 }
 
 
 /* TEMPERATURE */
 
-if(layer==="temperature"){
+if(
+layer===
+"temperature"
+){
 
 if(value<=-30)
-return [35,65,180,205];
+return [35,60,180,215];
 
 if(value<=-20)
-return [45,105,210,205];
+return [45,105,215,215];
 
 if(value<=-10)
-return [70,160,235,205];
+return [70,165,240,215];
 
 if(value<=0)
-return [95,205,230,205];
+return [75,205,235,215];
 
 if(value<=10)
-return [135,220,170,205];
+return [125,220,165,215];
 
 if(value<=20)
-return [245,225,75,205];
+return [245,225,65,215];
 
 if(value<=30)
-return [245,145,45,210];
+return [245,140,40,220];
 
 if(value<=40)
-return [225,55,35,215];
+return [225,50,35,225];
 
-return [150,20,25,220];
+return [145,15,25,230];
 
 }
 
 
 /* PRECIPITATION */
 
-if(layer==="precipitation"){
+if(
+layer===
+"precipitation"
+){
 
 if(value<=0.05)
 return [0,0,0,0];
 
 if(value<=0.2)
-return [70,170,255,80];
+return [80,180,255,90];
 
 if(value<=1)
-return [40,140,255,125];
+return [35,140,255,130];
 
 if(value<=3)
-return [25,90,235,165];
+return [25,85,235,170];
 
 if(value<=7)
-return [95,45,220,185];
+return [95,40,220,190];
 
 if(value<=15)
-return [185,35,180,205];
+return [190,30,175,210];
 
-return [235,30,80,220];
+if(value<=30)
+return [240,30,70,225];
+
+return [145,0,25,235];
 
 }
 
 
 /* WIND */
 
+if(
+layer===
+"wind"
+){
+
 if(value<=5)
-return [60,180,150,90];
+return [50,175,160,100];
 
 if(value<=10)
-return [65,210,115,125];
+return [60,210,120,135];
 
 if(value<=20)
-return [150,225,60,160];
+return [145,225,60,170];
 
 if(value<=30)
-return [250,215,50,180];
+return [250,220,50,185];
 
 if(value<=40)
-return [245,125,45,205];
+return [245,125,40,210];
 
-return [220,40,40,220];
+if(value<=60)
+return [220,45,35,225];
+
+return [145,10,20,235];
+
+}
+
+
+/* CLOUD */
+
+if(
+layer===
+"cloud"
+){
+
+if(value<=10)
+return [20,30,40,40];
+
+if(value<=25)
+return [60,75,90,80];
+
+if(value<=50)
+return [100,115,135,120];
+
+if(value<=75)
+return [160,170,185,165];
+
+return [230,235,240,195];
+
+}
+
+
+/* PRESSURE */
+
+if(
+layer===
+"pressure"
+){
+
+if(value<=980)
+return [80,30,170,210];
+
+if(value<=990)
+return [55,75,210,210];
+
+if(value<=1000)
+return [35,145,235,210];
+
+if(value<=1010)
+return [70,205,190,210];
+
+if(value<=1020)
+return [235,220,70,210];
+
+if(value<=1030)
+return [245,135,45,220];
+
+return [210,40,35,230];
+
+}
+
+
+return [0,0,0,0];
 
 }
 
 
 /* =========================================================
-   DRAW FORECAST FIELD
+   DRAW FIELD
 ========================================================= */
 
 function drawForecastCanvas(){
 
 if(
-!gridData ||
-!gridMeta ||
-!forecastMap
+!gridData.length ||
+!gridMeta
 ){
 
 return;
@@ -993,19 +1329,17 @@ return;
 }
 
 
-if(forecastCanvas){
-
-forecastCanvas.remove();
-
-}
+clearMapGraphics();
 
 
 const canvas=
-document.createElement("canvas");
+document.createElement(
+"canvas"
+);
 
 
-canvas.width=340;
-canvas.height=340;
+canvas.width=500;
+canvas.height=500;
 
 
 const bounds=
@@ -1031,16 +1365,27 @@ forecastMap
 );
 
 
-overlay.style.position="absolute";
-overlay.style.pointerEvents="none";
-overlay.style.zIndex="450";
+overlay.style.position=
+"absolute";
+
+overlay.style.pointerEvents=
+"none";
+
+overlay.style.zIndex=
+"450";
+
+overlay.appendChild(
+canvas
+);
 
 
-overlay.appendChild(canvas);
+forecastCanvas=
+overlay;
 
 
-forecastCanvas=overlay;
-
+/* ---------------------------------------------------------
+   RENDER
+--------------------------------------------------------- */
 
 function render(){
 
@@ -1048,7 +1393,6 @@ const nw=
 forecastMap.latLngToLayerPoint(
 bounds.getNorthWest()
 );
-
 
 const se=
 forecastMap.latLngToLayerPoint(
@@ -1061,7 +1405,6 @@ Math.max(
 1,
 se.x-nw.x
 );
-
 
 const height=
 Math.max(
@@ -1091,20 +1434,15 @@ height+"px";
 
 
 const ctx=
-canvas.getContext("2d");
-
-
-const w=
-canvas.width;
-
-const h=
-canvas.height;
+canvas.getContext(
+"2d"
+);
 
 
 const image=
 ctx.createImageData(
-w,
-h
+canvas.width,
+canvas.height
 );
 
 
@@ -1117,6 +1455,8 @@ gridData.map(
 getGridValue
 );
 
+
+/* BILINEAR INTERPOLATION */
 
 function valueAt(
 gx,
@@ -1131,7 +1471,6 @@ gridCols-1,
 gx
 )
 );
-
 
 gy=
 Math.max(
@@ -1148,7 +1487,6 @@ Math.floor(gx);
 
 const y0=
 Math.floor(gy);
-
 
 const x1=
 Math.min(
@@ -1192,10 +1530,10 @@ y1*gridCols+x1
 
 
 if(
-[a,b,c,d]
-.some(
+[a,b,c,d].some(
 v=>
 v===null ||
+v===undefined ||
 !isFinite(v)
 )
 ){
@@ -1206,13 +1544,10 @@ return null;
 
 
 const top=
-a+
-(b-a)*fx;
-
+a+(b-a)*fx;
 
 const bottom=
-c+
-(d-c)*fx;
+c+(d-c)*fx;
 
 
 return top+
@@ -1221,25 +1556,29 @@ return top+
 }
 
 
+/* PIXELS */
+
 for(
 let y=0;
-y<h;
+y<canvas.height;
 y++
 ){
 
 for(
 let x=0;
-x<w;
+x<canvas.width;
 x++
 ){
 
 const gx=
-x/(w-1)*
+x/
+(canvas.width-1)*
 (gridCols-1);
 
 
 const gy=
-y/(h-1)*
+y/
+(canvas.height-1)*
 (gridRows-1);
 
 
@@ -1257,17 +1596,21 @@ selectedLayer
 );
 
 
-const i=
-(y*w+x)*4;
+const index=
+(y*canvas.width+x)*4;
 
 
-pixels[i]=color[0];
+pixels[index]=
+color[0];
 
-pixels[i+1]=color[1];
+pixels[index+1]=
+color[1];
 
-pixels[i+2]=color[2];
+pixels[index+2]=
+color[2];
 
-pixels[i+3]=color[3];
+pixels[index+3]=
+color[3];
 
 }
 
@@ -1280,19 +1623,27 @@ image,
 0
 );
 
+
+/*
+    Стрелки ветра рисуем
+    отдельно поверх поля.
+*/
+
+if(
+selectedLayer===
+"wind"
+){
+
+drawWindArrows();
+
 }
-
-
-function update(){
-
-render();
 
 }
 
 
 forecastMap.on(
 "zoom move resize",
-update
+render
 );
 
 
@@ -1302,7 +1653,168 @@ render();
 
 
 /* =========================================================
-   LOAD REAL ICON DATA
+   WIND ARROWS
+========================================================= */
+
+function windDirectionName(deg){
+
+const directions=[
+"С",
+"СВ",
+"В",
+"ЮВ",
+"Ю",
+"ЮЗ",
+"З",
+"СЗ"
+];
+
+
+return directions[
+Math.round(deg/45)%8
+];
+
+}
+
+
+function drawWindArrows(){
+
+windArrows.forEach(
+arrow=>arrow.remove()
+);
+
+windArrows=[];
+
+
+if(!gridData.length)
+return;
+
+
+const rows=11;
+const cols=13;
+
+
+for(
+let y=0;
+y<rows;
+y++
+){
+
+for(
+let x=0;
+x<cols;
+x++
+){
+
+const gx=
+x/(cols-1)*
+(gridCols-1);
+
+
+const gy=
+y/(rows-1)*
+(gridRows-1);
+
+
+const ix=
+Math.round(gx);
+
+const iy=
+Math.round(gy);
+
+
+const item=
+gridData[
+iy*gridCols+ix
+];
+
+
+if(
+!item ||
+item.windDirection===null
+){
+
+continue;
+
+}
+
+
+const lat=
+gridMeta.latMin+
+(gridMeta.latMax-gridMeta.latMin)*
+y/(rows-1);
+
+
+const lon=
+gridMeta.lonMin+
+(gridMeta.lonMax-gridMeta.lonMin)*
+x/(cols-1);
+
+
+const point=
+forecastMap.latLngToLayerPoint(
+[lat,lon]
+);
+
+
+const arrow=
+L.DomUtil.create(
+"div",
+"wind-arrow",
+forecastMap.getPanes().markerPane
+);
+
+
+const direction=
+item.windDirection;
+
+
+/*
+    Метеорологическое направление:
+    0° = север,
+    90° = восток.
+
+    Стрелка показывает КУДА движется ветер.
+*/
+
+const toDirection=
+(direction+180)%360;
+
+
+arrow.textContent="↑";
+
+arrow.style.left=
+point.x+"px";
+
+arrow.style.top=
+point.y+"px";
+
+arrow.style.transform=
+"translate(-50%,-50%) rotate("+
+toDirection+
+"deg)";
+
+
+windArrows.push(
+{
+remove:()=>{
+if(arrow.parentNode)
+arrow.parentNode.removeChild(
+arrow
+);
+}
+}
+);
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+   LOAD ICON-EU FIELD
 ========================================================= */
 
 async function loadForecastGrid(){
@@ -1322,32 +1834,39 @@ const zoom=
 forecastMap.getZoom();
 
 
-let latStep;
-let lonStep;
+/*
+    Чем ближе масштаб,
+    тем меньше область поля,
+    поэтому сохраняем высокую
+    пространственную детализацию.
+*/
+
+let latSpan;
+let lonSpan;
 
 
 if(zoom<=4){
 
-latStep=3;
-lonStep=4.5;
+latSpan=10;
+lonSpan=15;
 
 }
-else if(zoom<=5){
+else if(zoom===5){
 
-latStep=2;
-lonStep=3;
+latSpan=7;
+lonSpan=11;
 
 }
-else if(zoom<=6){
+else if(zoom===6){
 
-latStep=1.2;
-lonStep=1.8;
+latSpan=4.5;
+lonSpan=7;
 
 }
 else{
 
-latStep=.65;
-lonStep=.95;
+latSpan=3;
+lonSpan=4.5;
 
 }
 
@@ -1355,32 +1874,30 @@ lonStep=.95;
 const latMin=
 Math.max(
 -80,
-center.lat-
-((gridRows-1)/2)*latStep
+center.lat-latSpan/2
 );
-
 
 const latMax=
 Math.min(
 80,
-center.lat+
-((gridRows-1)/2)*latStep
+center.lat+latSpan/2
 );
 
 
 const lonMin=
-center.lng-
-((gridCols-1)/2)*lonStep;
-
+center.lng-lonSpan/2;
 
 const lonMax=
-center.lng+
-((gridCols-1)/2)*lonStep;
+center.lng+lonSpan/2;
 
 
 const lats=[];
 const lons=[];
 
+
+/*
+    Регулярная сетка.
+*/
 
 for(
 let y=0;
@@ -1407,11 +1924,11 @@ x/(gridCols-1);
 
 
 lats.push(
-lat.toFixed(3)
+lat.toFixed(4)
 );
 
 lons.push(
-lon.toFixed(3)
+lon.toFixed(4)
 );
 
 }
@@ -1419,27 +1936,52 @@ lon.toFixed(3)
 }
 
 
+/*
+    ВАЖНО:
+
+    Здесь используется именно
+    ICON-EU, а не ICON Global.
+
+    Open-Meteo позволяет явно
+    выбрать модель через models=icon_eu.
+*/
+
+
 const url=
-"https://api.open-meteo.com/v1/dwd-icon"+
+"https://api.open-meteo.com/v1/forecast"+
 "?latitude="+
 lats.join(",")+
 "&longitude="+
 lons.join(",")+
-"&hourly=temperature_2m,precipitation,wind_speed_10m"+
+
+"&hourly="+
+"temperature_2m,"+
+"precipitation,"+
+"wind_speed_10m,"+
+"wind_direction_10m,"+
+"cloud_cover,"+
+"pressure_msl"+
+
+"&models=icon_eu"+
+
 "&forecast_hours=1"+
+
 "&timezone=GMT";
 
 
 try{
 
 const response=
-await fetch(url);
+await fetch(
+url
+);
 
 
 if(!response.ok){
 
 throw new Error(
-"ICON request failed"
+"ICON-EU HTTP "+
+response.status
 );
 
 }
@@ -1455,8 +1997,10 @@ return;
 
 const locations=
 Array.isArray(data)
-?data
-:[data];
+?
+data
+:
+[data];
 
 
 gridData=
@@ -1466,17 +2010,38 @@ item=>({
 temperature:
 item.hourly
 ?.temperature_2m
-?.[0]??null,
+?.[0]
+??null,
 
 precipitation:
 item.hourly
 ?.precipitation
-?.[0]??null,
+?.[0]
+??null,
 
 wind:
 item.hourly
 ?.wind_speed_10m
-?.[0]??null
+?.[0]
+??null,
+
+windDirection:
+item.hourly
+?.wind_direction_10m
+?.[0]
+??null,
+
+cloud:
+item.hourly
+?.cloud_cover
+?.[0]
+??null,
+
+pressure:
+item.hourly
+?.pressure_msl
+?.[0]
+??null
 
 })
 );
@@ -1498,7 +2063,7 @@ drawForecastCanvas();
 catch(error){
 
 console.error(
-"ICON:",
+"ICON-EU error:",
 error
 );
 
@@ -1506,7 +2071,8 @@ error
 finally{
 
 if(
-token===renderToken
+token===
+renderToken
 ){
 
 showMapLoading(false);
@@ -1519,7 +2085,205 @@ showMapLoading(false);
 
 
 /* =========================================================
-   LAYER SWITCH
+   LEGENDS
+========================================================= */
+
+function updateLegend(){
+
+const title=
+document
+.getElementById(
+"legendTitle"
+);
+
+const gradient=
+document
+.getElementById(
+"legendGradient"
+);
+
+const values=
+document
+.getElementById(
+"legendValues"
+);
+
+
+if(
+selectedLayer===
+"temperature"
+){
+
+title.textContent=
+"Температура, °C";
+
+
+gradient.style.background=
+"linear-gradient(90deg,"+
+"#2341b4,"+
+"#479fe8,"+
+"#5dd0e6,"+
+"#87dca8,"+
+"#f5e14b,"+
+"#f28d2d,"+
+"#dc3025)";
+
+
+values.innerHTML=
+`
+<span>−30°</span>
+<span>−10°</span>
+<span>0°</span>
+<span>+20°</span>
+<span>+40°</span>
+`;
+
+}
+
+
+if(
+selectedLayer===
+"precipitation"
+){
+
+title.textContent=
+"Осадки, мм/ч";
+
+
+gradient.style.background=
+"linear-gradient(90deg,"+
+"#469cff,"+
+"#2055e8,"+
+"#6b2bd5,"+
+"#bd25a9,"+
+"#ed2450)";
+
+
+values.innerHTML=
+`
+<span>0</span>
+<span>0.2</span>
+<span>1</span>
+<span>7</span>
+<span>15+</span>
+`;
+
+}
+
+
+if(
+selectedLayer===
+"wind"
+){
+
+title.textContent=
+"Ветер, км/ч";
+
+
+gradient.style.background=
+"linear-gradient(90deg,"+
+"#3cb496,"+
+"#65d273,"+
+"#f1dc38,"+
+"#f07e2d,"+
+"#dc2d2d)";
+
+
+values.innerHTML=
+`
+<span>0</span>
+<span>10</span>
+<span>20</span>
+<span>40</span>
+<span>60+</span>
+`;
+
+}
+
+
+if(
+selectedLayer===
+"cloud"
+){
+
+title.textContent=
+"Облачность, %";
+
+
+gradient.style.background=
+"linear-gradient(90deg,"+
+"#141e2b,"+
+"#3c4b5a,"+
+"#687482,"+
+"#a0aab3,"+
+"#eef2f5)";
+
+
+values.innerHTML=
+`
+<span>0%</span>
+<span>25%</span>
+<span>50%</span>
+<span>75%</span>
+<span>100%</span>
+`;
+
+}
+
+
+if(
+selectedLayer===
+"pressure"
+){
+
+title.textContent=
+"Давление, hPa";
+
+
+gradient.style.background=
+"linear-gradient(90deg,"+
+"#5020aa,"+
+"#374bd0,"+
+"#2395e8,"+
+"#46d0a0,"+
+"#f0dc46,"+
+"#ed7e2c,"+
+"#d52929)";
+
+
+values.innerHTML=
+`
+<span>980</span>
+<span>990</span>
+<span>1000</span>
+<span>1010</span>
+<span>1020</span>
+<span>1030+</span>
+`;
+
+}
+
+
+/*
+    Для ветра дополнительно
+    показываем пояснение стрелки.
+*/
+
+if(
+selectedLayer===
+"wind"
+){
+
+title.innerHTML=
+"Ветер, км/ч • стрелка → направление";
+
+}
+
+}
+
+
+/* =========================================================
+   SWITCH LAYER
 ========================================================= */
 
 function setLayer(layer){
@@ -1529,120 +2293,30 @@ layer;
 
 
 document
-.querySelectorAll(".layer")
+.querySelectorAll(
+".layer"
+)
 .forEach(
 button=>
-button.classList
-.remove("active")
+button.classList.remove(
+"active"
+)
 );
 
 
-if(layer==="temperature"){
-
-document
-.getElementById(
-"temperatureLayer"
-)
-.classList
-.add("active");
+const button=
+document.getElementById(
+layer+"Layer"
+);
 
 
-document
-.getElementById(
-"mapInfoTitle"
-)
-.textContent=
-"Температура, °C";
+if(button)
+button.classList.add(
+"active"
+);
 
 
-document
-.getElementById(
-"mapGradient"
-)
-.style.background=
-"linear-gradient(90deg,#2341b4,#479fe8,#5dd0e6,#87dca8,#f5e14b,#f28d2d,#dc3025)";
-
-
-document
-.getElementById(
-"mapValues"
-)
-.innerHTML=
-"<span>−30°</span><span>0°</span><span>+30°</span>";
-
-}
-
-
-if(layer==="precipitation"){
-
-document
-.getElementById(
-"precipitationLayer"
-)
-.classList
-.add("active");
-
-
-document
-.getElementById(
-"mapInfoTitle"
-)
-.textContent=
-"Осадки, мм/ч";
-
-
-document
-.getElementById(
-"mapGradient"
-)
-.style.background=
-"linear-gradient(90deg,#469cff,#2055e8,#6b2bd5,#bd25a9,#ed2450)";
-
-
-document
-.getElementById(
-"mapValues"
-)
-.innerHTML=
-"<span>0</span><span>3</span><span>15+</span>";
-
-}
-
-
-if(layer==="wind"){
-
-document
-.getElementById(
-"windLayer"
-)
-.classList
-.add("active");
-
-
-document
-.getElementById(
-"mapInfoTitle"
-)
-.textContent=
-"Ветер, км/ч";
-
-
-document
-.getElementById(
-"mapGradient"
-)
-.style.background=
-"linear-gradient(90deg,#3cb496,#65d273,#f1dc38,#f07e2d,#dc2d2d)";
-
-
-document
-.getElementById(
-"mapValues"
-)
-.innerHTML=
-"<span>0</span><span>20</span><span>40+</span>";
-
-}
+updateLegend();
 
 
 drawForecastCanvas();
@@ -1695,7 +2369,7 @@ if(
 ){
 
 throw new Error(
-"not-found"
+"city"
 );
 
 }
@@ -1713,13 +2387,19 @@ place.longitude;
 
 
 previewMap.setView(
-[latitude,longitude],
+[
+latitude,
+longitude
+],
 6
 );
 
 
 forecastMap.setView(
-[latitude,longitude],
+[
+latitude,
+longitude
+],
 6
 );
 
@@ -1754,7 +2434,7 @@ showError(
 
 
 /* =========================================================
-   WEATHER API
+   WEATHER
 ========================================================= */
 
 async function loadWeather(
@@ -1764,27 +2444,43 @@ city
 ){
 
 const url=
-"https://api.open-meteo.com/v1/dwd-icon"+
+"https://api.open-meteo.com/v1/forecast"+
 "?latitude="+
 lat+
 "&longitude="+
 lon+
-"&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m"+
-"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"+
+
+"&current="+
+"temperature_2m,"+
+"relative_humidity_2m,"+
+"apparent_temperature,"+
+"precipitation,"+
+"weather_code,"+
+"pressure_msl,"+
+"wind_speed_10m,"+
+"wind_direction_10m"+
+
+"&daily="+
+"weather_code,"+
+"temperature_2m_max,"+
+"temperature_2m_min,"+
+"precipitation_probability_max"+
+
+"&models=icon_eu"+
+
 "&timezone=auto";
 
 
 try{
 
 const response=
-await fetch(url);
+await fetch(
+url
+);
 
 
-if(!response.ok){
-
+if(!response.ok)
 throw new Error();
-
-}
 
 
 const data=
@@ -1845,6 +2541,12 @@ c.weather_code
 );
 
 
+const windDir=
+windDirectionName(
+c.wind_direction_10m
+);
+
+
 let html=`
 
 <div class="current">
@@ -1882,8 +2584,11 @@ ${weather[1]}
 
 <div class="details">
 
+
 <div class="detail">
-<div class="detail-title">Ощущается</div>
+<div class="detail-title">
+Ощущается
+</div>
 <div class="detail-value">
 ${Math.round(c.apparent_temperature)}°
 </div>
@@ -1891,7 +2596,9 @@ ${Math.round(c.apparent_temperature)}°
 
 
 <div class="detail">
-<div class="detail-title">Влажность</div>
+<div class="detail-title">
+Влажность
+</div>
 <div class="detail-value">
 ${c.relative_humidity_2m}%
 </div>
@@ -1899,15 +2606,30 @@ ${c.relative_humidity_2m}%
 
 
 <div class="detail">
-<div class="detail-title">Ветер</div>
+<div class="detail-title">
+Ветер
+</div>
 <div class="detail-value">
-${Math.round(c.wind_speed_10m)} км/ч
+${windDir}
+ ${Math.round(c.wind_speed_10m)} км/ч
 </div>
 </div>
 
 
 <div class="detail">
-<div class="detail-title">Давление</div>
+<div class="detail-title">
+Направление
+</div>
+<div class="detail-value">
+${Math.round(c.wind_direction_10m)}°
+</div>
+</div>
+
+
+<div class="detail">
+<div class="detail-title">
+Давление
+</div>
 <div class="detail-value">
 ${Math.round(c.pressure_msl)} hPa
 </div>
@@ -1915,7 +2637,9 @@ ${Math.round(c.pressure_msl)} hPa
 
 
 <div class="detail">
-<div class="detail-title">Осадки</div>
+<div class="detail-title">
+Осадки
+</div>
 <div class="detail-value">
 ${c.precipitation} мм
 </div>
@@ -1923,27 +2647,26 @@ ${c.precipitation} мм
 
 
 <div class="detail">
-<div class="detail-title">Максимум</div>
+<div class="detail-title">
+Максимум
+</div>
 <div class="detail-value">
-${Math.round(d.temperature_2m_max[0])}°
+${Math.round(
+d.temperature_2m_max[0]
+)}°
 </div>
 </div>
 
 
 <div class="detail">
-<div class="detail-title">Минимум</div>
-<div class="detail-value">
-${Math.round(d.temperature_2m_min[0])}°
+<div class="detail-title">
+Вероятность осадков
 </div>
-</div>
-
-
-<div class="detail">
-<div class="detail-title">Вероятность осадков</div>
 <div class="detail-value">
 ${d.precipitation_probability_max[0]}%
 </div>
 </div>
+
 
 </div>
 
@@ -1953,7 +2676,6 @@ ${d.precipitation_probability_max[0]}%
 <div class="section-title">
 Прогноз на 7 дней
 </div>
-
 
 <div class="forecast">
 
@@ -1978,9 +2700,10 @@ d.weather_code[i]
 );
 
 
-const dayName=
+const name=
 i===0
-?"Сегодня"
+?
+"Сегодня"
 :
 date.toLocaleDateString(
 "ru-RU",
@@ -1995,7 +2718,7 @@ html+=`
 <div class="day">
 
 <div class="day-name">
-${dayName}
+${name}
 </div>
 
 <div class="day-icon">
@@ -2111,7 +2834,7 @@ document
 
 
 /* =========================================================
-   ENTER
+   ENTER SEARCH
 ========================================================= */
 
 document
@@ -2120,10 +2843,11 @@ document
 )
 .addEventListener(
 "keydown",
-event=>{
+function(event){
 
 if(
-event.key==="Enter"
+event.key===
+"Enter"
 ){
 
 searchCity();
@@ -2139,6 +2863,8 @@ searchCity();
 ========================================================= */
 
 createMaps();
+
+updateLegend();
 
 searchCity();
 
