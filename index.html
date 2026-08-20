@@ -18,7 +18,7 @@
 html,body{
     width:100%;
     min-height:100%;
-    background:#07101c;
+    background:#07101b;
     color:#fff;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
@@ -31,16 +31,16 @@ body{
     width:100%;
     max-width:1000px;
     margin:auto;
-    padding:16px;
+    padding:15px;
 }
 
 /* HEADER */
 
 header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    margin-bottom:18px;
+    align-items:center;
+    margin-bottom:17px;
 }
 
 .logo{
@@ -53,7 +53,7 @@ header{
 }
 
 .location-status{
-    color:#91a1b5;
+    color:#8fa0b5;
     font-size:13px;
 }
 
@@ -62,34 +62,33 @@ header{
 .search{
     display:flex;
     gap:9px;
-    margin-bottom:16px;
+    margin-bottom:15px;
 }
 
 .search input{
     flex:1;
     height:50px;
-    border:none;
-    outline:none;
+    border:0;
+    outline:0;
     border-radius:15px;
+    background:#101d2c;
+    color:#fff;
     padding:0 16px;
-    background:#101d2d;
-    color:white;
     font-size:16px;
 }
 
 .search input::placeholder{
-    color:#718198;
+    color:#718095;
 }
 
 .search button{
     width:52px;
     height:50px;
-    border:none;
+    border:0;
     border-radius:15px;
-    background:#2588ff;
+    background:#2689ff;
     color:white;
     font-size:23px;
-    cursor:pointer;
 }
 
 /* ERROR */
@@ -97,26 +96,25 @@ header{
 .error{
     display:none;
     background:#35151d;
-    color:#ff9aa7;
+    color:#ff9ca8;
     padding:14px;
     border-radius:14px;
     margin-bottom:15px;
 }
 
-/* CURRENT WEATHER */
+/* CURRENT */
 
 .current{
-    background:linear-gradient(145deg,#112c4a,#091523);
+    background:linear-gradient(145deg,#112d4c,#091522);
     border:1px solid rgba(255,255,255,.06);
     border-radius:24px;
-    padding:23px;
-    margin-bottom:16px;
+    padding:22px;
 }
 
 .current-top{
     display:flex;
-    align-items:flex-start;
     justify-content:space-between;
+    align-items:flex-start;
 }
 
 .city{
@@ -126,18 +124,18 @@ header{
 
 .date{
     margin-top:5px;
-    color:#8ea0b6;
+    color:#8fa0b5;
     font-size:14px;
     text-transform:capitalize;
 }
 
 .weather-icon{
-    font-size:55px;
+    font-size:54px;
 }
 
 .temperature{
-    margin-top:5px;
-    font-size:72px;
+    margin-top:7px;
+    font-size:70px;
     line-height:1;
     font-weight:700;
 }
@@ -145,7 +143,7 @@ header{
 .description{
     margin-top:8px;
     font-size:18px;
-    color:#c5d0df;
+    color:#c4cfdd;
 }
 
 /* DETAILS */
@@ -182,13 +180,13 @@ header{
     margin:23px 0 11px;
 }
 
-/* FORECAST */
+/* DAYS */
 
 .forecast{
     display:flex;
     gap:9px;
     overflow-x:auto;
-    padding-bottom:3px;
+    padding-bottom:2px;
 }
 
 .forecast::-webkit-scrollbar{
@@ -197,14 +195,14 @@ header{
 
 .day{
     min-width:112px;
-    background:#101d2d;
+    background:#101d2c;
     border-radius:17px;
     padding:14px;
     text-align:center;
 }
 
 .day-name{
-    color:#9aaabe;
+    color:#9aaabd;
     font-size:13px;
 }
 
@@ -219,124 +217,153 @@ header{
 }
 
 .day-rain{
-    color:#5ea8ff;
+    color:#61aaff;
     font-size:12px;
     margin-top:7px;
 }
 
-/* MAP */
+/* MAP PREVIEW */
 
-.map-container{
+.map-preview{
     position:relative;
     width:100%;
-    height:520px;
-    border-radius:22px;
+    height:180px;
+    border-radius:20px;
     overflow:hidden;
+    background:#080e16;
     border:1px solid rgba(255,255,255,.08);
-    background:#070d15;
 }
 
-#map{
+#previewMap{
     width:100%;
     height:100%;
 }
 
-/* DARK MAP */
+/* OPEN BUTTON */
+
+.open-map-button{
+    position:absolute;
+    z-index:1000;
+    right:10px;
+    bottom:10px;
+
+    border:0;
+    border-radius:10px;
+
+    padding:9px 13px;
+
+    background:rgba(7,15,27,.94);
+    color:white;
+
+    font-size:13px;
+    font-weight:600;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.35);
+}
+
+/* FULL MAP */
+
+.map-fullscreen{
+    display:none;
+
+    position:fixed;
+    z-index:99999;
+
+    inset:0;
+
+    width:100vw;
+    height:100vh;
+
+    background:#060c14;
+}
+
+.map-fullscreen.open{
+    display:block;
+}
+
+#fullMap{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+}
+
+/* CLOSE */
+
+.close-map-button{
+    position:absolute;
+    z-index:10000;
+
+    top:15px;
+    right:15px;
+
+    border:0;
+    border-radius:12px;
+
+    background:rgba(7,15,27,.94);
+    color:white;
+
+    padding:11px 15px;
+
+    font-size:14px;
+    font-weight:650;
+
+    box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+
+/* MAP LAYERS */
+
+.layer-panel{
+    position:absolute;
+    z-index:10000;
+
+    top:15px;
+    left:15px;
+
+    display:flex;
+    gap:6px;
+
+    padding:6px;
+
+    background:rgba(7,15,27,.9);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:13px;
+
+    backdrop-filter:blur(12px);
+}
+
+.layer-button{
+    border:0;
+
+    background:#142236;
+    color:#aebdce;
+
+    padding:9px 11px;
+
+    border-radius:9px;
+
+    font-size:12px;
+    white-space:nowrap;
+}
+
+.layer-button.active{
+    background:#2689ff;
+    color:white;
+}
+
+/* LEAFLET */
 
 .leaflet-container{
     background:#070d15;
 }
 
-.map-panel{
-    position:absolute;
-    z-index:1000;
-    top:12px;
-    right:12px;
-
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-
-    padding:7px;
-
-    background:rgba(5,11,20,.92);
-    backdrop-filter:blur(12px);
-
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:14px;
-}
-
-.map-button{
-    border:none;
-    background:#111f31;
-    color:#b8c5d5;
-    padding:9px 12px;
-    border-radius:9px;
-    font-size:13px;
-    cursor:pointer;
-    white-space:nowrap;
-}
-
-.map-button.active{
-    background:#2689ff;
-    color:white;
-}
-
-/* LEGEND */
-
-.legend{
-    position:absolute;
-    z-index:1000;
-    left:12px;
-    bottom:12px;
-
-    background:rgba(5,11,20,.92);
-    backdrop-filter:blur(12px);
-
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:13px;
-
-    padding:11px 13px;
-
-    font-size:12px;
-    color:#d8e0eb;
-}
-
-.legend-title{
-    font-weight:650;
-    margin-bottom:7px;
-}
-
-.gradient{
-    width:160px;
-    height:9px;
-    border-radius:8px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #2c7bb6,
-            #abd9e9,
-            #ffffbf,
-            #fdae61,
-            #d7191c
-        );
-}
-
-.legend-labels{
-    width:160px;
-    display:flex;
-    justify-content:space-between;
-    margin-top:4px;
-    color:#91a0b3;
-}
-
-/* LEAFLET CONTROLS */
-
 .leaflet-control-zoom a{
-    background:#0d1928!important;
-    color:#fff!important;
-    border-color:#26374b!important;
+    background:#101c2b!important;
+    color:white!important;
+    border-color:#26384d!important;
 }
 
 .leaflet-control-attribution{
@@ -345,7 +372,15 @@ header{
 }
 
 .leaflet-control-attribution a{
-    color:#6daaff!important;
+    color:#70aaff!important;
+}
+
+/* LOADING */
+
+.loading{
+    text-align:center;
+    color:#8c9caf;
+    padding:40px 0;
 }
 
 /* MOBILE */
@@ -368,19 +403,20 @@ header{
         padding:19px;
     }
 
-    .map-container{
-        height:430px;
-        border-radius:19px;
+    .map-preview{
+        height:170px;
     }
 
-    .map-panel{
-        top:8px;
-        right:8px;
+    .layer-panel{
+        top:10px;
+        left:10px;
+        right:10px;
+        overflow-x:auto;
     }
 
-    .map-button{
-        padding:8px 9px;
-        font-size:12px;
+    .close-map-button{
+        top:10px;
+        right:10px;
     }
 }
 </style>
@@ -395,7 +431,10 @@ header{
         Метео<span>•</span>
     </div>
 
-    <div class="location-status" id="locationStatus">
+    <div
+        class="location-status"
+        id="locationStatus"
+    >
         Погода
     </div>
 </header>
@@ -410,53 +449,82 @@ header{
         placeholder="Введите город..."
     >
 
-    <button onclick="searchCity()">⌕</button>
+    <button onclick="searchCity()">
+        ⌕
+    </button>
 
 </div>
 
 
-<div class="error" id="error"></div>
+<div
+    class="error"
+    id="error"
+></div>
 
 
 <div id="weather">
+
     <div class="loading">
         Загрузка погоды...
     </div>
+
 </div>
 
+
+<!-- КАРТА-ПРЕВЬЮ -->
 
 <div class="section-title">
     Карта прогнозов
 </div>
 
+<div class="map-preview">
 
-<div class="map-container">
+    <div id="previewMap"></div>
 
-    <div id="map"></div>
+    <button
+        class="open-map-button"
+        onclick="openMap()"
+    >
+        Открыть карту
+    </button>
+
+</div>
+
+</div>
 
 
-    <div class="map-panel">
+<!-- ПОЛНОЭКРАННАЯ КАРТА -->
+
+<div
+    class="map-fullscreen"
+    id="mapFullscreen"
+>
+
+    <div id="fullMap"></div>
+
+
+    <div class="layer-panel">
 
         <button
-            class="map-button active"
-            id="tempButton"
-            onclick="changeMapLayer('temperature')"
+            class="layer-button active"
+            id="temperatureButton"
+            onclick="changeLayer('temperature')"
         >
             🌡 Температура
         </button>
 
         <button
-            class="map-button"
+            class="layer-button"
             id="rainButton"
-            onclick="changeMapLayer('rain')"
+            onclick="changeLayer('rain')"
         >
             🌧 Осадки
         </button>
 
         <button
-            class="map-button"
+            class="layer-button"
             id="windButton"
-            onclick="changeMapLayer('wind')"
+            onclick="changeLayer('wind')"
         >
             💨 Ветер
         </button>
@@ -464,23 +532,12 @@ header{
     </div>
 
 
-    <div class="legend" id="legend">
-
-        <div class="legend-title">
-            Температура
-        </div>
-
-        <div class="gradient"></div>
-
-        <div class="legend-labels">
-            <span>−30°</span>
-            <span>0°</span>
-            <span>+30°</span>
-        </div>
-
-    </div>
-
-</div>
+    <button
+        class="close-map-button"
+        onclick="closeMap()"
+    >
+        Закрыть карту
+    </button>
 
 </div>
 
@@ -489,7 +546,11 @@ header{
 
 <script>
 
-const weatherCodes = {
+/* =========================================================
+   WEATHER
+========================================================= */
+
+const weatherCodes={
 
     0:["☀️","Ясно"],
     1:["🌤️","Преимущественно ясно"],
@@ -534,309 +595,136 @@ const weatherCodes = {
 
 
 function getWeather(code){
+
     return weatherCodes[code] || ["🌡️","Неизвестно"];
+
 }
 
 
-/* MAP */
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-let map;
+let latitude=54.7388;
+let longitude=55.9721;
 
-let currentLat = 54.7388;
-let currentLon = 55.9721;
+let previewMap;
+let fullMap;
 
-let currentMapLayer = "temperature";
-
-let mapCanvasLayer = null;
+let selectedLayer="temperature";
 
 
-function initMap(){
+/* =========================================================
+   DARK MAP
+========================================================= */
 
-    map = L.map("map",{
-        zoomControl:true,
-        attributionControl:true
-    }).setView(
-        [currentLat,currentLon],
+function createMaps(){
+
+    previewMap=L.map(
+        "previewMap",
+        {
+            zoomControl:false,
+            attributionControl:false
+        }
+    ).setView(
+        [latitude,longitude],
         5
     );
 
-    /*
-       ТЁМНАЯ КАРТА CARTO
-    */
 
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
             maxZoom:20,
-            attribution:"© OpenStreetMap © CARTO",
-            subdomains:"abcd"
+            subdomains:"abcd",
+            attribution:"© OpenStreetMap © CARTO"
         }
-    ).addTo(map);
-
-    updateForecastMap();
-}
+    ).addTo(previewMap);
 
 
-/* FORECAST MAP */
-
-async function updateForecastMap(){
-
-    if(!map) return;
-
-    if(mapCanvasLayer){
-        mapCanvasLayer.remove();
-        mapCanvasLayer=null;
-    }
-
-    try{
-
-        const center=map.getCenter();
-
-        const lat=center.lat;
-        const lon=center.lng;
-
-        const gridSize=9;
-        const points=[];
-
-        for(let y=0;y<gridSize;y++){
-
-            for(let x=0;x<gridSize;x++){
-
-                const pLat=
-                    lat+((y-4)*1.8);
-
-                const pLon=
-                    lon+((x-4)*2.8);
-
-                points.push([pLat,pLon]);
-            }
+    fullMap=L.map(
+        "fullMap",
+        {
+            zoomControl:true,
+            attributionControl:true
         }
-
-        const requests=points.map(point=>{
-
-            return fetch(
-                `https://api.open-meteo.com/v1/forecast?latitude=${point[0]}&longitude=${point[1]}&current=temperature_2m,precipitation,wind_speed_10m`
-            ).then(r=>r.json());
-
-        });
-
-        const results=
-            await Promise.all(requests);
-
-        const canvas=
-            document.createElement("canvas");
-
-        const rect=
-            map.getContainer().getBoundingClientRect();
-
-        canvas.width=rect.width;
-        canvas.height=rect.height;
-
-        canvas.style.position="absolute";
-        canvas.style.left="0";
-        canvas.style.top="0";
-        canvas.style.pointerEvents="none";
-        canvas.style.zIndex="300";
-
-        map.getPanes()
-            .overlayPane
-            .appendChild(canvas);
-
-        const ctx=
-            canvas.getContext("2d");
+    ).setView(
+        [latitude,longitude],
+        5
+    );
 
 
-        function draw(){
-
-            ctx.clearRect(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            for(let i=0;i<points.length;i++){
-
-                const result=results[i];
-
-                if(!result.current)
-                    continue;
-
-                const pos=
-                    map.latLngToContainerPoint(
-                        points[i]
-                    );
-
-                let value;
-
-                if(currentMapLayer==="temperature"){
-                    value=result.current.temperature_2m;
-                }
-                else if(currentMapLayer==="rain"){
-                    value=result.current.precipitation;
-                }
-                else{
-                    value=result.current.wind_speed_10m;
-                }
-
-                const radius=105;
-
-                let color;
-
-                if(currentMapLayer==="temperature"){
-                    color=temperatureColor(value);
-                }
-                else if(currentMapLayer==="rain"){
-                    color=rainColor(value);
-                }
-                else{
-                    color=windColor(value);
-                }
-
-                const gradient=
-                    ctx.createRadialGradient(
-                        pos.x,
-                        pos.y,
-                        0,
-                        pos.x,
-                        pos.y,
-                        radius
-                    );
-
-                gradient.addColorStop(
-                    0,
-                    color
-                );
-
-                gradient.addColorStop(
-                    1,
-                    "rgba(0,0,0,0)"
-                );
-
-                ctx.fillStyle=gradient;
-
-                ctx.beginPath();
-
-                ctx.arc(
-                    pos.x,
-                    pos.y,
-                    radius,
-                    0,
-                    Math.PI*2
-                );
-
-                ctx.fill();
-            }
+    L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+            maxZoom:20,
+            subdomains:"abcd",
+            attribution:"© OpenStreetMap © CARTO"
         }
+    ).addTo(fullMap);
 
 
-        draw();
+    L.marker(
+        [latitude,longitude]
+    )
+    .addTo(fullMap)
+    .bindPopup("Текущая точка");
 
-        map.on(
-            "move zoom resize",
-            draw
-        );
+
+    L.marker(
+        [latitude,longitude]
+    )
+    .addTo(previewMap);
 
 
-        mapCanvasLayer={
-            canvas:canvas,
-
-            remove:function(){
-
-                map.off(
-                    "move zoom resize",
-                    draw
-                );
-
-                canvas.remove();
-            }
-        };
-
-    }
-    catch(error){
-
-        console.log(
-            "Ошибка карты:",
-            error
-        );
-
-    }
 }
 
 
-/* COLORS */
+/* =========================================================
+   OPEN / CLOSE MAP
+========================================================= */
 
-function temperatureColor(t){
-
-    if(t<=-20)
-        return "rgba(40,90,190,.65)";
-
-    if(t<=-10)
-        return "rgba(70,145,230,.65)";
-
-    if(t<=0)
-        return "rgba(90,190,235,.65)";
-
-    if(t<=10)
-        return "rgba(150,220,170,.65)";
-
-    if(t<=20)
-        return "rgba(250,220,80,.65)";
-
-    if(t<=30)
-        return "rgba(245,145,55,.65)";
-
-    return "rgba(220,45,40,.65)";
-}
-
-
-function rainColor(r){
-
-    if(r<=0)
-        return "rgba(0,0,0,0)";
-
-    if(r<0.5)
-        return "rgba(80,180,255,.35)";
-
-    if(r<2)
-        return "rgba(30,130,255,.5)";
-
-    if(r<5)
-        return "rgba(30,80,220,.6)";
-
-    if(r<10)
-        return "rgba(150,50,230,.65)";
-
-    return "rgba(220,40,120,.7)";
-}
-
-
-function windColor(w){
-
-    if(w<10)
-        return "rgba(80,190,160,.35)";
-
-    if(w<20)
-        return "rgba(80,210,100,.5)";
-
-    if(w<30)
-        return "rgba(245,210,60,.6)";
-
-    if(w<40)
-        return "rgba(245,130,50,.65)";
-
-    return "rgba(220,45,45,.7)";
-}
-
-
-/* MAP BUTTONS */
-
-function changeMapLayer(layer){
-
-    currentMapLayer=layer;
+function openMap(){
 
     document
-        .querySelectorAll(".map-button")
+        .getElementById("mapFullscreen")
+        .classList.add("open");
+
+
+    setTimeout(()=>{
+
+        fullMap.invalidateSize();
+
+        fullMap.setView(
+            [latitude,longitude],
+            5
+        );
+
+    },100);
+
+}
+
+
+function closeMap(){
+
+    document
+        .getElementById("mapFullscreen")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   LAYERS
+========================================================= */
+
+function changeLayer(layer){
+
+    selectedLayer=layer;
+
+
+    document
+        .querySelectorAll(".layer-button")
         .forEach(button=>{
             button.classList.remove("active");
         });
@@ -845,26 +733,9 @@ function changeMapLayer(layer){
     if(layer==="temperature"){
 
         document
-            .getElementById("tempButton")
+            .getElementById("temperatureButton")
             .classList.add("active");
 
-        document
-            .getElementById("legend")
-            .innerHTML=`
-
-                <div class="legend-title">
-                    Температура
-                </div>
-
-                <div class="gradient"></div>
-
-                <div class="legend-labels">
-                    <span>−30°</span>
-                    <span>0°</span>
-                    <span>+30°</span>
-                </div>
-
-            `;
     }
 
 
@@ -874,35 +745,6 @@ function changeMapLayer(layer){
             .getElementById("rainButton")
             .classList.add("active");
 
-        document
-            .getElementById("legend")
-            .innerHTML=`
-
-                <div class="legend-title">
-                    Осадки
-                </div>
-
-                <div
-                    class="gradient"
-                    style="
-                        background:
-                        linear-gradient(
-                            90deg,
-                            #55bfff,
-                            #206cff,
-                            #7930df,
-                            #dc2878
-                        );
-                    "
-                ></div>
-
-                <div class="legend-labels">
-                    <span>0 мм</span>
-                    <span>5 мм</span>
-                    <span>10+ мм</span>
-                </div>
-
-            `;
     }
 
 
@@ -912,44 +754,14 @@ function changeMapLayer(layer){
             .getElementById("windButton")
             .classList.add("active");
 
-        document
-            .getElementById("legend")
-            .innerHTML=`
-
-                <div class="legend-title">
-                    Ветер
-                </div>
-
-                <div
-                    class="gradient"
-                    style="
-                        background:
-                        linear-gradient(
-                            90deg,
-                            #50c09f,
-                            #54d26a,
-                            #f5d23c,
-                            #f58232,
-                            #dc2d2d
-                        );
-                    "
-                ></div>
-
-                <div class="legend-labels">
-                    <span>0</span>
-                    <span>20</span>
-                    <span>40+ км/ч</span>
-                </div>
-
-            `;
     }
 
-
-    updateForecastMap();
 }
 
 
-/* SEARCH */
+/* =========================================================
+   SEARCH
+========================================================= */
 
 async function searchCity(){
 
@@ -959,21 +771,25 @@ async function searchCity(){
             .value
             .trim();
 
+
     if(!city)
         return;
 
+
     showLoading();
+
 
     try{
 
-        const url=
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ru&format=json`;
-
         const response=
-            await fetch(url);
+            await fetch(
+                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ru&format=json`
+            );
+
 
         const data=
             await response.json();
+
 
         if(
             !data.results ||
@@ -983,26 +799,40 @@ async function searchCity(){
             throw new Error(
                 "Город не найден"
             );
+
         }
 
-        const place=data.results[0];
 
-        currentLat=place.latitude;
-        currentLon=place.longitude;
+        const place=
+            data.results[0];
 
-        map.setView(
-            [currentLat,currentLon],
-            7
+
+        latitude=
+            place.latitude;
+
+        longitude=
+            place.longitude;
+
+
+        previewMap.setView(
+            [latitude,longitude],
+            6
         );
 
+
+        fullMap.setView(
+            [latitude,longitude],
+            6
+        );
+
+
         await loadWeather(
-            currentLat,
-            currentLon,
+            latitude,
+            longitude,
             place.name,
             place.country
         );
 
-        updateForecastMap();
 
     }
     catch(error){
@@ -1010,11 +840,15 @@ async function searchCity(){
         showError(
             error.message
         );
+
     }
+
 }
 
 
-/* WEATHER */
+/* =========================================================
+   WEATHER API
+========================================================= */
 
 async function loadWeather(
     lat,
@@ -1026,31 +860,39 @@ async function loadWeather(
     const url=
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`+
         `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m`+
-        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum`+
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max`+
         `&timezone=auto`;
+
 
     const response=
         await fetch(url);
 
+
     if(!response.ok){
 
         throw new Error(
-            "Не удалось получить погоду"
+            "Ошибка получения погоды"
         );
+
     }
+
 
     const data=
         await response.json();
+
 
     renderWeather(
         data,
         city,
         country
     );
+
 }
 
 
-/* RENDER */
+/* =========================================================
+   RENDER WEATHER
+========================================================= */
 
 function renderWeather(
     data,
@@ -1058,13 +900,17 @@ function renderWeather(
     country
 ){
 
-    const current=data.current;
-    const daily=data.daily;
+    const current=
+        data.current;
+
+    const daily=
+        data.daily;
 
     const weather=
         getWeather(
             current.weather_code
         );
+
 
     document
         .getElementById("locationStatus")
@@ -1072,7 +918,9 @@ function renderWeather(
             country || "";
 
 
-    const now=new Date();
+    const date=
+        new Date();
+
 
     let html=`
 
@@ -1087,7 +935,7 @@ function renderWeather(
                     </div>
 
                     <div class="date">
-                        ${formatDate(now)}
+                        ${formatDate(date)}
                     </div>
 
                 </div>
@@ -1218,20 +1066,22 @@ function renderWeather(
 
     for(let i=0;i<7;i++){
 
-        const date=
+        const d=
             new Date(
                 daily.time[i]+"T12:00:00"
             );
 
-        const dayWeather=
+
+        const w=
             getWeather(
                 daily.weather_code[i]
             );
 
+
         const dayName=
             i===0
                 ? "Сегодня"
-                : date.toLocaleDateString(
+                : d.toLocaleDateString(
                     "ru-RU",
                     {
                         weekday:"short"
@@ -1248,7 +1098,7 @@ function renderWeather(
                 </div>
 
                 <div class="day-icon">
-                    ${dayWeather[0]}
+                    ${w[0]}
                 </div>
 
                 <div class="day-temp">
@@ -1269,6 +1119,7 @@ function renderWeather(
             </div>
 
         `;
+
     }
 
 
@@ -1281,10 +1132,13 @@ function renderWeather(
         .getElementById("weather")
         .innerHTML=
             html;
+
 }
 
 
-/* HELPERS */
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function formatDate(date){
 
@@ -1296,6 +1150,7 @@ function formatDate(date){
             month:"long"
         }
     );
+
 }
 
 
@@ -1305,6 +1160,7 @@ function showLoading(){
         .getElementById("error")
         .style.display="none";
 
+
     document
         .getElementById("weather")
         .innerHTML=`
@@ -1312,6 +1168,7 @@ function showLoading(){
                 Загрузка погоды...
             </div>
         `;
+
 }
 
 
@@ -1321,22 +1178,31 @@ function showError(message){
         document
             .getElementById("error");
 
-    error.textContent=message;
-    error.style.display="block";
+
+    error.textContent=
+        message;
+
+
+    error.style.display=
+        "block";
+
 
     document
         .getElementById("weather")
         .innerHTML="";
+
 }
 
+
+/* ENTER */
 
 document
     .getElementById("cityInput")
     .addEventListener(
         "keydown",
-        function(event){
+        function(e){
 
-            if(event.key==="Enter"){
+            if(e.key==="Enter"){
                 searchCity();
             }
 
@@ -1346,7 +1212,8 @@ document
 
 /* START */
 
-initMap();
+createMaps();
+
 searchCity();
 
 </script>
