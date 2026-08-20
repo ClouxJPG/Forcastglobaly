@@ -2,15 +2,14 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Meteo Forecast</title>
+<title>Метео — прогноз погоды</title>
 
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -35,8 +34,6 @@ body{
     padding:14px;
 }
 
-/* HEADER */
-
 header{
     display:flex;
     justify-content:space-between;
@@ -57,8 +54,6 @@ header{
     color:#899bb0;
     font-size:13px;
 }
-
-/* SEARCH */
 
 .search{
     display:flex;
@@ -88,11 +83,9 @@ header{
     border:0;
     border-radius:15px;
     background:#2689ff;
-    color:white;
+    color:#fff;
     font-size:23px;
 }
-
-/* ERROR */
 
 .error{
     display:none;
@@ -102,8 +95,6 @@ header{
     background:#35151d;
     color:#ff9daa;
 }
-
-/* CURRENT */
 
 .current{
     background:linear-gradient(145deg,#112d4c,#091521);
@@ -147,8 +138,6 @@ header{
     font-size:18px;
 }
 
-/* DETAILS */
-
 .details{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -173,15 +162,11 @@ header{
     font-weight:650;
 }
 
-/* SECTION */
-
 .section-title{
     font-size:20px;
     font-weight:700;
     margin:23px 0 11px;
 }
-
-/* FORECAST */
 
 .forecast{
     display:flex;
@@ -222,11 +207,9 @@ header{
     font-size:12px;
 }
 
-/* MAP PREVIEW */
-
 .map-preview{
     position:relative;
-    height:220px;
+    height:250px;
     width:100%;
     overflow:hidden;
     border-radius:21px;
@@ -244,50 +227,35 @@ header{
     left:12px;
     top:12px;
     z-index:1000;
-
     padding:7px 10px;
     border-radius:9px;
-
     background:rgba(5,12,21,.88);
     backdrop-filter:blur(10px);
-
     color:#cbd6e2;
     font-size:12px;
 }
-
-/* OPEN */
 
 .open-map{
     position:absolute;
     right:10px;
     bottom:10px;
     z-index:1000;
-
     border:0;
     border-radius:10px;
-
     padding:9px 13px;
-
     background:rgba(5,12,21,.94);
     color:#fff;
-
     font-size:13px;
     font-weight:650;
 }
 
-/* FULLSCREEN MAP */
-
 .fullscreen-map{
     display:none;
-
     position:fixed;
     inset:0;
-
     z-index:99999;
-
     width:100vw;
     height:100vh;
-
     background:#060c14;
 }
 
@@ -302,47 +270,36 @@ header{
     height:100%;
 }
 
-/* MAP TOP BAR */
-
 .map-top{
     position:absolute;
     z-index:10000;
-
     top:12px;
     left:12px;
     right:12px;
-
     display:flex;
     justify-content:space-between;
-    align-items:center;
-
+    align-items:flex-start;
+    gap:10px;
     pointer-events:none;
 }
 
 .map-layers{
     display:flex;
     gap:5px;
-
     padding:6px;
-
     background:rgba(5,12,21,.92);
     backdrop-filter:blur(12px);
-
     border:1px solid rgba(255,255,255,.1);
     border-radius:13px;
-
     pointer-events:auto;
 }
 
 .layer{
     border:0;
     border-radius:9px;
-
     padding:9px 11px;
-
     background:#111f30;
     color:#aebdce;
-
     font-size:12px;
     white-space:nowrap;
 }
@@ -355,37 +312,25 @@ header{
 .close-map{
     border:0;
     border-radius:11px;
-
     padding:10px 14px;
-
     background:rgba(5,12,21,.94);
     color:#fff;
-
     font-size:13px;
     font-weight:650;
-
     pointer-events:auto;
 }
-
-/* MAP INFO */
 
 .map-info{
     position:absolute;
     z-index:10000;
-
     left:12px;
     bottom:12px;
-
-    min-width:170px;
-
+    min-width:180px;
     padding:11px 13px;
-
     background:rgba(5,12,21,.92);
     backdrop-filter:blur(12px);
-
     border:1px solid rgba(255,255,255,.1);
     border-radius:13px;
-
     pointer-events:none;
 }
 
@@ -396,30 +341,39 @@ header{
 }
 
 .map-gradient{
-    width:170px;
+    width:180px;
     height:9px;
     border-radius:10px;
 }
 
 .map-values{
-    width:170px;
+    width:180px;
     display:flex;
     justify-content:space-between;
     margin-top:4px;
-
     color:#8495a9;
     font-size:10px;
 }
 
-/* LOADING */
+.map-loading{
+    position:absolute;
+    z-index:10001;
+    top:75px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:9px 13px;
+    border-radius:11px;
+    background:rgba(5,12,21,.92);
+    font-size:12px;
+    color:#c7d2df;
+    display:none;
+}
 
 .loading{
     text-align:center;
     padding:40px 0;
     color:#899bb0;
 }
-
-/* LEAFLET */
 
 .leaflet-container{
     background:#060d15;
@@ -440,8 +394,6 @@ header{
     color:#71aaff!important;
 }
 
-/* MOBILE */
-
 @media(max-width:650px){
 
     .app{
@@ -457,14 +409,13 @@ header{
     }
 
     .map-preview{
-        height:210px;
+        height:220px;
     }
 
     .map-top{
         left:8px;
         right:8px;
         top:8px;
-        align-items:flex-start;
     }
 
     .map-layers{
@@ -484,9 +435,7 @@ header{
         left:8px;
         bottom:8px;
     }
-
 }
-
 </style>
 </head>
 
@@ -504,7 +453,7 @@ header{
         class="location-status"
         id="locationStatus"
     >
-        DWD ICON
+        Город не выбран
     </div>
 
 </header>
@@ -534,7 +483,7 @@ header{
 <div id="weather">
 
     <div class="loading">
-        Загрузка DWD ICON...
+        Загрузка прогноза...
     </div>
 
 </div>
@@ -550,7 +499,7 @@ header{
     <div id="previewMap"></div>
 
     <div class="preview-label">
-        DWD ICON Global
+        Реальный DWD ICON Global
     </div>
 
     <button
@@ -564,8 +513,6 @@ header{
 
 </div>
 
-
-<!-- FULLSCREEN -->
 
 <div
     class="fullscreen-map"
@@ -616,6 +563,14 @@ header{
     </div>
 
 
+    <div
+        class="map-loading"
+        id="mapLoading"
+    >
+        Загрузка ICON...
+    </div>
+
+
     <div class="map-info">
 
         <div
@@ -654,51 +609,51 @@ header{
 
 const weatherCodes={
 
-    0:["☀️","Ясно"],
-    1:["🌤️","Преимущественно ясно"],
-    2:["⛅","Переменная облачность"],
-    3:["☁️","Пасмурно"],
+0:["☀️","Ясно"],
+1:["🌤️","Преимущественно ясно"],
+2:["⛅","Переменная облачность"],
+3:["☁️","Пасмурно"],
 
-    45:["🌫️","Туман"],
-    48:["🌫️","Изморозь"],
+45:["🌫️","Туман"],
+48:["🌫️","Изморозь"],
 
-    51:["🌦️","Морось"],
-    53:["🌦️","Морось"],
-    55:["🌧️","Сильная морось"],
+51:["🌦️","Морось"],
+53:["🌦️","Морось"],
+55:["🌧️","Сильная морось"],
 
-    56:["🌧️","Ледяная морось"],
-    57:["🌧️","Сильная ледяная морось"],
+56:["🌧️","Ледяная морось"],
+57:["🌧️","Сильная ледяная морось"],
 
-    61:["🌧️","Небольшой дождь"],
-    63:["🌧️","Дождь"],
-    65:["🌧️","Сильный дождь"],
+61:["🌧️","Небольшой дождь"],
+63:["🌧️","Дождь"],
+65:["🌧️","Сильный дождь"],
 
-    66:["🌧️","Ледяной дождь"],
-    67:["🌧️","Сильный ледяной дождь"],
+66:["🌧️","Ледяной дождь"],
+67:["🌧️","Сильный ледяной дождь"],
 
-    71:["🌨️","Небольшой снег"],
-    73:["🌨️","Снег"],
-    75:["❄️","Сильный снег"],
+71:["🌨️","Небольшой снег"],
+73:["🌨️","Снег"],
+75:["❄️","Сильный снег"],
 
-    77:["🌨️","Снежные зерна"],
+77:["🌨️","Снежные зерна"],
 
-    80:["🌦️","Ливень"],
-    81:["🌧️","Сильный ливень"],
-    82:["⛈️","Очень сильный ливень"],
+80:["🌦️","Ливень"],
+81:["🌧️","Сильный ливень"],
+82:["⛈️","Очень сильный ливень"],
 
-    85:["🌨️","Снегопад"],
-    86:["❄️","Сильный снегопад"],
+85:["🌨️","Снегопад"],
+86:["❄️","Сильный снегопад"],
 
-    95:["⛈️","Гроза"],
-    96:["⛈️","Гроза с градом"],
-    99:["⛈️","Сильная гроза с градом"]
+95:["⛈️","Гроза"],
+96:["⛈️","Гроза с градом"],
+99:["⛈️","Сильная гроза с градом"]
 
 };
 
 
 function getWeather(code){
 
-    return weatherCodes[code] || ["🌡️","Неизвестно"];
+return weatherCodes[code] || ["🌡️","Неизвестно"];
 
 }
 
@@ -712,77 +667,89 @@ let longitude=55.9721;
 
 let previewMap;
 let forecastMap;
-
-let forecastCanvas=null;
+let marker;
 
 let selectedLayer="temperature";
 
 let gridData=null;
+let gridMeta=null;
 
-let gridRows=15;
-let gridCols=15;
+let forecastCanvas=null;
 
-let gridLatMin;
-let gridLatMax;
-let gridLonMin;
-let gridLonMax;
+let renderToken=0;
 
-let mapMarker=null;
+const gridRows=17;
+const gridCols=17;
 
 
 /* =========================================================
-   DARK MAPS
+   MAPS
 ========================================================= */
 
 function createMaps(){
 
-    previewMap=L.map(
-        "previewMap",
-        {
-            zoomControl:false,
-            attributionControl:false,
-            dragging:true,
-            scrollWheelZoom:false
-        }
-    ).setView(
-        [latitude,longitude],
-        5
-    );
+previewMap=L.map(
+"previewMap",
+{
+zoomControl:false,
+attributionControl:false,
+scrollWheelZoom:false
+}
+).setView(
+[latitude,longitude],
+5
+);
 
 
-    L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-            maxZoom:20,
-            subdomains:"abcd",
-            attribution:"© OpenStreetMap © CARTO"
-        }
-    ).addTo(previewMap);
+L.tileLayer(
+"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+{
+maxZoom:20,
+subdomains:"abcd",
+attribution:"© OpenStreetMap © CARTO"
+}
+).addTo(previewMap);
 
 
-    forecastMap=L.map(
-        "forecastMap",
-        {
-            zoomControl:true,
-            attributionControl:true
-        }
-    ).setView(
-        [latitude,longitude],
-        5
-    );
+forecastMap=L.map(
+"forecastMap",
+{
+zoomControl:true,
+attributionControl:true
+}
+).setView(
+[latitude,longitude],
+5
+);
 
 
-    L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-            maxZoom:20,
-            subdomains:"abcd",
-            attribution:"© OpenStreetMap © CARTO"
-        }
-    ).addTo(forecastMap);
+L.tileLayer(
+"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+{
+maxZoom:20,
+subdomains:"abcd",
+attribution:"© OpenStreetMap © CARTO"
+}
+).addTo(forecastMap);
 
 
-    addMarker();
+forecastMap.on(
+"moveend",
+()=>{
+
+if(
+document
+.getElementById("fullscreenMap")
+.classList
+.contains("open")
+){
+
+loadForecastGrid();
+
+}
+
+}
+);
 
 }
 
@@ -791,28 +758,25 @@ function createMaps(){
    MARKER
 ========================================================= */
 
-function addMarker(){
+function updateMarker(){
 
-    if(mapMarker){
+if(marker){
 
-        forecastMap.removeLayer(
-            mapMarker
-        );
+forecastMap.removeLayer(marker);
 
-    }
+}
 
-
-    mapMarker=
-        L.circleMarker(
-            [latitude,longitude],
-            {
-                radius:6,
-                color:"#fff",
-                weight:2,
-                fillColor:"#268cff",
-                fillOpacity:1
-            }
-        ).addTo(forecastMap);
+marker=
+L.circleMarker(
+[latitude,longitude],
+{
+radius:6,
+color:"#fff",
+weight:2,
+fillColor:"#268cff",
+fillOpacity:1
+}
+).addTo(forecastMap);
 
 }
 
@@ -823,23 +787,26 @@ function addMarker(){
 
 function openForecastMap(){
 
-    document
-        .getElementById("fullscreenMap")
-        .classList.add("open");
+document
+.getElementById("fullscreenMap")
+.classList
+.add("open");
 
 
-    setTimeout(()=>{
+setTimeout(()=>{
 
-        forecastMap.invalidateSize();
+forecastMap.invalidateSize();
 
-        forecastMap.setView(
-            [latitude,longitude],
-            5
-        );
+forecastMap.setView(
+[latitude,longitude],
+6
+);
 
-        loadForecastGrid();
+updateMarker();
 
-    },120);
+loadForecastGrid();
+
+},100);
 
 }
 
@@ -850,498 +817,58 @@ function openForecastMap(){
 
 function closeForecastMap(){
 
-    document
-        .getElementById("fullscreenMap")
-        .classList.remove("open");
+document
+.getElementById("fullscreenMap")
+.classList
+.remove("open");
+
+
+if(forecastCanvas){
+
+forecastCanvas.remove();
+
+forecastCanvas=null;
+
+}
 
 }
 
 
 /* =========================================================
-   GET REAL ICON DATA
+   LOADING
 ========================================================= */
 
-async function loadForecastGrid(){
-
-    if(forecastCanvas){
-
-        forecastCanvas.remove();
-
-        forecastCanvas=null;
-
-    }
-
-
-    /*
-       Берём область вокруг текущего
-       положения карты.
-
-       15 × 15 = 225 реальных
-       модельных координат.
-
-       Open-Meteo поддерживает несколько
-       координат в одном запросе.
-    */
-
-    const center=
-        forecastMap.getCenter();
-
-    const zoom=
-        forecastMap.getZoom();
-
-
-    let latStep;
-    let lonStep;
-
-
-    if(zoom<=4){
-
-        latStep=3.0;
-        lonStep=4.5;
-
-    }
-    else if(zoom<=5){
-
-        latStep=2.0;
-        lonStep=3.0;
-
-    }
-    else if(zoom<=6){
-
-        latStep=1.2;
-        lonStep=1.8;
-
-    }
-    else{
-
-        latStep=.65;
-        lonStep=.95;
-
-    }
-
-
-    gridLatMin=
-        center.lat-
-        ((gridRows-1)/2)*latStep;
-
-    gridLatMax=
-        center.lat+
-        ((gridRows-1)/2)*latStep;
-
-    gridLonMin=
-        center.lng-
-        ((gridCols-1)/2)*lonStep;
-
-    gridLonMax=
-        center.lng+
-        ((gridCols-1)/2)*lonStep;
-
-
-    const lats=[];
-    const lons=[];
-
-
-    for(let y=0;y<gridRows;y++){
-
-        const lat=
-            gridLatMin+
-            y*latStep;
-
-
-        for(let x=0;x<gridCols;x++){
-
-            const lon=
-                gridLonMin+
-                x*lonStep;
-
-
-            lats.push(
-                lat.toFixed(3)
-            );
-
-            lons.push(
-                lon.toFixed(3)
-            );
-
-        }
-
-    }
-
-
-    const url=
-        "https://api.open-meteo.com/v1/dwd-icon"+
-        "?latitude="+
-        lats.join(",")+
-        "&longitude="+
-        lons.join(",")+
-        "&hourly=temperature_2m,precipitation,wind_speed_10m"+
-        "&forecast_hours=1"+
-        "&timezone=GMT";
-
-
-    try{
-
-        const response=
-            await fetch(url);
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "ICON API error"
-            );
-
-        }
-
-
-        const data=
-            await response.json();
-
-
-        /*
-           При нескольких координатах
-           Open-Meteo возвращает массив.
-        */
-
-        const locations=
-            Array.isArray(data)
-                ? data
-                : [data];
-
-
-        gridData=
-            locations.map(item=>({
-
-                temperature:
-                    item.hourly?.temperature_2m?.[0] ?? null,
-
-                precipitation:
-                    item.hourly?.precipitation?.[0] ?? null,
-
-                wind:
-                    item.hourly?.wind_speed_10m?.[0] ?? null
-
-            }));
-
-
-        drawForecastCanvas();
-
-
-    }
-    catch(error){
-
-        console.error(
-            "ICON:",
-            error
-        );
-
-    }
+function showMapLoading(show){
+
+document
+.getElementById("mapLoading")
+.style.display=
+show
+?"block"
+:"none";
 
 }
 
 
 /* =========================================================
-   DRAW REAL FORECAST FIELD
+   GET VALUE
 ========================================================= */
 
-function drawForecastCanvas(){
+function getGridValue(item){
 
-    if(!gridData)
-        return;
+if(!item)
+return null;
 
 
-    if(forecastCanvas){
+if(selectedLayer==="temperature")
+return item.temperature;
 
-        forecastCanvas.remove();
 
-    }
+if(selectedLayer==="precipitation")
+return item.precipitation;
 
 
-    const canvas=
-        document.createElement("canvas");
-
-
-    canvas.style.position="absolute";
-    canvas.style.pointerEvents="none";
-    canvas.style.zIndex="450";
-
-
-    const pane=
-        forecastMap.getPanes().overlayPane;
-
-
-    pane.appendChild(canvas);
-
-
-    forecastCanvas=canvas;
-
-
-    function resize(){
-
-        const size=
-            forecastMap.getSize();
-
-
-        canvas.width=
-            Math.max(
-                1,
-                Math.floor(size.x/2)
-            );
-
-
-        canvas.height=
-            Math.max(
-                1,
-                Math.floor(size.y/2)
-            );
-
-
-        canvas.style.width=
-            size.x+"px";
-
-        canvas.style.height=
-            size.y+"px";
-
-
-        draw();
-
-    }
-
-
-    function draw(){
-
-        if(!gridData)
-            return;
-
-
-        const ctx=
-            canvas.getContext("2d");
-
-
-        const w=canvas.width;
-        const h=canvas.height;
-
-
-        ctx.clearRect(
-            0,
-            0,
-            w,
-            h
-        );
-
-
-        /*
-           Рисуем поле через билинейную
-           интерполяцию реальных ICON
-           значений.
-        */
-
-        const image=
-            ctx.createImageData(
-                w,
-                h
-            );
-
-
-        const pixels=
-            image.data;
-
-
-        for(let py=0;py<h;py++){
-
-            const screenY=
-                py*2;
-
-
-            const latlngTop=
-                forecastMap.containerPointToLatLng(
-                    [0,screenY]
-                );
-
-            const latlngBottom=
-                forecastMap.containerPointToLatLng(
-                    [0,screenY+2]
-                );
-
-
-            for(let px=0;px<w;px++){
-
-                const screenX=
-                    px*2;
-
-
-                const p=
-                    forecastMap.containerPointToLatLng(
-                        [screenX,screenY]
-                    );
-
-
-                const gx=
-                    (p.lng-gridLonMin)/
-                    (gridLonMax-gridLonMin)*
-                    (gridCols-1);
-
-
-                const gy=
-                    (p.lat-gridLatMin)/
-                    (gridLatMax-gridLatMin)*
-                    (gridRows-1);
-
-
-                if(
-                    gx<0 ||
-                    gx>gridCols-1 ||
-                    gy<0 ||
-                    gy>gridRows-1
-                ){
-
-                    continue;
-
-                }
-
-
-                const x0=
-                    Math.floor(gx);
-
-                const y0=
-                    Math.floor(gy);
-
-                const x1=
-                    Math.min(
-                        x0+1,
-                        gridCols-1
-                    );
-
-                const y1=
-                    Math.min(
-                        y0+1,
-                        gridRows-1
-                    );
-
-
-                const fx=
-                    gx-x0;
-
-                const fy=
-                    gy-y0;
-
-
-                const a=
-                    getGridValue(
-                        y0*gridCols+x0
-                    );
-
-                const b=
-                    getGridValue(
-                        y0*gridCols+x1
-                    );
-
-                const c=
-                    getGridValue(
-                        y1*gridCols+x0
-                    );
-
-                const d=
-                    getGridValue(
-                        y1*gridCols+x1
-                    );
-
-
-                if(
-                    a===null ||
-                    b===null ||
-                    c===null ||
-                    d===null
-                ){
-
-                    continue;
-
-                }
-
-
-                const top=
-                    a+
-                    (b-a)*fx;
-
-
-                const bottom=
-                    c+
-                    (d-c)*fx;
-
-
-                const value=
-                    top+
-                    (bottom-top)*fy;
-
-
-                const color=
-                    getColor(
-                        value,
-                        selectedLayer
-                    );
-
-
-                const index=
-                    (py*w+px)*4;
-
-
-                pixels[index]=color[0];
-                pixels[index+1]=color[1];
-                pixels[index+2]=color[2];
-                pixels[index+3]=color[3];
-
-            }
-
-        }
-
-
-        ctx.putImageData(
-            image,
-            0,
-            0
-        );
-
-    }
-
-
-    function getGridValue(index){
-
-        const item=
-            gridData[index];
-
-
-        if(!item)
-            return null;
-
-
-        if(selectedLayer==="temperature")
-            return item.temperature;
-
-
-        if(selectedLayer==="precipitation")
-            return item.precipitation;
-
-
-        return item.wind;
-
-    }
-
-
-    resize();
-
-
-    forecastMap.on(
-        "resize",
-        resize
-    );
-
-
-    forecastMap.on(
-        "moveend",
-        ()=>{
-            loadForecastGrid();
-        }
-    );
+return item.wind;
 
 }
 
@@ -1350,85 +877,643 @@ function drawForecastCanvas(){
    COLORS
 ========================================================= */
 
-function getColor(
-    value,
-    layer
+function colorFor(
+value,
+layer
 ){
 
-    if(layer==="temperature"){
+if(
+value===null ||
+!isFinite(value)
+){
 
-        if(value<=-30)
-            return [35,65,180,185];
+return [
+0,0,0,0
+];
 
-        if(value<=-20)
-            return [45,105,210,185];
-
-        if(value<=-10)
-            return [70,160,235,185];
-
-        if(value<=0)
-            return [95,205,230,185];
-
-        if(value<=10)
-            return [135,220,170,185];
-
-        if(value<=20)
-            return [245,225,75,185];
-
-        if(value<=30)
-            return [245,145,45,190];
-
-        if(value<=40)
-            return [225,55,35,195];
-
-        return [150,20,25,200];
-
-    }
+}
 
 
-    if(layer==="precipitation"){
+/* TEMPERATURE */
 
-        if(value<=0.05)
-            return [0,0,0,0];
+if(layer==="temperature"){
 
-        if(value<=0.2)
-            return [70,170,255,70];
+if(value<=-30)
+return [35,65,180,205];
 
-        if(value<=1)
-            return [40,140,255,110];
+if(value<=-20)
+return [45,105,210,205];
 
-        if(value<=3)
-            return [25,90,235,145];
+if(value<=-10)
+return [70,160,235,205];
 
-        if(value<=7)
-            return [95,45,220,170];
+if(value<=0)
+return [95,205,230,205];
 
-        if(value<=15)
-            return [185,35,180,190];
+if(value<=10)
+return [135,220,170,205];
 
-        return [235,30,80,205];
+if(value<=20)
+return [245,225,75,205];
 
-    }
+if(value<=30)
+return [245,145,45,210];
+
+if(value<=40)
+return [225,55,35,215];
+
+return [150,20,25,220];
+
+}
 
 
-    /* WIND */
+/* PRECIPITATION */
 
-    if(value<=5)
-        return [60,180,150,80];
+if(layer==="precipitation"){
 
-    if(value<=10)
-        return [65,210,115,110];
+if(value<=0.05)
+return [0,0,0,0];
 
-    if(value<=20)
-        return [150,225,60,145];
+if(value<=0.2)
+return [70,170,255,80];
 
-    if(value<=30)
-        return [250,215,50,170];
+if(value<=1)
+return [40,140,255,125];
 
-    if(value<=40)
-        return [245,125,45,185];
+if(value<=3)
+return [25,90,235,165];
 
-    return [220,40,40,200];
+if(value<=7)
+return [95,45,220,185];
+
+if(value<=15)
+return [185,35,180,205];
+
+return [235,30,80,220];
+
+}
+
+
+/* WIND */
+
+if(value<=5)
+return [60,180,150,90];
+
+if(value<=10)
+return [65,210,115,125];
+
+if(value<=20)
+return [150,225,60,160];
+
+if(value<=30)
+return [250,215,50,180];
+
+if(value<=40)
+return [245,125,45,205];
+
+return [220,40,40,220];
+
+}
+
+
+/* =========================================================
+   DRAW FORECAST FIELD
+========================================================= */
+
+function drawForecastCanvas(){
+
+if(
+!gridData ||
+!gridMeta ||
+!forecastMap
+){
+
+return;
+
+}
+
+
+if(forecastCanvas){
+
+forecastCanvas.remove();
+
+}
+
+
+const canvas=
+document.createElement("canvas");
+
+
+canvas.width=340;
+canvas.height=340;
+
+
+const bounds=
+L.latLngBounds(
+[
+gridMeta.latMin,
+gridMeta.lonMin
+],
+[
+gridMeta.latMax,
+gridMeta.lonMax
+]
+);
+
+
+const overlay=
+L.DomUtil.create(
+"div",
+"icon-field-overlay",
+forecastMap
+.getPanes()
+.overlayPane
+);
+
+
+overlay.style.position="absolute";
+overlay.style.pointerEvents="none";
+overlay.style.zIndex="450";
+
+
+overlay.appendChild(canvas);
+
+
+forecastCanvas=overlay;
+
+
+function render(){
+
+const nw=
+forecastMap.latLngToLayerPoint(
+bounds.getNorthWest()
+);
+
+
+const se=
+forecastMap.latLngToLayerPoint(
+bounds.getSouthEast()
+);
+
+
+const width=
+Math.max(
+1,
+se.x-nw.x
+);
+
+
+const height=
+Math.max(
+1,
+se.y-nw.y
+);
+
+
+overlay.style.left=
+nw.x+"px";
+
+overlay.style.top=
+nw.y+"px";
+
+overlay.style.width=
+width+"px";
+
+overlay.style.height=
+height+"px";
+
+
+canvas.style.width=
+width+"px";
+
+canvas.style.height=
+height+"px";
+
+
+const ctx=
+canvas.getContext("2d");
+
+
+const w=
+canvas.width;
+
+const h=
+canvas.height;
+
+
+const image=
+ctx.createImageData(
+w,
+h
+);
+
+
+const pixels=
+image.data;
+
+
+const values=
+gridData.map(
+getGridValue
+);
+
+
+function valueAt(
+gx,
+gy
+){
+
+gx=
+Math.max(
+0,
+Math.min(
+gridCols-1,
+gx
+)
+);
+
+
+gy=
+Math.max(
+0,
+Math.min(
+gridRows-1,
+gy
+)
+);
+
+
+const x0=
+Math.floor(gx);
+
+const y0=
+Math.floor(gy);
+
+
+const x1=
+Math.min(
+x0+1,
+gridCols-1
+);
+
+const y1=
+Math.min(
+y0+1,
+gridRows-1
+);
+
+
+const fx=
+gx-x0;
+
+const fy=
+gy-y0;
+
+
+const a=
+values[
+y0*gridCols+x0
+];
+
+const b=
+values[
+y0*gridCols+x1
+];
+
+const c=
+values[
+y1*gridCols+x0
+];
+
+const d=
+values[
+y1*gridCols+x1
+];
+
+
+if(
+[a,b,c,d]
+.some(
+v=>
+v===null ||
+!isFinite(v)
+)
+){
+
+return null;
+
+}
+
+
+const top=
+a+
+(b-a)*fx;
+
+
+const bottom=
+c+
+(d-c)*fx;
+
+
+return top+
+(bottom-top)*fy;
+
+}
+
+
+for(
+let y=0;
+y<h;
+y++
+){
+
+for(
+let x=0;
+x<w;
+x++
+){
+
+const gx=
+x/(w-1)*
+(gridCols-1);
+
+
+const gy=
+y/(h-1)*
+(gridRows-1);
+
+
+const value=
+valueAt(
+gx,
+gy
+);
+
+
+const color=
+colorFor(
+value,
+selectedLayer
+);
+
+
+const i=
+(y*w+x)*4;
+
+
+pixels[i]=color[0];
+
+pixels[i+1]=color[1];
+
+pixels[i+2]=color[2];
+
+pixels[i+3]=color[3];
+
+}
+
+}
+
+
+ctx.putImageData(
+image,
+0,
+0
+);
+
+}
+
+
+function update(){
+
+render();
+
+}
+
+
+forecastMap.on(
+"zoom move resize",
+update
+);
+
+
+render();
+
+}
+
+
+/* =========================================================
+   LOAD REAL ICON DATA
+========================================================= */
+
+async function loadForecastGrid(){
+
+const token=
+++renderToken;
+
+
+showMapLoading(true);
+
+
+const center=
+forecastMap.getCenter();
+
+
+const zoom=
+forecastMap.getZoom();
+
+
+let latStep;
+let lonStep;
+
+
+if(zoom<=4){
+
+latStep=3;
+lonStep=4.5;
+
+}
+else if(zoom<=5){
+
+latStep=2;
+lonStep=3;
+
+}
+else if(zoom<=6){
+
+latStep=1.2;
+lonStep=1.8;
+
+}
+else{
+
+latStep=.65;
+lonStep=.95;
+
+}
+
+
+const latMin=
+Math.max(
+-80,
+center.lat-
+((gridRows-1)/2)*latStep
+);
+
+
+const latMax=
+Math.min(
+80,
+center.lat+
+((gridRows-1)/2)*latStep
+);
+
+
+const lonMin=
+center.lng-
+((gridCols-1)/2)*lonStep;
+
+
+const lonMax=
+center.lng+
+((gridCols-1)/2)*lonStep;
+
+
+const lats=[];
+const lons=[];
+
+
+for(
+let y=0;
+y<gridRows;
+y++
+){
+
+const lat=
+latMin+
+(latMax-latMin)*
+y/(gridRows-1);
+
+
+for(
+let x=0;
+x<gridCols;
+x++
+){
+
+const lon=
+lonMin+
+(lonMax-lonMin)*
+x/(gridCols-1);
+
+
+lats.push(
+lat.toFixed(3)
+);
+
+lons.push(
+lon.toFixed(3)
+);
+
+}
+
+}
+
+
+const url=
+"https://api.open-meteo.com/v1/dwd-icon"+
+"?latitude="+
+lats.join(",")+
+"&longitude="+
+lons.join(",")+
+"&hourly=temperature_2m,precipitation,wind_speed_10m"+
+"&forecast_hours=1"+
+"&timezone=GMT";
+
+
+try{
+
+const response=
+await fetch(url);
+
+
+if(!response.ok){
+
+throw new Error(
+"ICON request failed"
+);
+
+}
+
+
+const data=
+await response.json();
+
+
+if(token!==renderToken)
+return;
+
+
+const locations=
+Array.isArray(data)
+?data
+:[data];
+
+
+gridData=
+locations.map(
+item=>({
+
+temperature:
+item.hourly
+?.temperature_2m
+?.[0]??null,
+
+precipitation:
+item.hourly
+?.precipitation
+?.[0]??null,
+
+wind:
+item.hourly
+?.wind_speed_10m
+?.[0]??null
+
+})
+);
+
+
+gridMeta={
+
+latMin,
+latMax,
+lonMin,
+lonMax
+
+};
+
+
+drawForecastCanvas();
+
+}
+catch(error){
+
+console.error(
+"ICON:",
+error
+);
+
+}
+finally{
+
+if(
+token===renderToken
+){
+
+showMapLoading(false);
+
+}
+
+}
 
 }
 
@@ -1439,485 +1524,519 @@ function getColor(
 
 function setLayer(layer){
 
-    selectedLayer=
-        layer;
+selectedLayer=
+layer;
 
 
-    document
-        .querySelectorAll(".layer")
-        .forEach(button=>{
-            button.classList.remove("active");
-        });
+document
+.querySelectorAll(".layer")
+.forEach(
+button=>
+button.classList
+.remove("active")
+);
 
 
-    if(layer==="temperature"){
+if(layer==="temperature"){
 
-        document
-            .getElementById("temperatureLayer")
-            .classList.add("active");
-
-
-        document
-            .getElementById("mapInfoTitle")
-            .textContent=
-                "Температура, °C";
+document
+.getElementById(
+"temperatureLayer"
+)
+.classList
+.add("active");
 
 
-        document
-            .getElementById("mapGradient")
-            .style.background=
-                "linear-gradient(90deg,#2341b4,#479fe8,#5dd0e6,#87dca8,#f5e14b,#f28d2d,#dc3025)";
+document
+.getElementById(
+"mapInfoTitle"
+)
+.textContent=
+"Температура, °C";
 
 
-        document
-            .getElementById("mapValues")
-            .innerHTML=
-                "<span>−30°</span><span>0°</span><span>+30°</span>";
-
-    }
-
-
-    if(layer==="precipitation"){
-
-        document
-            .getElementById("precipitationLayer")
-            .classList.add("active");
+document
+.getElementById(
+"mapGradient"
+)
+.style.background=
+"linear-gradient(90deg,#2341b4,#479fe8,#5dd0e6,#87dca8,#f5e14b,#f28d2d,#dc3025)";
 
 
-        document
-            .getElementById("mapInfoTitle")
-            .textContent=
-                "Осадки, мм/ч";
+document
+.getElementById(
+"mapValues"
+)
+.innerHTML=
+"<span>−30°</span><span>0°</span><span>+30°</span>";
+
+}
 
 
-        document
-            .getElementById("mapGradient")
-            .style.background=
-                "linear-gradient(90deg,#469cff,#2055e8,#6b2bd5,#bd25a9,#ed2450)";
+if(layer==="precipitation"){
+
+document
+.getElementById(
+"precipitationLayer"
+)
+.classList
+.add("active");
 
 
-        document
-            .getElementById("mapValues")
-            .innerHTML=
-                "<span>0</span><span>3</span><span>15+ мм</span>";
-
-    }
-
-
-    if(layer==="wind"){
-
-        document
-            .getElementById("windLayer")
-            .classList.add("active");
+document
+.getElementById(
+"mapInfoTitle"
+)
+.textContent=
+"Осадки, мм/ч";
 
 
-        document
-            .getElementById("mapInfoTitle")
-            .textContent=
-                "Ветер, км/ч";
+document
+.getElementById(
+"mapGradient"
+)
+.style.background=
+"linear-gradient(90deg,#469cff,#2055e8,#6b2bd5,#bd25a9,#ed2450)";
 
 
-        document
-            .getElementById("mapGradient")
-            .style.background=
-                "linear-gradient(90deg,#3cb496,#65d273,#f1dc38,#f07e2d,#dc2d2d)";
+document
+.getElementById(
+"mapValues"
+)
+.innerHTML=
+"<span>0</span><span>3</span><span>15+</span>";
+
+}
 
 
-        document
-            .getElementById("mapValues")
-            .innerHTML=
-                "<span>0</span><span>20</span><span>40+ км/ч</span>";
+if(layer==="wind"){
 
-    }
+document
+.getElementById(
+"windLayer"
+)
+.classList
+.add("active");
 
 
-    drawForecastCanvas();
+document
+.getElementById(
+"mapInfoTitle"
+)
+.textContent=
+"Ветер, км/ч";
+
+
+document
+.getElementById(
+"mapGradient"
+)
+.style.background=
+"linear-gradient(90deg,#3cb496,#65d273,#f1dc38,#f07e2d,#dc2d2d)";
+
+
+document
+.getElementById(
+"mapValues"
+)
+.innerHTML=
+"<span>0</span><span>20</span><span>40+</span>";
+
+}
+
+
+drawForecastCanvas();
 
 }
 
 
 /* =========================================================
-   SEARCH CITY
+   CITY SEARCH
 ========================================================= */
 
 async function searchCity(){
 
-    const city=
-        document
-            .getElementById("cityInput")
-            .value
-            .trim();
+const city=
+document
+.getElementById(
+"cityInput"
+)
+.value
+.trim();
 
 
-    if(!city)
-        return;
+if(!city)
+return;
 
 
-    showLoading();
+showLoading();
 
 
-    try{
+try{
 
-        const response=
-            await fetch(
-                "https://geocoding-api.open-meteo.com/v1/search"+
-                "?name="+
-                encodeURIComponent(city)+
-                "&count=1"+
-                "&language=ru"+
-                "&format=json"
-            );
-
-
-        const data=
-            await response.json();
+const response=
+await fetch(
+"https://geocoding-api.open-meteo.com/v1/search"+
+"?name="+
+encodeURIComponent(city)+
+"&count=1"+
+"&language=ru"+
+"&format=json"
+);
 
 
-        if(
-            !data.results ||
-            !data.results.length
-        ){
-
-            throw new Error(
-                "Город не найден"
-            );
-
-        }
+const data=
+await response.json();
 
 
-        const place=
-            data.results[0];
+if(
+!data.results ||
+!data.results.length
+){
+
+throw new Error(
+"not-found"
+);
+
+}
 
 
-        latitude=
-            place.latitude;
-
-        longitude=
-            place.longitude;
+const place=
+data.results[0];
 
 
-        previewMap.setView(
-            [latitude,longitude],
-            6
-        );
+latitude=
+place.latitude;
+
+longitude=
+place.longitude;
 
 
-        forecastMap.setView(
-            [latitude,longitude],
-            6
-        );
+previewMap.setView(
+[latitude,longitude],
+6
+);
 
 
-        addMarker();
+forecastMap.setView(
+[latitude,longitude],
+6
+);
 
 
-        await loadWeather(
-            latitude,
-            longitude,
-            place.name,
-            place.country
-        );
+updateMarker();
 
 
-    }
-    catch(error){
+await loadWeather(
+latitude,
+longitude,
+place.name
+);
 
-        showError(
-            error.message
-        );
+}
+catch(error){
 
-    }
+document
+.getElementById(
+"locationStatus"
+)
+.textContent=
+"Город не выбран";
+
+
+showError(
+"Город не выбран"
+);
+
+}
 
 }
 
 
 /* =========================================================
-   REAL ICON WEATHER
+   WEATHER API
 ========================================================= */
 
 async function loadWeather(
-    lat,
-    lon,
-    city,
-    country
+lat,
+lon,
+city
 ){
 
-    const url=
-        "https://api.open-meteo.com/v1/dwd-icon"+
-        "?latitude="+lat+
-        "&longitude="+lon+
-        "&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m"+
-        "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"+
-        "&timezone=auto";
+const url=
+"https://api.open-meteo.com/v1/dwd-icon"+
+"?latitude="+
+lat+
+"&longitude="+
+lon+
+"&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,wind_speed_10m"+
+"&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"+
+"&timezone=auto";
 
 
-    const response=
-        await fetch(url);
+try{
+
+const response=
+await fetch(url);
 
 
-    if(!response.ok){
+if(!response.ok){
 
-        throw new Error(
-            "DWD ICON недоступен"
-        );
+throw new Error();
 
-    }
+}
 
 
-    const data=
-        await response.json();
+const data=
+await response.json();
 
 
-    renderWeather(
-        data,
-        city,
-        country
-    );
+document
+.getElementById(
+"locationStatus"
+)
+.textContent=
+city;
+
+
+renderWeather(
+data,
+city
+);
+
+}
+catch(error){
+
+document
+.getElementById(
+"locationStatus"
+)
+.textContent=
+"Город не выбран";
+
+
+showError(
+"Город не выбран"
+);
+
+}
 
 }
 
 
 /* =========================================================
-   RENDER
+   WEATHER UI
 ========================================================= */
 
 function renderWeather(
-    data,
-    city,
-    country
+data,
+city
 ){
 
-    const current=
-        data.current;
+const c=
+data.current;
 
-    const daily=
-        data.daily;
+const d=
+data.daily;
 
-    const weather=
-        getWeather(
-            current.weather_code
-        );
+const weather=
+getWeather(
+c.weather_code
+);
 
 
-    document
-        .getElementById("locationStatus")
-        .textContent=
-            "DWD ICON";
+let html=`
 
+<div class="current">
 
-    let html=`
+<div class="current-top">
 
-        <div class="current">
+<div>
 
-            <div class="current-top">
+<div class="city">
+${city}
+</div>
 
-                <div>
+<div class="date">
+${formatDate(new Date())}
+</div>
 
-                    <div class="city">
-                        ${city}
-                    </div>
+</div>
 
-                    <div class="date">
-                        ${formatDate(new Date())}
-                    </div>
-
-                </div>
-
-                <div class="weather-icon">
-                    ${weather[0]}
-                </div>
+<div class="weather-icon">
+${weather[0]}
+</div>
 
-            </div>
-
-
-            <div class="temperature">
-                ${Math.round(
-                    current.temperature_2m
-                )}°
-            </div>
+</div>
 
-
-            <div class="description">
-                ${weather[1]}
-            </div>
 
+<div class="temperature">
+${Math.round(c.temperature_2m)}°
+</div>
 
-            <div class="details">
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Ощущается
-                    </div>
-                    <div class="detail-value">
-                        ${Math.round(
-                            current.apparent_temperature
-                        )}°
-                    </div>
-                </div>
+<div class="description">
+${weather[1]}
+</div>
 
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Влажность
-                    </div>
-                    <div class="detail-value">
-                        ${current.relative_humidity_2m}%
-                    </div>
-                </div>
+<div class="details">
 
+<div class="detail">
+<div class="detail-title">Ощущается</div>
+<div class="detail-value">
+${Math.round(c.apparent_temperature)}°
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Ветер
-                    </div>
-                    <div class="detail-value">
-                        ${Math.round(
-                            current.wind_speed_10m
-                        )} км/ч
-                    </div>
-                </div>
 
+<div class="detail">
+<div class="detail-title">Влажность</div>
+<div class="detail-value">
+${c.relative_humidity_2m}%
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Давление
-                    </div>
-                    <div class="detail-value">
-                        ${Math.round(
-                            current.pressure_msl
-                        )} hPa
-                    </div>
-                </div>
 
+<div class="detail">
+<div class="detail-title">Ветер</div>
+<div class="detail-value">
+${Math.round(c.wind_speed_10m)} км/ч
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Осадки
-                    </div>
-                    <div class="detail-value">
-                        ${current.precipitation} мм
-                    </div>
-                </div>
 
+<div class="detail">
+<div class="detail-title">Давление</div>
+<div class="detail-value">
+${Math.round(c.pressure_msl)} hPa
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Максимум
-                    </div>
-                    <div class="detail-value">
-                        ${Math.round(
-                            daily.temperature_2m_max[0]
-                        )}°
-                    </div>
-                </div>
 
+<div class="detail">
+<div class="detail-title">Осадки</div>
+<div class="detail-value">
+${c.precipitation} мм
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Минимум
-                    </div>
-                    <div class="detail-value">
-                        ${Math.round(
-                            daily.temperature_2m_min[0]
-                        )}°
-                    </div>
-                </div>
 
+<div class="detail">
+<div class="detail-title">Максимум</div>
+<div class="detail-value">
+${Math.round(d.temperature_2m_max[0])}°
+</div>
+</div>
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Осадки
-                    </div>
-                    <div class="detail-value">
-                        ${daily.precipitation_probability_max[0]}%
-                    </div>
-                </div>
 
-            </div>
+<div class="detail">
+<div class="detail-title">Минимум</div>
+<div class="detail-value">
+${Math.round(d.temperature_2m_min[0])}°
+</div>
+</div>
 
-        </div>
 
+<div class="detail">
+<div class="detail-title">Вероятность осадков</div>
+<div class="detail-value">
+${d.precipitation_probability_max[0]}%
+</div>
+</div>
 
-        <div class="section-title">
-            Прогноз на 7 дней
-        </div>
+</div>
 
+</div>
 
-        <div class="forecast">
 
-    `;
+<div class="section-title">
+Прогноз на 7 дней
+</div>
 
 
-    for(let i=0;i<7;i++){
+<div class="forecast">
 
-        const date=
-            new Date(
-                daily.time[i]+"T12:00:00"
-            );
+`;
 
 
-        const weatherDay=
-            getWeather(
-                daily.weather_code[i]
-            );
+for(
+let i=0;
+i<7;
+i++
+){
 
+const date=
+new Date(
+d.time[i]+"T12:00:00"
+);
 
-        const dayName=
-            i===0
-                ? "Сегодня"
-                : date.toLocaleDateString(
-                    "ru-RU",
-                    {
-                        weekday:"short"
-                    }
-                );
 
+const dayWeather=
+getWeather(
+d.weather_code[i]
+);
 
-        html+=`
 
-            <div class="day">
+const dayName=
+i===0
+?"Сегодня"
+:
+date.toLocaleDateString(
+"ru-RU",
+{
+weekday:"short"
+}
+);
 
-                <div class="day-name">
-                    ${dayName}
-                </div>
 
-                <div class="day-icon">
-                    ${weatherDay[0]}
-                </div>
+html+=`
 
-                <div class="day-temp">
-                    ${Math.round(
-                        daily.temperature_2m_max[i]
-                    )}°
-                    /
-                    ${Math.round(
-                        daily.temperature_2m_min[i]
-                    )}°
-                </div>
+<div class="day">
 
-                <div class="day-rain">
-                    💧
-                    ${daily.precipitation_probability_max[i]}%
-                </div>
+<div class="day-name">
+${dayName}
+</div>
 
-            </div>
+<div class="day-icon">
+${dayWeather[0]}
+</div>
 
-        `;
+<div class="day-temp">
+${Math.round(
+d.temperature_2m_max[i]
+)}°
+/
+${Math.round(
+d.temperature_2m_min[i]
+)}°
+</div>
 
-    }
+<div class="day-rain">
+💧
+${d.precipitation_probability_max[i]}%
+</div>
 
+</div>
 
-    html+=`
+`;
 
-        </div>
+}
 
-    `;
 
+html+=`
 
-    document
-        .getElementById("weather")
-        .innerHTML=
-            html;
+</div>
+
+`;
+
+
+document
+.getElementById(
+"weather"
+)
+.innerHTML=
+html;
 
 }
 
@@ -1928,76 +2047,91 @@ function renderWeather(
 
 function formatDate(date){
 
-    return date.toLocaleDateString(
-        "ru-RU",
-        {
-            weekday:"long",
-            day:"numeric",
-            month:"long"
-        }
-    );
+return date.toLocaleDateString(
+"ru-RU",
+{
+weekday:"long",
+day:"numeric",
+month:"long"
+}
+);
 
 }
 
 
 function showLoading(){
 
-    document
-        .getElementById("error")
-        .style.display="none";
+document
+.getElementById(
+"error"
+)
+.style.display=
+"none";
 
 
-    document
-        .getElementById("weather")
-        .innerHTML=`
-
-            <div class="loading">
-                Загрузка DWD ICON...
-            </div>
-
-        `;
+document
+.getElementById(
+"weather"
+)
+.innerHTML=
+`
+<div class="loading">
+Загрузка прогноза...
+</div>
+`;
 
 }
 
 
 function showError(message){
 
-    const error=
-        document
-            .getElementById("error");
+const error=
+document
+.getElementById(
+"error"
+);
 
 
-    error.textContent=
-        message;
+error.textContent=
+message;
 
 
-    error.style.display=
-        "block";
+error.style.display=
+"block";
 
 
-    document
-        .getElementById("weather")
-        .innerHTML="";
+document
+.getElementById(
+"weather"
+)
+.innerHTML=
+"";
 
 }
 
 
-/* ENTER */
+/* =========================================================
+   ENTER
+========================================================= */
 
 document
-    .getElementById("cityInput")
-    .addEventListener(
-        "keydown",
-        event=>{
+.getElementById(
+"cityInput"
+)
+.addEventListener(
+"keydown",
+event=>{
 
-            if(event.key==="Enter"){
+if(
+event.key==="Enter"
+){
 
-                searchCity();
+searchCity();
 
-            }
+}
 
-        }
-    );
+}
+);
 
 
 /* =========================================================
