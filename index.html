@@ -2,14 +2,15 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Meteo Forecast</title>
+<title>Метео • Прогноз</title>
 
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -35,6 +36,8 @@ body{
     padding:14px;
 }
 
+/* HEADER */
+
 header{
     display:flex;
     justify-content:space-between;
@@ -56,6 +59,8 @@ header{
     font-size:13px;
 }
 
+/* SEARCH */
+
 .search{
     display:flex;
     gap:8px;
@@ -70,7 +75,7 @@ header{
     border-radius:15px;
     padding:0 16px;
     background:#101a27;
-    color:white;
+    color:#fff;
     font-size:16px;
 }
 
@@ -87,6 +92,8 @@ header{
     font-size:23px;
 }
 
+/* ERROR */
+
 .error{
     display:none;
     background:#35151d;
@@ -95,6 +102,8 @@ header{
     border-radius:14px;
     margin-bottom:14px;
 }
+
+/* CURRENT WEATHER */
 
 .current{
     padding:22px;
@@ -160,6 +169,8 @@ header{
     font-weight:650;
 }
 
+/* FORECAST */
+
 .section-title{
     font-size:20px;
     font-weight:750;
@@ -205,9 +216,11 @@ header{
     font-size:12px;
 }
 
+/* MAP PREVIEW */
+
 .map-preview{
     position:relative;
-    height:340px;
+    height:380px;
     border-radius:22px;
     overflow:hidden;
     background:#070d15;
@@ -245,6 +258,8 @@ header{
     font-weight:650;
 }
 
+/* FULLSCREEN MAP */
+
 .fullscreen-map{
     display:none;
     position:fixed;
@@ -266,16 +281,20 @@ header{
     height:100%;
 }
 
+/* MAP TOP */
+
 .map-top{
     position:absolute;
     z-index:10000;
     top:10px;
     left:10px;
     right:10px;
+
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
     gap:8px;
+
     pointer-events:none;
 }
 
@@ -299,7 +318,7 @@ header{
     flex-shrink:0;
     border:0;
     border-radius:9px;
-    padding:9px 11px;
+    padding:9px 12px;
     background:#111d2c;
     color:#aebdce;
     font-size:12px;
@@ -336,6 +355,8 @@ header{
     font-size:12px;
 }
 
+/* LEGEND */
+
 .legend{
     position:absolute;
     z-index:10000;
@@ -371,16 +392,207 @@ header{
     font-size:10px;
 }
 
-.wind-arrow{
-    position:absolute;
-    transform:translate(-50%,-50%);
-    color:white;
-    font-size:17px;
-    font-weight:900;
-    text-shadow:0 1px 3px #000,0 0 4px #000;
-    pointer-events:none;
-    z-index:600;
+
+/* =========================================
+   RADAR VIEWER
+========================================= */
+
+.radar-viewer{
+    display:none;
+
+    position:fixed;
+    z-index:100000;
+
+    inset:0;
+
+    width:100vw;
+    height:100vh;
+
+    background:#02050a;
+
+    overflow:hidden;
+
+    touch-action:none;
 }
+
+.radar-viewer.open{
+    display:block;
+}
+
+
+/*
+   Слой для перемещения/масштабирования.
+*/
+
+.radar-stage{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:100vw;
+    height:100vh;
+
+    transform:
+        translate3d(-50%,-50%,0)
+        translate3d(0,0,0)
+        rotate(0deg)
+        scale(1);
+
+    transform-origin:50% 50%;
+
+    will-change:transform;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    touch-action:none;
+}
+
+
+/*
+   GIF без сглаживания.
+
+   Это особенно важно при увеличении:
+   браузер не пытается размывать
+   пиксели радара.
+*/
+
+.radar-image{
+    display:block;
+
+    max-width:none;
+    max-height:none;
+
+    width:auto;
+    height:auto;
+
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+
+    user-select:none;
+    -webkit-user-drag:none;
+
+    pointer-events:none;
+
+    will-change:transform;
+}
+
+
+/* RADAR HEADER */
+
+.radar-header{
+    position:absolute;
+
+    z-index:20;
+
+    top:10px;
+    left:10px;
+    right:10px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    pointer-events:none;
+}
+
+.radar-title{
+    padding:9px 12px;
+
+    border-radius:12px;
+
+    background:rgba(3,8,14,.92);
+
+    backdrop-filter:blur(12px);
+
+    font-size:13px;
+    color:#dce6ef;
+
+    pointer-events:auto;
+}
+
+.radar-close{
+    border:0;
+
+    padding:10px 13px;
+
+    border-radius:11px;
+
+    background:rgba(3,8,14,.95);
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:650;
+
+    pointer-events:auto;
+}
+
+
+/* RADAR CONTROLS */
+
+.radar-controls{
+    position:absolute;
+
+    z-index:20;
+
+    right:10px;
+    bottom:10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.radar-control{
+    width:42px;
+    height:42px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:rgba(3,8,14,.93);
+
+    color:white;
+
+    font-size:19px;
+
+    backdrop-filter:blur(12px);
+}
+
+
+/* RADAR INFO */
+
+.radar-help{
+    position:absolute;
+
+    z-index:20;
+
+    left:50%;
+    bottom:12px;
+
+    transform:translateX(-50%);
+
+    padding:8px 12px;
+
+    border-radius:11px;
+
+    background:rgba(3,8,14,.8);
+
+    color:#93a5b8;
+
+    font-size:11px;
+
+    white-space:nowrap;
+
+    pointer-events:none;
+}
+
+
+/* LEAFLET */
 
 .leaflet-container{
     background:#060b12;
@@ -401,6 +613,9 @@ header{
     color:#73aaff!important;
 }
 
+
+/* MOBILE */
+
 @media(max-width:650px){
 
     .app{
@@ -416,7 +631,7 @@ header{
     }
 
     .map-preview{
-        height:300px;
+        height:330px;
     }
 
     .map-top{
@@ -430,7 +645,7 @@ header{
     }
 
     .layer{
-        padding:8px 9px;
+        padding:8px 10px;
     }
 
     .close-map{
@@ -441,48 +656,88 @@ header{
         left:7px;
         bottom:7px;
     }
+
+    .radar-help{
+        bottom:8px;
+        font-size:10px;
+    }
+
 }
+
 </style>
 </head>
 
 <body>
 
+
 <div class="app">
 
 <header>
-    <div class="logo">Метео<span>•</span></div>
-    <div id="locationStatus" class="location-status">
+
+    <div class="logo">
+        Метео<span>•</span>
+    </div>
+
+    <div id="locationStatus"
+         class="location-status">
         Город не выбран
     </div>
+
 </header>
 
+
 <div class="search">
-    <input id="cityInput" value="Уфа" placeholder="Введите город...">
-    <button onclick="searchCity()">⌕</button>
+
+    <input
+        id="cityInput"
+        value="Уфа"
+        placeholder="Введите город..."
+    >
+
+    <button onclick="searchCity()">
+        ⌕
+    </button>
+
 </div>
 
-<div id="error" class="error"></div>
+
+<div id="error"
+     class="error">
+</div>
+
 
 <div id="weather">
-    <div style="padding:30px;text-align:center;color:#8799ad">
+
+    <div style="
+        padding:30px;
+        text-align:center;
+        color:#8799ad;
+    ">
         Загрузка прогноза...
     </div>
+
 </div>
+
 
 <div class="section-title">
     Карта прогнозов
 </div>
+
 
 <div class="map-preview">
 
     <div id="previewMap"></div>
 
     <div class="preview-label">
-        DWD ICON • прогноз
+        DWD ICON • осадки
     </div>
 
-    <button class="open-map" onclick="openForecastMap()">
+    <button
+        class="open-map"
+        onclick="openForecastMap()">
+
         Открыть карту
+
     </button>
 
 </div>
@@ -490,68 +745,93 @@ header{
 </div>
 
 
-<div id="fullscreenMap" class="fullscreen-map">
+
+<!-- =====================================
+     ПОЛНОЭКРАННАЯ КАРТА
+===================================== -->
+
+<div id="fullscreenMap"
+     class="fullscreen-map">
+
 
     <div id="forecastMap"></div>
+
 
     <div class="map-top">
 
         <div class="map-layers">
 
-            <button id="temperatureLayer"
-                    class="layer active"
-                    onclick="setLayer('temperature')">
-                🌡 Температура
-            </button>
+            <button
+                id="precipitationLayer"
+                class="layer active"
+                onclick="setLayer('precipitation')">
 
-            <button id="precipitationLayer"
-                    class="layer"
-                    onclick="setLayer('precipitation')">
                 🌧 Осадки
+
             </button>
 
-            <button id="windLayer"
-                    class="layer"
-                    onclick="setLayer('wind')">
-                💨 Ветер
-            </button>
 
-            <button id="cloudLayer"
-                    class="layer"
-                    onclick="setLayer('cloud')">
-                ☁️ Облачность
-            </button>
+            <button
+                id="radarLayer"
+                class="layer"
+                onclick="openRadarViewer()">
 
-            <button id="pressureLayer"
-                    class="layer"
-                    onclick="setLayer('pressure')">
-                🔽 Давление
+                📡 Радарная-GIF
+
             </button>
 
         </div>
 
-        <button class="close-map" onclick="closeForecastMap()">
+
+        <button
+            class="close-map"
+            onclick="closeForecastMap()">
+
             Закрыть карту
+
         </button>
 
     </div>
 
-    <div id="mapLoading" class="map-loading">
+
+    <div id="mapLoading"
+         class="map-loading">
+
         Загрузка прогноза...
+
     </div>
 
-    <div class="legend">
 
-        <div id="legendTitle" class="legend-title">
-            Температура, °C
+    <div id="precipLegend"
+         class="legend">
+
+        <div class="legend-title">
+            Осадки, мм/ч
         </div>
 
-        <div id="legendGradient"
-             class="legend-gradient">
+        <div
+            class="legend-gradient"
+            style="
+            background:
+            linear-gradient(
+                90deg,
+                #469cff,
+                #2055e8,
+                #6b2bd5,
+                #bd25a9,
+                #ed2450
+            );
+            ">
         </div>
 
-        <div id="legendValues"
-             class="legend-values">
+        <div class="legend-values">
+
+            <span>0</span>
+            <span>0.2</span>
+            <span>1</span>
+            <span>7</span>
+            <span>15+</span>
+
         </div>
 
     </div>
@@ -559,30 +839,193 @@ header{
 </div>
 
 
+
+<!-- =====================================
+     ОТДЕЛЬНЫЙ ПРОСМОТРЩИК GIF
+===================================== -->
+
+<div id="radarViewer"
+     class="radar-viewer">
+
+
+    <div class="radar-stage"
+         id="radarStage">
+
+
+        <img
+            id="radarImage"
+            class="radar-image"
+            alt="Meteoinfo Radar">
+
+
+    </div>
+
+
+    <div class="radar-header">
+
+        <div class="radar-title">
+
+            📡 Meteoinfo • Radar
+
+        </div>
+
+
+        <button
+            class="radar-close"
+            onclick="closeRadarViewer()">
+
+            Закрыть
+
+        </button>
+
+    </div>
+
+
+    <div class="radar-controls">
+
+        <button
+            class="radar-control"
+            onclick="radarZoom(1.25)">
+
+            +
+
+        </button>
+
+
+        <button
+            class="radar-control"
+            onclick="radarZoom(.8)">
+
+            −
+
+        </button>
+
+
+        <button
+            class="radar-control"
+            onclick="radarRotate(-15)">
+
+            ↶
+
+        </button>
+
+
+        <button
+            class="radar-control"
+            onclick="radarRotate(15)">
+
+            ↷
+
+        </button>
+
+
+        <button
+            class="radar-control"
+            onclick="resetRadarTransform()">
+
+            ⟳
+
+        </button>
+
+    </div>
+
+
+    <div class="radar-help">
+
+        Два пальца: масштаб + вращение • Один палец: перемещение
+
+    </div>
+
+</div>
+
+
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+
 <script>
+
+/* =========================================
+   ПЕРЕМЕННЫЕ
+========================================= */
 
 let latitude = 54.7388;
 let longitude = 55.9721;
 
 let previewMap;
 let forecastMap;
+
 let marker;
 
-let selectedLayer = "temperature";
+let selectedLayer =
+    "precipitation";
 
 let gridData = [];
 let gridMeta = null;
 
 let forecastCanvas = null;
 
-let windArrows = [];
+let gridRows = 15;
+let gridCols = 15;
 
 let renderToken = 0;
 
-let gridRows = 15;
-let gridCols = 15;
+
+/* =========================================
+   РАДАР
+========================================= */
+
+const radarViewer =
+    document.getElementById(
+        "radarViewer"
+    );
+
+const radarStage =
+    document.getElementById(
+        "radarStage"
+    );
+
+const radarImage =
+    document.getElementById(
+        "radarImage"
+    );
+
+
+let radarScale = 1;
+
+let radarRotation = 0;
+
+let radarX = 0;
+
+let radarY = 0;
+
+
+/*
+ * Состояние жеста.
+ */
+
+let pointers =
+    new Map();
+
+let gestureMode =
+    "none";
+
+let startDistance = 0;
+
+let startAngle = 0;
+
+let startScale = 1;
+
+let startRotation = 0;
+
+let startCenterX = 0;
+let startCenterY = 0;
+
+let startX = 0;
+let startY = 0;
+
+let startTranslateX = 0;
+let startTranslateY = 0;
 
 
 /* =========================================
@@ -632,22 +1075,35 @@ const weatherCodes = {
 
 };
 
+
 function getWeather(code){
-    return weatherCodes[code] || ["🌡️","Неизвестно"];
+
+    return weatherCodes[code]
+        || ["🌡️","Неизвестно"];
+
 }
 
 
 /* =========================================
-   КАРТЫ
+   СОЗДАНИЕ КАРТ
 ========================================= */
 
 function createMaps(){
 
-    previewMap = L.map("previewMap",{
-        zoomControl:false,
-        attributionControl:false,
-        scrollWheelZoom:false
-    }).setView([latitude,longitude],5);
+    previewMap =
+        L.map(
+            "previewMap",
+            {
+                zoomControl:false,
+                attributionControl:false,
+                scrollWheelZoom:false
+            }
+        )
+        .setView(
+            [latitude,longitude],
+            5
+        );
+
 
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
@@ -655,36 +1111,64 @@ function createMaps(){
             maxZoom:20,
             subdomains:"abcd"
         }
-    ).addTo(previewMap);
+    ).addTo(
+        previewMap
+    );
 
 
-    forecastMap = L.map("forecastMap",{
-        zoomControl:true,
-        attributionControl:true
-    }).setView([latitude,longitude],5);
+    forecastMap =
+        L.map(
+            "forecastMap",
+            {
+                zoomControl:true,
+                attributionControl:true
+            }
+        )
+        .setView(
+            [latitude,longitude],
+            5
+        );
+
 
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
             maxZoom:20,
             subdomains:"abcd",
-            attribution:"© OpenStreetMap © CARTO"
+            attribution:
+                "© OpenStreetMap © CARTO"
         }
-    ).addTo(forecastMap);
+    ).addTo(
+        forecastMap
+    );
 
 
-    forecastMap.on("moveend",function(){
+    forecastMap.on(
+        "moveend",
+        function(){
 
-        if(
-            document
-            .getElementById("fullscreenMap")
-            .classList
-            .contains("open")
-        ){
-            loadForecastGrid();
+            if(
+                selectedLayer ===
+                "precipitation"
+            ){
+
+                if(
+                    document
+                    .getElementById(
+                        "fullscreenMap"
+                    )
+                    .classList
+                    .contains("open")
+                ){
+
+                    loadForecastGrid();
+
+                }
+
+            }
+
         }
-
-    });
+    );
 
 }
 
@@ -696,78 +1180,87 @@ function createMaps(){
 function updateMarker(){
 
     if(marker){
-        forecastMap.removeLayer(marker);
+
+        forecastMap.removeLayer(
+            marker
+        );
+
     }
 
-    marker = L.circleMarker(
-        [latitude,longitude],
-        {
-            radius:6,
-            color:"#fff",
-            weight:2,
-            fillColor:"#268cff",
-            fillOpacity:1
-        }
-    ).addTo(forecastMap);
+
+    marker =
+        L.circleMarker(
+            [
+                latitude,
+                longitude
+            ],
+            {
+                radius:6,
+                color:"#fff",
+                weight:2,
+                fillColor:"#268cff",
+                fillOpacity:1
+            }
+        )
+        .addTo(
+            forecastMap
+        );
 
 }
 
 
 /* =========================================
-   ОТКРЫТИЕ / ЗАКРЫТИЕ КАРТЫ
+   ОТКРЫТИЕ КАРТЫ
 ========================================= */
 
 function openForecastMap(){
 
     document
-    .getElementById("fullscreenMap")
+    .getElementById(
+        "fullscreenMap"
+    )
     .classList
     .add("open");
 
-    setTimeout(function(){
 
-        forecastMap.invalidateSize();
+    setTimeout(
+        function(){
 
-        forecastMap.setView(
-            [latitude,longitude],
-            6
-        );
+            forecastMap.invalidateSize();
 
-        updateMarker();
+            forecastMap.setView(
+                [
+                    latitude,
+                    longitude
+                ],
+                6
+            );
 
-        loadForecastGrid();
+            updateMarker();
 
-    },100);
+            setLayer(
+                "precipitation"
+            );
 
-}
-
-
-function closeForecastMap(){
-
-    document
-    .getElementById("fullscreenMap")
-    .classList
-    .remove("open");
-
-    clearMapGraphics();
+        },
+        100
+    );
 
 }
 
 
 /* =========================================
-   ОЧИСТКА
+   ЗАКРЫТИЕ КАРТЫ
 ========================================= */
 
-function clearMapGraphics(){
+function closeForecastMap(){
 
-    if(forecastCanvas){
-        forecastCanvas.remove();
-        forecastCanvas = null;
-    }
-
-    windArrows.forEach(a => a.remove());
-
-    windArrows = [];
+    document
+    .getElementById(
+        "fullscreenMap"
+    )
+    .classList
+    .remove("open");
 
 }
 
@@ -779,190 +1272,121 @@ function clearMapGraphics(){
 function showMapLoading(show){
 
     document
-    .getElementById("mapLoading")
+    .getElementById(
+        "mapLoading"
+    )
     .style.display =
-        show ? "block" : "none";
+        show
+        ? "block"
+        : "none";
 
 }
 
 
 /* =========================================
-   ПОЛУЧЕНИЕ ЗНАЧЕНИЯ
+   ЦВЕТ ОСАДКОВ
 ========================================= */
 
-function getGridValue(item){
-
-    if(!item) return null;
-
-    if(selectedLayer === "temperature")
-        return item.temperature;
-
-    if(selectedLayer === "precipitation")
-        return item.precipitation;
-
-    if(selectedLayer === "wind")
-        return item.wind;
-
-    if(selectedLayer === "cloud")
-        return item.cloud;
-
-    if(selectedLayer === "pressure")
-        return item.pressure;
-
-    return null;
-
-}
-
-
-/* =========================================
-   ЦВЕТА
-========================================= */
-
-function colorFor(value,layer){
+function precipitationColor(value){
 
     if(
         value === null ||
         value === undefined ||
         !isFinite(value)
     ){
+
         return [0,0,0,0];
+
     }
 
 
-    if(layer === "temperature"){
+    if(value <= 0.05){
 
-        if(value <= -30) return [35,60,180,220];
-        if(value <= -20) return [45,105,215,220];
-        if(value <= -10) return [70,165,240,220];
-        if(value <= 0) return [75,205,235,220];
-        if(value <= 10) return [125,220,165,220];
-        if(value <= 20) return [245,225,65,220];
-        if(value <= 30) return [245,140,40,225];
-        if(value <= 40) return [225,50,35,230];
+        return [0,0,0,0];
 
-        return [145,15,25,235];
     }
 
 
-    if(layer === "precipitation"){
+    if(value <= 0.2){
 
-        if(value <= 0.05)
-            return [0,0,0,0];
+        return [70,170,255,100];
 
-        if(value <= .2)
-            return [80,180,255,100];
-
-        if(value <= 1)
-            return [35,140,255,145];
-
-        if(value <= 3)
-            return [25,85,235,180];
-
-        if(value <= 7)
-            return [95,40,220,195];
-
-        if(value <= 15)
-            return [190,30,175,215];
-
-        if(value <= 30)
-            return [240,30,70,230];
-
-        return [145,0,25,235];
     }
 
 
-    if(layer === "wind"){
+    if(value <= 1){
 
-        if(value <= 5)
-            return [50,175,160,110];
+        return [30,125,255,145];
 
-        if(value <= 10)
-            return [60,210,120,145];
-
-        if(value <= 20)
-            return [145,225,60,175];
-
-        if(value <= 30)
-            return [250,220,50,190];
-
-        if(value <= 40)
-            return [245,125,40,215];
-
-        if(value <= 60)
-            return [220,45,35,230];
-
-        return [145,10,20,240];
     }
 
 
-    if(layer === "cloud"){
+    if(value <= 3){
 
-        if(value <= 10)
-            return [20,30,40,45];
+        return [30,75,235,180];
 
-        if(value <= 25)
-            return [60,75,90,85];
-
-        if(value <= 50)
-            return [100,115,135,125];
-
-        if(value <= 75)
-            return [160,170,185,170];
-
-        return [230,235,240,200];
     }
 
 
-    if(layer === "pressure"){
+    if(value <= 7){
 
-        if(value <= 980)
-            return [80,30,170,215];
+        return [100,35,220,195];
 
-        if(value <= 990)
-            return [55,75,210,215];
-
-        if(value <= 1000)
-            return [35,145,235,215];
-
-        if(value <= 1010)
-            return [70,205,190,215];
-
-        if(value <= 1020)
-            return [235,220,70,215];
-
-        if(value <= 1030)
-            return [245,135,45,225];
-
-        return [210,40,35,235];
     }
 
-    return [0,0,0,0];
+
+    if(value <= 15){
+
+        return [190,25,170,215];
+
+    }
+
+
+    if(value <= 30){
+
+        return [240,25,65,230];
+
+    }
+
+
+    return [145,0,25,240];
 
 }
 
 
 /* =========================================
-   ОТРИСОВКА
+   ОТРИСОВКА ОСАДКОВ
 ========================================= */
 
-function drawForecastCanvas(){
+function drawPrecipitation(){
 
     if(
         !gridData.length ||
         !gridMeta
     ){
+
         return;
+
     }
 
 
-    clearMapGraphics();
+    if(forecastCanvas){
+
+        forecastCanvas.remove();
+
+        forecastCanvas = null;
+
+    }
 
 
     const canvas =
-        document.createElement("canvas");
+        document.createElement(
+            "canvas"
+        );
 
-    canvas.width = 500;
-    canvas.height = 500;
+
+    canvas.width = 600;
+    canvas.height = 600;
 
 
     const bounds =
@@ -981,51 +1405,87 @@ function drawForecastCanvas(){
     const overlay =
         L.DomUtil.create(
             "div",
-            "icon-field-overlay",
-            forecastMap.getPanes().overlayPane
+            "precipitation-overlay",
+            forecastMap
+            .getPanes()
+            .overlayPane
         );
 
 
-    overlay.style.position = "absolute";
-    overlay.style.pointerEvents = "none";
-    overlay.style.zIndex = "450";
+    overlay.style.position =
+        "absolute";
 
-    overlay.appendChild(canvas);
+    overlay.style.pointerEvents =
+        "none";
 
-    forecastCanvas = overlay;
+    overlay.style.zIndex =
+        "450";
+
+
+    overlay.appendChild(
+        canvas
+    );
+
+
+    forecastCanvas =
+        overlay;
 
 
     function render(){
 
         const nw =
-            forecastMap.latLngToLayerPoint(
+            forecastMap
+            .latLngToLayerPoint(
                 bounds.getNorthWest()
             );
 
+
         const se =
-            forecastMap.latLngToLayerPoint(
+            forecastMap
+            .latLngToLayerPoint(
                 bounds.getSouthEast()
             );
 
 
         const width =
-            Math.max(1,se.x-nw.x);
+            Math.max(
+                1,
+                se.x - nw.x
+            );
+
 
         const height =
-            Math.max(1,se.y-nw.y);
+            Math.max(
+                1,
+                se.y - nw.y
+            );
 
 
-        overlay.style.left = nw.x+"px";
-        overlay.style.top = nw.y+"px";
+        overlay.style.left =
+            nw.x+"px";
 
-        overlay.style.width = width+"px";
-        overlay.style.height = height+"px";
+        overlay.style.top =
+            nw.y+"px";
 
-        canvas.style.width = width+"px";
-        canvas.style.height = height+"px";
+        overlay.style.width =
+            width+"px";
+
+        overlay.style.height =
+            height+"px";
 
 
-        const ctx = canvas.getContext("2d");
+        canvas.style.width =
+            width+"px";
+
+        canvas.style.height =
+            height+"px";
+
+
+        const ctx =
+            canvas.getContext(
+                "2d"
+            );
+
 
         const image =
             ctx.createImageData(
@@ -1033,39 +1493,46 @@ function drawForecastCanvas(){
                 canvas.height
             );
 
-        const pixels = image.data;
 
-        const values =
-            gridData.map(getGridValue);
+        const pixels =
+            image.data;
 
 
         function valueAt(gx,gy){
 
-            gx = Math.max(
-                0,
-                Math.min(
-                    gridCols-1,
-                    gx
-                )
-            );
-
-            gy = Math.max(
-                0,
-                Math.min(
-                    gridRows-1,
-                    gy
-                )
-            );
+            gx =
+                Math.max(
+                    0,
+                    Math.min(
+                        gridCols-1,
+                        gx
+                    )
+                );
 
 
-            const x0 = Math.floor(gx);
-            const y0 = Math.floor(gy);
+            gy =
+                Math.max(
+                    0,
+                    Math.min(
+                        gridRows-1,
+                        gy
+                    )
+                );
+
+
+            const x0 =
+                Math.floor(gx);
+
+            const y0 =
+                Math.floor(gy);
+
 
             const x1 =
                 Math.min(
                     x0+1,
                     gridCols-1
                 );
+
 
             const y1 =
                 Math.min(
@@ -1074,21 +1541,28 @@ function drawForecastCanvas(){
                 );
 
 
-            const fx = gx-x0;
-            const fy = gy-y0;
-
-
             const a =
-                values[y0*gridCols+x0];
+                gridData[
+                    y0*gridCols+x0
+                ]?.precipitation;
+
 
             const b =
-                values[y0*gridCols+x1];
+                gridData[
+                    y0*gridCols+x1
+                ]?.precipitation;
+
 
             const c =
-                values[y1*gridCols+x0];
+                gridData[
+                    y1*gridCols+x0
+                ]?.precipitation;
+
 
             const d =
-                values[y1*gridCols+x1];
+                gridData[
+                    y1*gridCols+x1
+                ]?.precipitation;
 
 
             if(
@@ -1099,18 +1573,29 @@ function drawForecastCanvas(){
                     !isFinite(v)
                 )
             ){
+
                 return null;
+
             }
+
+
+            const fx =
+                gx-x0;
+
+            const fy =
+                gy-y0;
 
 
             const top =
                 a+(b-a)*fx;
 
+
             const bottom =
                 c+(d-c)*fx;
 
 
-            return top+(bottom-top)*fy;
+            return top+
+                (bottom-top)*fy;
 
         }
 
@@ -1128,22 +1613,27 @@ function drawForecastCanvas(){
             ){
 
                 const gx =
-                    x/(canvas.width-1)*
+                    x/
+                    (canvas.width-1)*
                     (gridCols-1);
 
+
                 const gy =
-                    y/(canvas.height-1)*
+                    y/
+                    (canvas.height-1)*
                     (gridRows-1);
 
 
                 const value =
-                    valueAt(gx,gy);
+                    valueAt(
+                        gx,
+                        gy
+                    );
 
 
                 const color =
-                    colorFor(
-                        value,
-                        selectedLayer
+                    precipitationColor(
+                        value
                     );
 
 
@@ -1168,12 +1658,11 @@ function drawForecastCanvas(){
         }
 
 
-        ctx.putImageData(image,0,0);
-
-
-        if(selectedLayer === "wind"){
-            drawWindArrows();
-        }
+        ctx.putImageData(
+            image,
+            0,
+            0
+        );
 
     }
 
@@ -1190,145 +1679,21 @@ function drawForecastCanvas(){
 
 
 /* =========================================
-   СТРЕЛКИ ВЕТРА
-========================================= */
-
-function drawWindArrows(){
-
-    windArrows.forEach(
-        a => a.remove()
-    );
-
-    windArrows = [];
-
-
-    if(!gridData.length)
-        return;
-
-
-    const rows = 10;
-    const cols = 12;
-
-
-    for(
-        let y=0;
-        y<rows;
-        y++
-    ){
-
-        for(
-            let x=0;
-            x<cols;
-            x++
-        ){
-
-            const gx =
-                x/(cols-1)*
-                (gridCols-1);
-
-            const gy =
-                y/(rows-1)*
-                (gridRows-1);
-
-
-            const ix = Math.round(gx);
-            const iy = Math.round(gy);
-
-
-            const item =
-                gridData[
-                    iy*gridCols+ix
-                ];
-
-
-            if(
-                !item ||
-                item.windDirection === null
-            ){
-                continue;
-            }
-
-
-            const lat =
-                gridMeta.latMin+
-                (gridMeta.latMax-gridMeta.latMin)*
-                y/(rows-1);
-
-
-            const lon =
-                gridMeta.lonMin+
-                (gridMeta.lonMax-gridMeta.lonMin)*
-                x/(cols-1);
-
-
-            const point =
-                forecastMap.latLngToLayerPoint(
-                    [lat,lon]
-                );
-
-
-            const arrow =
-                L.DomUtil.create(
-                    "div",
-                    "wind-arrow",
-                    forecastMap.getPanes().markerPane
-                );
-
-
-            const direction =
-                item.windDirection;
-
-
-            const toDirection =
-                (direction+180)%360;
-
-
-            arrow.textContent = "↑";
-
-            arrow.style.left =
-                point.x+"px";
-
-            arrow.style.top =
-                point.y+"px";
-
-            arrow.style.transform =
-                "translate(-50%,-50%) rotate("+
-                toDirection+
-                "deg)";
-
-
-            windArrows.push({
-
-                remove:()=>{
-
-                    if(arrow.parentNode)
-                        arrow.parentNode.removeChild(
-                            arrow
-                        );
-
-                }
-
-            });
-
-        }
-
-    }
-
-}
-
-
-/* =========================================
    ЗАГРУЗКА ICON
 ========================================= */
 
 async function loadForecastGrid(){
 
-    const token = ++renderToken;
+    const token =
+        ++renderToken;
+
 
     showMapLoading(true);
 
+
     const center =
         forecastMap.getCenter();
+
 
     const zoom =
         forecastMap.getZoom();
@@ -1338,28 +1703,28 @@ async function loadForecastGrid(){
     let lonSpan;
 
 
-    if(zoom <= 4){
+    if(zoom<=4){
 
-        latSpan = 10;
-        lonSpan = 15;
-
-    }
-    else if(zoom === 5){
-
-        latSpan = 7;
-        lonSpan = 11;
+        latSpan=10;
+        lonSpan=15;
 
     }
-    else if(zoom === 6){
+    else if(zoom===5){
 
-        latSpan = 4.5;
-        lonSpan = 7;
+        latSpan=7;
+        lonSpan=11;
+
+    }
+    else if(zoom===6){
+
+        latSpan=4.5;
+        lonSpan=7;
 
     }
     else{
 
-        latSpan = 3;
-        lonSpan = 4.5;
+        latSpan=3;
+        lonSpan=4.5;
 
     }
 
@@ -1367,24 +1732,31 @@ async function loadForecastGrid(){
     const latMin =
         center.lat-latSpan/2;
 
+
     const latMax =
         center.lat+latSpan/2;
 
+
     const lonMin =
         center.lng-lonSpan/2;
+
 
     const lonMax =
         center.lng+lonSpan/2;
 
 
-    const rows = 15;
-    const cols = 15;
+    const rows=15;
+    const cols=15;
 
 
-    const locations = [];
+    const locations=[];
 
 
-    for(let y=0;y<rows;y++){
+    for(
+        let y=0;
+        y<rows;
+        y++
+    ){
 
         const lat =
             latMin+
@@ -1392,7 +1764,11 @@ async function loadForecastGrid(){
             y/(rows-1);
 
 
-        for(let x=0;x<cols;x++){
+        for(
+            let x=0;
+            x<cols;
+            x++
+        ){
 
             const lon =
                 lonMin+
@@ -1410,9 +1786,9 @@ async function loadForecastGrid(){
     }
 
 
-    const chunkSize = 30;
+    const chunkSize=30;
 
-    const allResults = [];
+    const allResults=[];
 
 
     try{
@@ -1423,8 +1799,13 @@ async function loadForecastGrid(){
             start+=chunkSize
         ){
 
-            if(token !== renderToken)
+            if(
+                token!==renderToken
+            ){
+
                 return;
+
+            }
 
 
             const chunk =
@@ -1453,16 +1834,14 @@ async function loadForecastGrid(){
             const url =
                 "https://api.open-meteo.com/v1/dwd-icon"+
                 "?latitude="+
-                encodeURIComponent(latitudes)+
+                encodeURIComponent(
+                    latitudes
+                )+
                 "&longitude="+
-                encodeURIComponent(longitudes)+
-                "&hourly="+
-                "temperature_2m,"+
-                "precipitation,"+
-                "wind_speed_10m,"+
-                "wind_direction_10m,"+
-                "cloud_cover,"+
-                "pressure_msl"+
+                encodeURIComponent(
+                    longitudes
+                )+
+                "&hourly=precipitation"+
                 "&forecast_hours=1"+
                 "&timezone=GMT";
 
@@ -1498,59 +1877,34 @@ async function loadForecastGrid(){
         }
 
 
-        if(token !== renderToken)
+        if(
+            token!==renderToken
+        ){
+
             return;
+
+        }
 
 
         gridData =
             allResults.map(
                 item => ({
 
-                    temperature:
-                        item.hourly &&
-                        item.hourly.temperature_2m
-                        ? item.hourly.temperature_2m[0]
-                        : null,
-
                     precipitation:
                         item.hourly &&
                         item.hourly.precipitation
                         ? item.hourly.precipitation[0]
-                        : null,
-
-                    wind:
-                        item.hourly &&
-                        item.hourly.wind_speed_10m
-                        ? item.hourly.wind_speed_10m[0]
-                        : null,
-
-                    windDirection:
-                        item.hourly &&
-                        item.hourly.wind_direction_10m
-                        ? item.hourly.wind_direction_10m[0]
-                        : null,
-
-                    cloud:
-                        item.hourly &&
-                        item.hourly.cloud_cover
-                        ? item.hourly.cloud_cover[0]
-                        : null,
-
-                    pressure:
-                        item.hourly &&
-                        item.hourly.pressure_msl
-                        ? item.hourly.pressure_msl[0]
-                        : null
+                        : 0
 
                 })
             );
 
 
-        gridRows = rows;
-        gridCols = cols;
+        gridRows=rows;
+        gridCols=cols;
 
 
-        gridMeta = {
+        gridMeta={
 
             latMin,
             latMax,
@@ -1560,7 +1914,7 @@ async function loadForecastGrid(){
         };
 
 
-        drawForecastCanvas();
+        drawPrecipitation();
 
     }
     catch(error){
@@ -1570,164 +1924,16 @@ async function loadForecastGrid(){
             error
         );
 
-
-        const loading =
-            document.getElementById(
-                "mapLoading"
-            );
-
-
-        loading.textContent =
-            "Ошибка загрузки ICON";
-
-
-        loading.style.display =
-            "block";
-
-
-        setTimeout(()=>{
-
-            loading.style.display =
-                "none";
-
-            loading.textContent =
-                "Загрузка прогноза...";
-
-        },3000);
-
     }
     finally{
 
-        if(token === renderToken){
+        if(
+            token===renderToken
+        ){
 
             showMapLoading(false);
 
         }
-
-    }
-
-}
-
-
-/* =========================================
-   ЛЕГЕНДА
-========================================= */
-
-function updateLegend(){
-
-    const title =
-        document.getElementById(
-            "legendTitle"
-        );
-
-    const gradient =
-        document.getElementById(
-            "legendGradient"
-        );
-
-    const values =
-        document.getElementById(
-            "legendValues"
-        );
-
-
-    if(selectedLayer === "temperature"){
-
-        title.textContent =
-            "Температура, °C";
-
-        gradient.style.background =
-            "linear-gradient(90deg,"+
-            "#2341b4,#479fe8,#5dd0e6,"+
-            "#87dca8,#f5e14b,#f28d2d,#dc3025)";
-
-        values.innerHTML =
-            "<span>−30°</span>"+
-            "<span>−10°</span>"+
-            "<span>0°</span>"+
-            "<span>+20°</span>"+
-            "<span>+40°</span>";
-
-    }
-
-
-    if(selectedLayer === "precipitation"){
-
-        title.textContent =
-            "Осадки, мм/ч";
-
-        gradient.style.background =
-            "linear-gradient(90deg,"+
-            "#469cff,#2055e8,#6b2bd5,"+
-            "#bd25a9,#ed2450)";
-
-        values.innerHTML =
-            "<span>0</span>"+
-            "<span>0.2</span>"+
-            "<span>1</span>"+
-            "<span>7</span>"+
-            "<span>15+</span>";
-
-    }
-
-
-    if(selectedLayer === "wind"){
-
-        title.textContent =
-            "Ветер, км/ч";
-
-        gradient.style.background =
-            "linear-gradient(90deg,"+
-            "#3cb496,#65d273,#f1dc38,"+
-            "#f07e2d,#dc2d2d)";
-
-        values.innerHTML =
-            "<span>0</span>"+
-            "<span>10</span>"+
-            "<span>20</span>"+
-            "<span>40</span>"+
-            "<span>60+</span>";
-
-    }
-
-
-    if(selectedLayer === "cloud"){
-
-        title.textContent =
-            "Облачность, %";
-
-        gradient.style.background =
-            "linear-gradient(90deg,"+
-            "#141e2b,#3c4b5a,#687482,"+
-            "#a0aab3,#eef2f5)";
-
-        values.innerHTML =
-            "<span>0%</span>"+
-            "<span>25%</span>"+
-            "<span>50%</span>"+
-            "<span>75%</span>"+
-            "<span>100%</span>";
-
-    }
-
-
-    if(selectedLayer === "pressure"){
-
-        title.textContent =
-            "Давление, hPa";
-
-        gradient.style.background =
-            "linear-gradient(90deg,"+
-            "#5020aa,#374bd0,#2395e8,"+
-            "#46d0a0,#f0dc46,#ed7e2c,#d52929)";
-
-        values.innerHTML =
-            "<span>980</span>"+
-            "<span>990</span>"+
-            "<span>1000</span>"+
-            "<span>1010</span>"+
-            "<span>1020</span>"+
-            "<span>1030+</span>";
 
     }
 
@@ -1740,34 +1946,656 @@ function updateLegend(){
 
 function setLayer(layer){
 
-    selectedLayer = layer;
+    selectedLayer =
+        layer;
 
 
     document
-    .querySelectorAll(".layer")
+    .querySelectorAll(
+        ".layer"
+    )
     .forEach(
         button =>
-        button.classList.remove("active")
+        button.classList.remove(
+            "active"
+        )
     );
 
 
-    const button =
-        document.getElementById(
-            layer+"Layer"
-        );
+    document
+    .getElementById(
+        "precipitationLayer"
+    )
+    .classList
+    .add("active");
 
 
-    if(button){
-        button.classList.add("active");
+    document
+    .getElementById(
+        "precipLegend"
+    )
+    .style.display =
+        "block";
+
+
+    if(
+        forecastCanvas
+    ){
+
+        forecastCanvas.remove();
+
+        forecastCanvas=null;
+
     }
 
 
-    updateLegend();
+    if(
+        layer==="precipitation"
+    ){
 
+        loadForecastGrid();
 
-    drawForecastCanvas();
+    }
 
 }
+
+
+/* =========================================
+   ОТКРЫТЬ РАДАР
+========================================= */
+
+function openRadarViewer(){
+
+    /*
+     * Сама карта прогнозов остаётся
+     * открытой в фоне.
+     */
+
+    radarViewer
+    .classList
+    .add("open");
+
+
+    resetRadarTransform();
+
+
+    loadRadarGif();
+
+}
+
+
+/* =========================================
+   ЗАКРЫТЬ РАДАР
+========================================= */
+
+function closeRadarViewer(){
+
+    radarViewer
+    .classList
+    .remove("open");
+
+}
+
+
+/* =========================================
+   ЗАГРУЗКА GIF
+========================================= */
+
+function loadRadarGif(){
+
+    /*
+     * cache-busting.
+     */
+
+    const url =
+        "https://meteoinfo.ru/hmc-output/rmap/phenomena.gif?"+
+        Date.now();
+
+
+    radarImage.src =
+        url;
+
+}
+
+
+/*
+ * Обновляем GIF каждые 4 минуты.
+ *
+ * Важно:
+ * GIF остаётся анимационной.
+ */
+
+setInterval(
+    function(){
+
+        if(
+            radarViewer
+            .classList
+            .contains("open")
+        ){
+
+            loadRadarGif();
+
+        }
+
+    },
+    4*60*1000
+);
+
+
+/* =========================================
+   РАДАР TRANSFORM
+========================================= */
+
+function updateRadarTransform(){
+
+    radarStage.style.transform =
+        "translate3d(-50%,-50%,0)"+
+        "translate3d("+
+        radarX+
+        "px,"+
+        radarY+
+        "px,0)"+
+        "rotate("+
+        radarRotation+
+        "deg)"+
+        "scale("+
+        radarScale+
+        ")";
+
+}
+
+
+/* =========================================
+   ZOOM
+========================================= */
+
+function radarZoom(factor){
+
+    radarScale *= factor;
+
+
+    radarScale =
+        Math.max(
+            0.15,
+            Math.min(
+                20,
+                radarScale
+            )
+        );
+
+
+    updateRadarTransform();
+
+}
+
+
+/* =========================================
+   ROTATE
+========================================= */
+
+function radarRotate(deg){
+
+    radarRotation += deg;
+
+    updateRadarTransform();
+
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+function resetRadarTransform(){
+
+    radarScale=1;
+
+    radarRotation=0;
+
+    radarX=0;
+
+    radarY=0;
+
+    updateRadarTransform();
+
+}
+
+
+/* =========================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+========================================= */
+
+function distance(a,b){
+
+    const dx =
+        b.x-a.x;
+
+    const dy =
+        b.y-a.y;
+
+
+    return Math.sqrt(
+        dx*dx+
+        dy*dy
+    );
+
+}
+
+
+function angle(a,b){
+
+    return Math.atan2(
+        b.y-a.y,
+        b.x-a.x
+    )*
+    180/
+    Math.PI;
+
+}
+
+
+function center(a,b){
+
+    return {
+
+        x:(a.x+b.x)/2,
+
+        y:(a.y+b.y)/2
+
+    };
+
+}
+
+
+/* =========================================
+   TOUCH / POINTER EVENTS
+========================================= */
+
+radarViewer.addEventListener(
+    "pointerdown",
+    function(e){
+
+        e.preventDefault();
+
+
+        radarViewer.setPointerCapture(
+            e.pointerId
+        );
+
+
+        pointers.set(
+            e.pointerId,
+            {
+                x:e.clientX,
+                y:e.clientY
+            }
+        );
+
+
+        if(
+            pointers.size===1
+        ){
+
+            gestureMode =
+                "pan";
+
+
+            startX =
+                e.clientX;
+
+            startY =
+                e.clientY;
+
+
+            startTranslateX =
+                radarX;
+
+            startTranslateY =
+                radarY;
+
+        }
+
+
+        if(
+            pointers.size===2
+        ){
+
+            const pts =
+                Array.from(
+                    pointers.values()
+                );
+
+
+            startDistance =
+                distance(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            startAngle =
+                angle(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            startScale =
+                radarScale;
+
+
+            startRotation =
+                radarRotation;
+
+
+            const c =
+                center(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            startCenterX =
+                c.x;
+
+            startCenterY =
+                c.y;
+
+
+            startTranslateX =
+                radarX;
+
+            startTranslateY =
+                radarY;
+
+
+            gestureMode =
+                "transform";
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+radarViewer.addEventListener(
+    "pointermove",
+    function(e){
+
+        if(
+            !pointers.has(
+                e.pointerId
+            )
+        ){
+
+            return;
+
+        }
+
+
+        e.preventDefault();
+
+
+        pointers.set(
+            e.pointerId,
+            {
+                x:e.clientX,
+                y:e.clientY
+            }
+        );
+
+
+        /*
+         * ОДИН ПАЛЕЦ
+         */
+
+        if(
+            pointers.size===1 &&
+            gestureMode==="pan"
+        ){
+
+            radarX =
+                startTranslateX+
+                (
+                    e.clientX-startX
+                );
+
+
+            radarY =
+                startTranslateY+
+                (
+                    e.clientY-startY
+                );
+
+
+            updateRadarTransform();
+
+            return;
+
+        }
+
+
+        /*
+         * ДВА ПАЛЬЦА
+         */
+
+        if(
+            pointers.size===2
+        ){
+
+            const pts =
+                Array.from(
+                    pointers.values()
+                );
+
+
+            const currentDistance =
+                distance(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            const currentAngle =
+                angle(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            const currentCenter =
+                center(
+                    pts[0],
+                    pts[1]
+                );
+
+
+            /*
+             * Масштаб.
+             */
+
+            const scaleFactor =
+                currentDistance/
+                startDistance;
+
+
+            radarScale =
+                startScale*
+                scaleFactor;
+
+
+            radarScale =
+                Math.max(
+                    0.15,
+                    Math.min(
+                        20,
+                        radarScale
+                    )
+                );
+
+
+            /*
+             * Вращение.
+             */
+
+            radarRotation =
+                startRotation+
+                (
+                    currentAngle-
+                    startAngle
+                );
+
+
+            /*
+             * Самое важное:
+             *
+             * центр между пальцами
+             * сохраняется как точка
+             * трансформации.
+             *
+             * Поэтому картинка не
+             * "улетает" при pinch/rotate.
+             */
+
+            const dx =
+                currentCenter.x-
+                startCenterX;
+
+
+            const dy =
+                currentCenter.y-
+                startCenterY;
+
+
+            radarX =
+                startTranslateX+
+                dx;
+
+
+            radarY =
+                startTranslateY+
+                dy;
+
+
+            updateRadarTransform();
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+radarViewer.addEventListener(
+    "pointerup",
+    function(e){
+
+        pointers.delete(
+            e.pointerId
+        );
+
+
+        if(
+            pointers.size===0
+        ){
+
+            gestureMode =
+                "none";
+
+        }
+
+
+        if(
+            pointers.size===1
+        ){
+
+            const remaining =
+                Array.from(
+                    pointers.values()
+                )[0];
+
+
+            gestureMode =
+                "pan";
+
+
+            startX =
+                remaining.x;
+
+            startY =
+                remaining.y;
+
+
+            startTranslateX =
+                radarX;
+
+            startTranslateY =
+                radarY;
+
+        }
+
+    }
+);
+
+
+radarViewer.addEventListener(
+    "pointercancel",
+    function(e){
+
+        pointers.delete(
+            e.pointerId
+        );
+
+
+        if(
+            pointers.size===0
+        ){
+
+            gestureMode =
+                "none";
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   DOUBLE TAP
+========================================= */
+
+let lastTap=0;
+
+
+radarViewer.addEventListener(
+    "pointerup",
+    function(e){
+
+        const now =
+            Date.now();
+
+
+        if(
+            now-lastTap<
+            300 &&
+            pointers.size===0
+        ){
+
+            resetRadarTransform();
+
+        }
+
+
+        lastTap=now;
+
+    }
+);
 
 
 /* =========================================
@@ -1778,7 +2606,9 @@ async function searchCity(){
 
     const city =
         document
-        .getElementById("cityInput")
+        .getElementById(
+            "cityInput"
+        )
         .value
         .trim();
 
@@ -1815,7 +2645,9 @@ async function searchCity(){
             !data.results ||
             !data.results.length
         ){
+
             throw new Error();
+
         }
 
 
@@ -1826,18 +2658,25 @@ async function searchCity(){
         latitude =
             place.latitude;
 
+
         longitude =
             place.longitude;
 
 
         previewMap.setView(
-            [latitude,longitude],
+            [
+                latitude,
+                longitude
+            ],
             6
         );
 
 
         forecastMap.setView(
-            [latitude,longitude],
+            [
+                latitude,
+                longitude
+            ],
             6
         );
 
@@ -1850,7 +2689,6 @@ async function searchCity(){
             longitude,
             place.name
         );
-
 
     }
     catch(error){
@@ -1873,7 +2711,7 @@ async function searchCity(){
 
 
 /* =========================================
-   ОСНОВНОЙ ПРОГНОЗ
+   ПРОГНОЗ ГОРОДА
 ========================================= */
 
 async function loadWeather(
@@ -1958,13 +2796,21 @@ async function loadWeather(
 
 
 /* =========================================
-   ОТОБРАЖЕНИЕ ПРОГНОЗА
+   ОТОБРАЖЕНИЕ ПОГОДЫ
 ========================================= */
 
-function renderWeather(data,city){
+function renderWeather(
+    data,
+    city
+){
 
-    const c = data.current;
-    const d = data.daily;
+    const c =
+        data.current;
+
+
+    const d =
+        data.daily;
+
 
     const weather =
         getWeather(
@@ -2016,85 +2862,109 @@ function renderWeather(data,city){
         <div class="details">
 
             <div class="detail">
+
                 <div class="detail-title">
                     Ощущается
                 </div>
+
                 <div class="detail-value">
                     ${Math.round(c.apparent_temperature)}°
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Влажность
                 </div>
+
                 <div class="detail-value">
                     ${c.relative_humidity_2m}%
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Ветер
                 </div>
+
                 <div class="detail-value">
                     ${windDirection}
                     ${Math.round(c.wind_speed_10m)} км/ч
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Направление
                 </div>
+
                 <div class="detail-value">
                     ${Math.round(c.wind_direction_10m)}°
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Давление
                 </div>
+
                 <div class="detail-value">
                     ${Math.round(c.pressure_msl)} hPa
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Осадки
                 </div>
+
                 <div class="detail-value">
                     ${c.precipitation} мм
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
                     Максимум
                 </div>
+
                 <div class="detail-value">
                     ${Math.round(
                         d.temperature_2m_max[0]
                     )}°
                 </div>
+
             </div>
 
 
             <div class="detail">
+
                 <div class="detail-title">
-                    Осадки
+                    Вероятность осадков
                 </div>
+
                 <div class="detail-value">
                     ${d.precipitation_probability_max[0]}%
                 </div>
+
             </div>
 
         </div>
@@ -2108,10 +2978,15 @@ function renderWeather(data,city){
 
 
     <div class="forecast">
+
     `;
 
 
-    for(let i=0;i<7;i++){
+    for(
+        let i=0;
+        i<7;
+        i++
+    ){
 
         const date =
             new Date(
@@ -2130,7 +3005,9 @@ function renderWeather(data,city){
             ? "Сегодня"
             : date.toLocaleDateString(
                 "ru-RU",
-                {weekday:"short"}
+                {
+                    weekday:"short"
+                }
             );
 
 
@@ -2174,7 +3051,9 @@ function renderWeather(data,city){
 
 
     document
-    .getElementById("weather")
+    .getElementById(
+        "weather"
+    )
     .innerHTML =
         html;
 
@@ -2182,7 +3061,7 @@ function renderWeather(data,city){
 
 
 /* =========================================
-   НАПРАВЛЕНИЕ ВЕТРА
+   ВЕТЕР
 ========================================= */
 
 function getWindDirection(deg){
@@ -2231,13 +3110,17 @@ function formatDate(date){
 function showLoading(){
 
     document
-    .getElementById("error")
+    .getElementById(
+        "error"
+    )
     .style.display =
         "none";
 
 
     document
-    .getElementById("weather")
+    .getElementById(
+        "weather"
+    )
     .innerHTML = `
 
         <div style="
@@ -2245,7 +3128,9 @@ function showLoading(){
             text-align:center;
             color:#8799ad;
         ">
+
             Загрузка прогноза...
+
         </div>
 
     `;
@@ -2270,7 +3155,9 @@ function showError(message){
 
 
     document
-    .getElementById("weather")
+    .getElementById(
+        "weather"
+    )
     .innerHTML =
         "";
 
@@ -2282,13 +3169,17 @@ function showError(message){
 ========================================= */
 
 document
-.getElementById("cityInput")
+.getElementById(
+    "cityInput"
+)
 .addEventListener(
     "keydown",
     function(e){
 
-        if(e.key === "Enter"){
+        if(e.key==="Enter"){
+
             searchCity();
+
         }
 
     }
@@ -2296,12 +3187,10 @@ document
 
 
 /* =========================================
-   START
+   ЗАПУСК
 ========================================= */
 
 createMaps();
-
-updateLegend();
 
 searchCity();
 
