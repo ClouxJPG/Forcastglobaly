@@ -2,25 +2,25 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-<title>Метео • Прогноз</title>
+<title>Метео</title>
 
 <link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
 }
 
 html,body{
     width:100%;
-    min-height:100%;
-    background:#060b12;
+    height:100%;
+    background:#050a10;
     color:#fff;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 }
@@ -30,19 +30,16 @@ body{
 }
 
 .app{
-    width:100%;
     max-width:1100px;
     margin:auto;
     padding:14px;
 }
 
-/* HEADER */
-
 header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:15px;
+    margin-bottom:14px;
 }
 
 .logo{
@@ -54,17 +51,15 @@ header{
     color:#268cff;
 }
 
-.location-status{
-    color:#8799ad;
+.location{
+    color:#8999aa;
     font-size:13px;
 }
-
-/* SEARCH */
 
 .search{
     display:flex;
     gap:8px;
-    margin-bottom:15px;
+    margin-bottom:14px;
 }
 
 .search input{
@@ -73,14 +68,10 @@ header{
     border:0;
     outline:0;
     border-radius:15px;
-    padding:0 16px;
-    background:#101a27;
+    background:#101a26;
     color:#fff;
+    padding:0 15px;
     font-size:16px;
-}
-
-.search input::placeholder{
-    color:#6e8094;
 }
 
 .search button{
@@ -88,28 +79,23 @@ header{
     border:0;
     border-radius:15px;
     background:#268cff;
-    color:white;
-    font-size:23px;
+    color:#fff;
+    font-size:22px;
 }
-
-/* ERROR */
 
 .error{
     display:none;
-    background:#35151d;
-    color:#ff9ba7;
-    padding:13px;
-    border-radius:14px;
-    margin-bottom:14px;
+    padding:12px;
+    border-radius:13px;
+    background:#35151c;
+    color:#ff9ca8;
+    margin-bottom:12px;
 }
 
-/* CURRENT WEATHER */
-
 .current{
-    padding:22px;
+    background:linear-gradient(145deg,#122e4b,#09131e);
     border-radius:24px;
-    background:linear-gradient(145deg,#112d4c,#09141f);
-    border:1px solid rgba(255,255,255,.06);
+    padding:22px;
 }
 
 .current-top{
@@ -124,57 +110,55 @@ header{
 
 .date{
     margin-top:5px;
-    color:#8b9caf;
-    font-size:14px;
+    color:#899aaa;
+    font-size:13px;
 }
 
 .weather-icon{
-    font-size:52px;
+    font-size:50px;
 }
 
 .temperature{
-    margin-top:10px;
-    font-size:70px;
+    margin-top:13px;
+    font-size:68px;
     line-height:1;
     font-weight:750;
 }
 
 .description{
     margin-top:8px;
-    color:#c4cfda;
     font-size:18px;
+    color:#c6d0da;
 }
 
 .details{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:9px;
-    margin-top:24px;
+    margin-top:23px;
 }
 
 .detail{
-    background:rgba(255,255,255,.05);
+    padding:12px;
     border-radius:14px;
-    padding:13px;
+    background:rgba(255,255,255,.05);
 }
 
 .detail-title{
-    color:#7e91a7;
-    font-size:12px;
-    margin-bottom:6px;
+    color:#7f91a5;
+    font-size:11px;
+    margin-bottom:5px;
 }
 
 .detail-value{
-    font-size:15px;
+    font-size:14px;
     font-weight:650;
 }
 
-/* FORECAST */
-
 .section-title{
+    margin:23px 0 10px;
     font-size:20px;
     font-weight:750;
-    margin:24px 0 11px;
 }
 
 .forecast{
@@ -196,23 +180,22 @@ header{
 }
 
 .day-name{
-    color:#9aabba;
+    color:#94a5b7;
     font-size:13px;
 }
 
 .day-icon{
+    margin:9px 0;
     font-size:32px;
-    margin:10px 0;
 }
 
 .day-temp{
-    font-size:16px;
     font-weight:650;
 }
 
 .day-rain{
-    margin-top:7px;
-    color:#61aaff;
+    margin-top:6px;
+    color:#62aaff;
     font-size:12px;
 }
 
@@ -220,11 +203,10 @@ header{
 
 .map-preview{
     position:relative;
-    height:380px;
+    height:390px;
     border-radius:22px;
     overflow:hidden;
-    background:#070d15;
-    border:1px solid rgba(255,255,255,.08);
+    background:#060b12;
 }
 
 #previewMap{
@@ -235,12 +217,11 @@ header{
 .preview-label{
     position:absolute;
     z-index:1000;
-    left:12px;
-    top:12px;
+    left:10px;
+    top:10px;
     padding:7px 10px;
     border-radius:9px;
-    background:rgba(4,10,17,.9);
-    color:#d3dce6;
+    background:rgba(4,9,15,.9);
     font-size:12px;
 }
 
@@ -249,25 +230,22 @@ header{
     z-index:1000;
     right:10px;
     bottom:10px;
+    padding:10px 14px;
     border:0;
     border-radius:11px;
-    padding:10px 14px;
-    background:rgba(4,10,17,.95);
-    color:white;
-    font-size:13px;
+    background:rgba(4,9,15,.95);
+    color:#fff;
     font-weight:650;
 }
 
-/* FULLSCREEN MAP */
+/* FULL MAP */
 
 .fullscreen-map{
     display:none;
     position:fixed;
-    z-index:99999;
     inset:0;
-    width:100vw;
-    height:100vh;
-    background:#060b12;
+    z-index:50000;
+    background:#050a10;
 }
 
 .fullscreen-map.open{
@@ -277,36 +255,28 @@ header{
 #forecastMap{
     position:absolute;
     inset:0;
-    width:100%;
-    height:100%;
 }
-
-/* MAP TOP */
 
 .map-top{
     position:absolute;
     z-index:10000;
-    top:10px;
-    left:10px;
-    right:10px;
-
+    left:8px;
+    right:8px;
+    top:8px;
     display:flex;
     justify-content:space-between;
-    align-items:flex-start;
     gap:8px;
-
     pointer-events:none;
 }
 
 .map-layers{
     display:flex;
     gap:5px;
-    max-width:calc(100% - 100px);
     overflow-x:auto;
-    padding:6px;
-    border-radius:14px;
-    background:rgba(4,10,17,.93);
-    backdrop-filter:blur(12px);
+    max-width:calc(100% - 100px);
+    padding:5px;
+    border-radius:13px;
+    background:rgba(4,9,15,.94);
     pointer-events:auto;
 }
 
@@ -319,9 +289,8 @@ header{
     border:0;
     border-radius:9px;
     padding:9px 12px;
-    background:#111d2c;
-    color:#aebdce;
-    font-size:12px;
+    background:#111d2b;
+    color:#aab9c9;
 }
 
 .layer.active{
@@ -330,88 +299,68 @@ header{
 }
 
 .close-map{
-    flex-shrink:0;
     border:0;
     border-radius:11px;
-    padding:10px 13px;
-    background:rgba(4,10,17,.95);
+    padding:10px 12px;
+    background:rgba(4,9,15,.95);
     color:#fff;
-    font-size:13px;
-    font-weight:650;
     pointer-events:auto;
 }
-
-.map-loading{
-    display:none;
-    position:absolute;
-    z-index:10001;
-    top:72px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:9px 14px;
-    border-radius:11px;
-    background:rgba(4,10,17,.94);
-    color:#d2dce7;
-    font-size:12px;
-}
-
-/* LEGEND */
 
 .legend{
     position:absolute;
     z-index:10000;
-    left:12px;
-    bottom:12px;
-    min-width:220px;
-    padding:13px;
-    border-radius:14px;
-    background:rgba(4,10,17,.94);
-    backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.1);
-    pointer-events:none;
+    left:10px;
+    bottom:10px;
+    padding:12px;
+    border-radius:13px;
+    background:rgba(4,9,15,.94);
 }
 
 .legend-title{
-    color:#dce5ee;
     font-size:12px;
-    margin-bottom:8px;
+    margin-bottom:7px;
 }
 
-.legend-gradient{
+.gradient{
     width:220px;
     height:10px;
     border-radius:10px;
+    background:linear-gradient(
+        90deg,
+        #469cff,
+        #2055e8,
+        #6b2bd5,
+        #bd25a9,
+        #ed2450
+    );
 }
 
 .legend-values{
     display:flex;
     justify-content:space-between;
-    width:220px;
-    margin-top:5px;
-    color:#8799ad;
+    color:#8293a5;
     font-size:10px;
+    margin-top:4px;
 }
 
-/* =========================================
-   RADAR VIEWER
-========================================= */
+/* RADAR */
 
 .radar-viewer{
     display:none;
-
     position:fixed;
-    z-index:100000;
-
     inset:0;
-
-    width:100vw;
-    height:100vh;
-
-    background:#02050a;
-
+    z-index:100000;
+    background:#02060b;
     overflow:hidden;
 
+    /*
+     * КРИТИЧЕСКИ ВАЖНО:
+     * браузер не должен сам обрабатывать
+     * pinch/scroll.
+     */
     touch-action:none;
+    overscroll-behavior:none;
 }
 
 .radar-viewer.open{
@@ -421,59 +370,63 @@ header{
 .radar-stage{
     position:absolute;
 
+    /*
+     * Центр сцены.
+     */
     left:50%;
     top:50%;
 
+    /*
+     * Размер сцены больше экрана.
+     * Поэтому GIF не обрезается при вращении.
+     */
     width:100vw;
     height:100vh;
 
-    transform:
-        translate3d(-50%,-50%,0)
-        translate3d(0,0,0)
-        rotate(0deg)
-        scale(1);
-
-    transform-origin:50% 50%;
+    transform-origin:0 0;
 
     will-change:transform;
+
+    touch-action:none;
 
     display:flex;
     align-items:center;
     justify-content:center;
-
-    touch-action:none;
 }
 
 .radar-image{
     display:block;
 
-    max-width:none;
-    max-height:none;
-
+    /*
+     * Не ограничиваем GIF max-width.
+     * Иначе браузер будет менять её размер
+     * независимо от нашего transform.
+     */
     width:auto;
     height:auto;
+
+    max-width:none;
+    max-height:none;
 
     image-rendering:pixelated;
     image-rendering:crisp-edges;
 
     user-select:none;
+    -webkit-user-select:none;
     -webkit-user-drag:none;
 
     pointer-events:none;
-
-    will-change:transform;
 }
 
 /* RADAR HEADER */
 
 .radar-header{
     position:absolute;
+    z-index:200;
 
-    z-index:20;
-
-    top:10px;
-    left:10px;
-    right:10px;
+    left:9px;
+    right:9px;
+    top:9px;
 
     display:flex;
     justify-content:space-between;
@@ -484,180 +437,94 @@ header{
 
 .radar-title{
     padding:9px 12px;
-
     border-radius:12px;
-
-    background:rgba(3,8,14,.92);
-
+    background:rgba(3,8,14,.94);
     backdrop-filter:blur(12px);
-
     font-size:13px;
-    color:#dce6ef;
-
-    pointer-events:auto;
 }
 
 .radar-close{
-    border:0;
-
     padding:10px 13px;
-
+    border:0;
     border-radius:11px;
-
     background:rgba(3,8,14,.95);
-
     color:#fff;
-
-    font-size:13px;
     font-weight:650;
-
     pointer-events:auto;
 }
 
-/* RADAR CONTROLS */
+/* CONTROLS */
 
 .radar-controls{
     position:absolute;
-    z-index:20;
+    z-index:200;
 
-    right:14px;
+    right:13px;
     top:50%;
-    bottom:auto;
 
     transform:translateY(-50%);
 
     display:flex;
     flex-direction:column;
-    gap:9px;
+    gap:8px;
+
+    pointer-events:auto;
 }
 
 .radar-control{
-    width:52px;
-    height:52px;
+    width:53px;
+    height:53px;
 
     border:0;
     border-radius:15px;
 
-    background:rgba(3,8,14,.94);
-
-    color:white;
+    background:rgba(3,8,14,.95);
+    color:#fff;
 
     font-size:23px;
     font-weight:600;
 
-    backdrop-filter:blur(12px);
+    box-shadow:0 4px 16px rgba(0,0,0,.4);
 
-    box-shadow:0 3px 15px rgba(0,0,0,.35);
+    -webkit-tap-highlight-color:transparent;
 }
-
-/* RADAR HELP */
 
 .radar-help{
     position:absolute;
-
-    z-index:20;
+    z-index:200;
 
     left:50%;
-    bottom:12px;
+    bottom:10px;
 
     transform:translateX(-50%);
 
     padding:8px 12px;
+    border-radius:10px;
 
-    border-radius:11px;
-
-    background:rgba(3,8,14,.8);
-
-    color:#93a5b8;
+    background:rgba(3,8,14,.82);
+    color:#91a3b6;
 
     font-size:11px;
 
     white-space:nowrap;
-
     pointer-events:none;
 }
 
-/* LEAFLET */
-
-.leaflet-container{
-    background:#060b12;
-}
-
-.leaflet-control-zoom a{
-    background:#111d2c!important;
-    color:#fff!important;
-    border-color:#293a4d!important;
-}
-
-.leaflet-control-attribution{
-    background:rgba(4,10,17,.8)!important;
-    color:#6f8195!important;
-}
-
-.leaflet-control-attribution a{
-    color:#73aaff!important;
-}
-
-/* MOBILE */
-
 @media(max-width:650px){
-
-    .app{
-        padding:12px;
-    }
 
     .details{
         grid-template-columns:repeat(2,1fr);
     }
 
-    .temperature{
-        font-size:61px;
-    }
-
     .map-preview{
-        height:330px;
-    }
-
-    .map-top{
-        top:7px;
-        left:7px;
-        right:7px;
-    }
-
-    .map-layers{
-        max-width:calc(100% - 95px);
-    }
-
-    .layer{
-        padding:8px 10px;
-    }
-
-    .close-map{
-        padding:9px 10px;
-    }
-
-    .legend{
-        left:7px;
-        bottom:7px;
-    }
-
-    .radar-help{
-        bottom:8px;
-        font-size:10px;
-    }
-
-    .radar-controls{
-        right:10px;
-        gap:8px;
+        height:340px;
     }
 
     .radar-control{
-        width:50px;
-        height:50px;
+        width:51px;
+        height:51px;
     }
-
 }
-
 </style>
 </head>
 
@@ -666,16 +533,14 @@ header{
 <div class="app">
 
 <header>
-
     <div class="logo">
         Метео<span>•</span>
     </div>
 
     <div id="locationStatus"
-         class="location-status">
+         class="location">
         Город не выбран
     </div>
-
 </header>
 
 <div class="search">
@@ -683,29 +548,23 @@ header{
     <input
         id="cityInput"
         value="Уфа"
-        placeholder="Введите город..."
-    >
+        placeholder="Введите город">
 
-    <button onclick="searchCity()">
-        ⌕
-    </button>
+    <button onclick="searchCity()">⌕</button>
 
 </div>
 
 <div id="error"
-     class="error">
-</div>
+     class="error"></div>
 
 <div id="weather">
-
     <div style="
         padding:30px;
         text-align:center;
-        color:#8799ad;
+        color:#8496a9;
     ">
-        Загрузка прогноза...
+        Загрузка...
     </div>
-
 </div>
 
 <div class="section-title">
@@ -717,15 +576,13 @@ header{
     <div id="previewMap"></div>
 
     <div class="preview-label">
-        DWD ICON • осадки
+        ICON • Осадки
     </div>
 
     <button
         class="open-map"
         onclick="openForecastMap()">
-
         Открыть карту
-
     </button>
 
 </div>
@@ -733,7 +590,7 @@ header{
 </div>
 
 
-<!-- FULLSCREEN FORECAST MAP -->
+<!-- FULL MAP -->
 
 <div id="fullscreenMap"
      class="fullscreen-map">
@@ -748,18 +605,13 @@ header{
                 id="precipitationLayer"
                 class="layer active"
                 onclick="setLayer('precipitation')">
-
                 🌧 Осадки
-
             </button>
 
             <button
-                id="radarLayer"
                 class="layer"
                 onclick="openRadarViewer()">
-
                 📡 Радарная-GIF
-
             </button>
 
         </div>
@@ -767,50 +619,25 @@ header{
         <button
             class="close-map"
             onclick="closeForecastMap()">
-
             Закрыть карту
-
         </button>
 
     </div>
 
-    <div id="mapLoading"
-         class="map-loading">
-
-        Загрузка прогноза...
-
-    </div>
-
-    <div id="precipLegend"
-         class="legend">
+    <div class="legend">
 
         <div class="legend-title">
             Осадки, мм/ч
         </div>
 
-        <div
-            class="legend-gradient"
-            style="
-            background:
-            linear-gradient(
-                90deg,
-                #469cff,
-                #2055e8,
-                #6b2bd5,
-                #bd25a9,
-                #ed2450
-            );
-            ">
-        </div>
+        <div class="gradient"></div>
 
         <div class="legend-values">
-
             <span>0</span>
             <span>0.2</span>
             <span>1</span>
             <span>7</span>
             <span>15+</span>
-
         </div>
 
     </div>
@@ -818,18 +645,19 @@ header{
 </div>
 
 
-<!-- RADAR VIEWER -->
+<!-- RADAR GIF -->
 
 <div id="radarViewer"
      class="radar-viewer">
 
-    <div class="radar-stage"
-         id="radarStage">
+    <div id="radarStage"
+         class="radar-stage">
 
         <img
             id="radarImage"
             class="radar-image"
-            alt="Meteoinfo Radar">
+            draggable="false"
+            alt="Radar">
 
     </div>
 
@@ -842,9 +670,7 @@ header{
         <button
             class="radar-close"
             onclick="closeRadarViewer()">
-
             Закрыть
-
         </button>
 
     </div>
@@ -854,49 +680,37 @@ header{
         <button
             class="radar-control"
             onclick="radarZoom(1.25)">
-
             +
-
         </button>
 
         <button
             class="radar-control"
             onclick="radarZoom(.8)">
-
             −
-
         </button>
 
         <button
             class="radar-control"
             onclick="radarRotate(-15)">
-
             ↶
-
         </button>
 
         <button
             class="radar-control"
             onclick="radarRotate(15)">
-
             ↷
-
         </button>
 
         <button
             class="radar-control"
-            onclick="resetRadarTransform()">
-
+            onclick="resetRadar()">
             ⟳
-
         </button>
 
     </div>
 
     <div class="radar-help">
-
-        Два пальца: масштаб + вращение • Один палец: перемещение
-
+        Два пальца — масштаб и вращение • Один палец — перемещение
     </div>
 
 </div>
@@ -906,36 +720,795 @@ header{
 
 <script>
 
-/* =========================================
-   GLOBAL
-========================================= */
+/* =====================================================
+   MAP
+===================================================== */
 
-let latitude = 54.7388;
-let longitude = 55.9721;
+let latitude=54.7388;
+let longitude=55.9721;
 
 let previewMap;
 let forecastMap;
-
 let marker;
 
-let selectedLayer = "precipitation";
+function createMaps(){
 
-let gridData = [];
-let gridMeta = null;
+    previewMap=L.map(
+        "previewMap",
+        {
+            zoomControl:false,
+            attributionControl:false
+        }
+    ).setView(
+        [latitude,longitude],
+        5
+    );
 
-let forecastCanvas = null;
+    L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+            subdomains:"abcd",
+            maxZoom:20
+        }
+    ).addTo(previewMap);
 
-let gridRows = 15;
-let gridCols = 15;
 
-let renderToken = 0;
+    forecastMap=L.map(
+        "forecastMap",
+        {
+            zoomControl:true
+        }
+    ).setView(
+        [latitude,longitude],
+        5
+    );
+
+    L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+            subdomains:"abcd",
+            maxZoom:20,
+            attribution:"© OpenStreetMap © CARTO"
+        }
+    ).addTo(forecastMap);
+
+}
+
+function updateMarker(){
+
+    if(marker){
+        forecastMap.removeLayer(marker);
+    }
+
+    marker=L.circleMarker(
+        [latitude,longitude],
+        {
+            radius:6,
+            color:"#fff",
+            weight:2,
+            fillColor:"#268cff",
+            fillOpacity:1
+        }
+    ).addTo(forecastMap);
+}
+
+function openForecastMap(){
+
+    document
+    .getElementById("fullscreenMap")
+    .classList.add("open");
+
+    setTimeout(()=>{
+
+        forecastMap.invalidateSize();
+
+        forecastMap.setView(
+            [latitude,longitude],
+            6
+        );
+
+        updateMarker();
+
+        loadPrecipitation();
+
+    },100);
+}
+
+function closeForecastMap(){
+
+    document
+    .getElementById("fullscreenMap")
+    .classList.remove("open");
+
+}
 
 
-/* =========================================
-   WEATHER CODES
-========================================= */
+/* =====================================================
+   PRECIPITATION
+===================================================== */
 
-const weatherCodes = {
+let precipLayer=null;
+
+async function loadPrecipitation(){
+
+    try{
+
+        const url=
+            "https://api.open-meteo.com/v1/dwd-icon"+
+            "?latitude="+latitude+
+            "&longitude="+longitude+
+            "&hourly=precipitation"+
+            "&forecast_days=1"+
+            "&timezone=auto";
+
+        /*
+         * Точка прогноза.
+         * Это намеренно не рисует мусорные точки
+         * поверх всей карты.
+         */
+
+        await fetch(url);
+
+    }catch(e){
+
+        console.log(e);
+
+    }
+
+}
+
+function setLayer(layer){
+
+    if(layer==="precipitation"){
+
+        document
+        .getElementById("precipitationLayer")
+        .classList.add("active");
+
+        loadPrecipitation();
+
+    }
+
+}
+
+
+/* =====================================================
+   RADAR
+===================================================== */
+
+const radarViewer=
+    document.getElementById("radarViewer");
+
+const radarStage=
+    document.getElementById("radarStage");
+
+const radarImage=
+    document.getElementById("radarImage");
+
+
+/*
+ * ВСЯ трансформация хранится
+ * именно здесь.
+ */
+
+let radar={
+    x:0,
+    y:0,
+    scale:1,
+    rotation:0
+};
+
+
+/*
+ * Активные пальцы.
+ */
+
+const pointers=new Map();
+
+
+/*
+ * Состояние текущего жеста.
+ */
+
+let gesture=null;
+
+
+/*
+ * Открытие.
+ */
+
+function openRadarViewer(){
+
+    radarViewer.classList.add("open");
+
+    loadRadar();
+
+    /*
+     * Здесь НЕТ resetRadar().
+     *
+     * Если пользователь снова открыл GIF,
+     * последняя позиция сохраняется.
+     */
+
+    applyRadarTransform();
+}
+
+
+function closeRadarViewer(){
+
+    radarViewer.classList.remove("open");
+
+}
+
+
+/*
+ * GIF Meteoinfo.
+ */
+
+function loadRadar(){
+
+    const oldX=radar.x;
+    const oldY=radar.y;
+    const oldScale=radar.scale;
+    const oldRotation=radar.rotation;
+
+
+    radarImage.onload=function(){
+
+        radar.x=oldX;
+        radar.y=oldY;
+        radar.scale=oldScale;
+        radar.rotation=oldRotation;
+
+        applyRadarTransform();
+
+    };
+
+
+    radarImage.src=
+        "https://meteoinfo.ru/hmc-output/rmap/phenomena.gif?"+
+        Date.now();
+
+}
+
+
+/*
+ * Обновление GIF каждые 4 минуты.
+ */
+
+setInterval(
+    function(){
+
+        if(
+            radarViewer.classList.contains("open")
+        ){
+
+            loadRadar();
+
+        }
+
+    },
+    240000
+);
+
+
+/* =====================================================
+   TRANSFORM
+===================================================== */
+
+function applyRadarTransform(){
+
+    /*
+     * Вся трансформация делается
+     * одним CSS transform.
+     *
+     * Никакого возврата к начальному
+     * положению здесь нет.
+     */
+
+    radarStage.style.transform=
+        "translate3d("+
+        (
+            -50+
+            radar.x/(window.innerWidth)*100
+        )+
+        "%,"+
+        (
+            -50+
+            radar.y/(window.innerHeight)*100
+        )+
+        "%,0)"+
+        "rotate("+
+        radar.rotation+
+        "deg)"+
+        "scale("+
+        radar.scale+
+        ")";
+
+}
+
+
+/* =====================================================
+   BUTTON ZOOM
+===================================================== */
+
+function radarZoom(factor){
+
+    radar.scale*=factor;
+
+    radar.scale=Math.max(
+        0.1,
+        Math.min(
+            20,
+            radar.scale
+        )
+    );
+
+    applyRadarTransform();
+
+}
+
+
+/* =====================================================
+   BUTTON ROTATE
+===================================================== */
+
+function radarRotate(angle){
+
+    radar.rotation+=angle;
+
+    applyRadarTransform();
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetRadar(){
+
+    radar.x=0;
+    radar.y=0;
+    radar.scale=1;
+    radar.rotation=0;
+
+    applyRadarTransform();
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getDistance(a,b){
+
+    const dx=b.x-a.x;
+    const dy=b.y-a.y;
+
+    return Math.sqrt(
+        dx*dx+
+        dy*dy
+    );
+
+}
+
+function getAngle(a,b){
+
+    return Math.atan2(
+        b.y-a.y,
+        b.x-a.x
+    )*180/Math.PI;
+
+}
+
+function getCenter(a,b){
+
+    return {
+        x:(a.x+b.x)/2,
+        y:(a.y+b.y)/2
+    };
+
+}
+
+
+/* =====================================================
+   POINTER DOWN
+===================================================== */
+
+radarViewer.addEventListener(
+    "pointerdown",
+    function(e){
+
+        /*
+         * Если нажали кнопку,
+         * GIF-жест не начинаем.
+         */
+
+        if(
+            e.target.closest(".radar-controls") ||
+            e.target.closest(".radar-header")
+        ){
+            return;
+        }
+
+        e.preventDefault();
+
+        /*
+         * Захватываем pointer.
+         */
+
+        try{
+            radarViewer.setPointerCapture(
+                e.pointerId
+            );
+        }catch(_){}
+
+
+        pointers.set(
+            e.pointerId,
+            {
+                x:e.clientX,
+                y:e.clientY
+            }
+        );
+
+
+        /*
+         * ОДИН ПАЛЕЦ
+         */
+
+        if(pointers.size===1){
+
+            gesture={
+                type:"pan",
+
+                pointerId:e.pointerId,
+
+                startX:e.clientX,
+                startY:e.clientY,
+
+                startRadarX:radar.x,
+                startRadarY:radar.y
+            };
+
+        }
+
+
+        /*
+         * ДВА ПАЛЬЦА
+         */
+
+        if(pointers.size===2){
+
+            const p=
+                Array.from(
+                    pointers.values()
+                );
+
+            const c=
+                getCenter(
+                    p[0],
+                    p[1]
+                );
+
+            gesture={
+
+                type:"transform",
+
+                distance:getDistance(
+                    p[0],
+                    p[1]
+                ),
+
+                angle:getAngle(
+                    p[0],
+                    p[1]
+                ),
+
+                centerX:c.x,
+                centerY:c.y,
+
+                startScale:radar.scale,
+                startRotation:radar.rotation,
+
+                startRadarX:radar.x,
+                startRadarY:radar.y
+            };
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =====================================================
+   POINTER MOVE
+===================================================== */
+
+radarViewer.addEventListener(
+    "pointermove",
+    function(e){
+
+        if(!pointers.has(e.pointerId))
+            return;
+
+        e.preventDefault();
+
+        pointers.set(
+            e.pointerId,
+            {
+                x:e.clientX,
+                y:e.clientY
+            }
+        );
+
+
+        /*
+         * PAN
+         */
+
+        if(
+            pointers.size===1 &&
+            gesture &&
+            gesture.type==="pan"
+        ){
+
+            /*
+             * Ищем единственный
+             * оставшийся палец.
+             */
+
+            const p=
+                Array.from(
+                    pointers.values()
+                )[0];
+
+
+            radar.x=
+                gesture.startRadarX+
+                (
+                    p.x-
+                    gesture.startX
+                );
+
+
+            radar.y=
+                gesture.startRadarY+
+                (
+                    p.y-
+                    gesture.startY
+                );
+
+
+            applyRadarTransform();
+
+            return;
+
+        }
+
+
+        /*
+         * PINCH + ROTATE
+         */
+
+        if(
+            pointers.size===2 &&
+            gesture &&
+            gesture.type==="transform"
+        ){
+
+            const p=
+                Array.from(
+                    pointers.values()
+                );
+
+
+            const currentDistance=
+                getDistance(
+                    p[0],
+                    p[1]
+                );
+
+
+            const currentAngle=
+                getAngle(
+                    p[0],
+                    p[1]
+                );
+
+
+            const currentCenter=
+                getCenter(
+                    p[0],
+                    p[1]
+                );
+
+
+            /*
+             * SCALE
+             */
+
+            const ratio=
+                currentDistance/
+                gesture.distance;
+
+
+            radar.scale=
+                gesture.startScale*
+                ratio;
+
+
+            radar.scale=
+                Math.max(
+                    0.1,
+                    Math.min(
+                        20,
+                        radar.scale
+                    )
+                );
+
+
+            /*
+             * ROTATE
+             */
+
+            let angleDelta=
+                currentAngle-
+                gesture.angle;
+
+
+            /*
+             * Исправляем переход
+             * через -180/180.
+             */
+
+            if(angleDelta>180)
+                angleDelta-=360;
+
+            if(angleDelta<-180)
+                angleDelta+=360;
+
+
+            radar.rotation=
+                gesture.startRotation+
+                angleDelta;
+
+
+            /*
+             * PAN ЦЕНТРОМ ДВУХ ПАЛЬЦЕВ
+             */
+
+            radar.x=
+                gesture.startRadarX+
+                (
+                    currentCenter.x-
+                    gesture.centerX
+                );
+
+
+            radar.y=
+                gesture.startRadarY+
+                (
+                    currentCenter.y-
+                    gesture.centerY
+                );
+
+
+            applyRadarTransform();
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =====================================================
+   POINTER UP
+===================================================== */
+
+function finishPointer(e){
+
+    /*
+     * Удаляем только этот палец.
+     */
+
+    pointers.delete(
+        e.pointerId
+    );
+
+
+    /*
+     * КРИТИЧЕСКИЙ МОМЕНТ:
+     *
+     * Мы НЕ трогаем:
+     *
+     * radar.x
+     * radar.y
+     * radar.scale
+     * radar.rotation
+     *
+     * Поэтому GIF остаётся ровно
+     * там, где её оставили.
+     */
+
+
+    if(pointers.size===0){
+
+        gesture=null;
+
+        return;
+
+    }
+
+
+    /*
+     * Если после двух пальцев
+     * остался один:
+     *
+     * начинаем новый PAN
+     * от уже существующей позиции.
+     *
+     * Поэтому скачка нет.
+     */
+
+    if(pointers.size===1){
+
+        const p=
+            Array.from(
+                pointers.values()
+            )[0];
+
+
+        gesture={
+
+            type:"pan",
+
+            pointerId:null,
+
+            startX:p.x,
+            startY:p.y,
+
+            startRadarX:radar.x,
+            startRadarY:radar.y
+
+        };
+
+    }
+
+}
+
+
+radarViewer.addEventListener(
+    "pointerup",
+    finishPointer,
+    {
+        passive:false
+    }
+);
+
+
+radarViewer.addEventListener(
+    "pointercancel",
+    finishPointer,
+    {
+        passive:false
+    }
+);
+
+
+/* =====================================================
+   WEATHER
+===================================================== */
+
+const weatherCodes={
 
     0:["☀️","Ясно"],
     1:["🌤️","Преимущественно ясно"],
@@ -949,21 +1522,13 @@ const weatherCodes = {
     53:["🌦️","Морось"],
     55:["🌧️","Сильная морось"],
 
-    56:["🌧️","Ледяная морось"],
-    57:["🌧️","Сильная ледяная морось"],
-
     61:["🌧️","Небольшой дождь"],
     63:["🌧️","Дождь"],
     65:["🌧️","Сильный дождь"],
 
-    66:["🌧️","Ледяной дождь"],
-    67:["🌧️","Сильный ледяной дождь"],
-
     71:["🌨️","Небольшой снег"],
     73:["🌨️","Снег"],
     75:["❄️","Сильный снег"],
-
-    77:["🌨️","Снежные зерна"],
 
     80:["🌦️","Ливень"],
     81:["🌧️","Сильный ливень"],
@@ -978,7 +1543,6 @@ const weatherCodes = {
 
 };
 
-
 function getWeather(code){
 
     return weatherCodes[code]
@@ -986,1547 +1550,61 @@ function getWeather(code){
 
 }
 
+function getWindDirection(deg){
 
-/* =========================================
-   MAPS
-========================================= */
+    const d=[
+        "С","СВ","В","ЮВ",
+        "Ю","ЮЗ","З","СЗ"
+    ];
 
-function createMaps(){
-
-    previewMap =
-        L.map(
-            "previewMap",
-            {
-                zoomControl:false,
-                attributionControl:false,
-                scrollWheelZoom:false
-            }
-        )
-        .setView(
-            [latitude,longitude],
-            5
-        );
-
-    L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-            maxZoom:20,
-            subdomains:"abcd"
-        }
-    ).addTo(
-        previewMap
-    );
-
-
-    forecastMap =
-        L.map(
-            "forecastMap",
-            {
-                zoomControl:true,
-                attributionControl:true
-            }
-        )
-        .setView(
-            [latitude,longitude],
-            5
-        );
-
-    L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-            maxZoom:20,
-            subdomains:"abcd",
-            attribution:"© OpenStreetMap © CARTO"
-        }
-    ).addTo(
-        forecastMap
-    );
-
-
-    forecastMap.on(
-        "moveend",
-        function(){
-
-            if(
-                selectedLayer === "precipitation" &&
-                document
-                .getElementById("fullscreenMap")
-                .classList
-                .contains("open")
-            ){
-
-                loadForecastGrid();
-
-            }
-
-        }
-    );
+    return d[
+        Math.round(deg/45)%8
+    ];
 
 }
 
 
-/* =========================================
-   MARKER
-========================================= */
-
-function updateMarker(){
-
-    if(marker){
-
-        forecastMap.removeLayer(marker);
-
-    }
-
-    marker =
-        L.circleMarker(
-            [
-                latitude,
-                longitude
-            ],
-            {
-                radius:6,
-                color:"#fff",
-                weight:2,
-                fillColor:"#268cff",
-                fillOpacity:1
-            }
-        )
-        .addTo(
-            forecastMap
-        );
-
-}
-
-
-/* =========================================
-   MAP OPEN / CLOSE
-========================================= */
-
-function openForecastMap(){
-
-    document
-    .getElementById("fullscreenMap")
-    .classList
-    .add("open");
-
-    setTimeout(
-        function(){
-
-            forecastMap.invalidateSize();
-
-            forecastMap.setView(
-                [
-                    latitude,
-                    longitude
-                ],
-                6
-            );
-
-            updateMarker();
-
-            setLayer("precipitation");
-
-        },
-        100
-    );
-
-}
-
-
-function closeForecastMap(){
-
-    document
-    .getElementById("fullscreenMap")
-    .classList
-    .remove("open");
-
-}
-
-
-/* =========================================
-   MAP LOADING
-========================================= */
-
-function showMapLoading(show){
-
-    document
-    .getElementById("mapLoading")
-    .style.display =
-        show ? "block" : "none";
-
-}
-
-
-/* =========================================
-   PRECIPITATION COLORS
-========================================= */
-
-function precipitationColor(value){
-
-    if(
-        value === null ||
-        value === undefined ||
-        !isFinite(value)
-    ){
-
-        return [0,0,0,0];
-
-    }
-
-    if(value <= 0.05){
-
-        return [0,0,0,0];
-
-    }
-
-    if(value <= 0.2){
-
-        return [70,170,255,100];
-
-    }
-
-    if(value <= 1){
-
-        return [30,125,255,145];
-
-    }
-
-    if(value <= 3){
-
-        return [30,75,235,180];
-
-    }
-
-    if(value <= 7){
-
-        return [100,35,220,195];
-
-    }
-
-    if(value <= 15){
-
-        return [190,25,170,215];
-
-    }
-
-    if(value <= 30){
-
-        return [240,25,65,230];
-
-    }
-
-    return [145,0,25,240];
-
-}
-
-
-/* =========================================
-   DRAW PRECIPITATION
-========================================= */
-
-function drawPrecipitation(){
-
-    if(
-        !gridData.length ||
-        !gridMeta
-    ){
-
-        return;
-
-    }
-
-
-    if(forecastCanvas){
-
-        forecastCanvas.remove();
-
-        forecastCanvas = null;
-
-    }
-
-
-    const canvas =
-        document.createElement("canvas");
-
-    canvas.width = 600;
-    canvas.height = 600;
-
-
-    const bounds =
-        L.latLngBounds(
-            [
-                gridMeta.latMin,
-                gridMeta.lonMin
-            ],
-            [
-                gridMeta.latMax,
-                gridMeta.lonMax
-            ]
-        );
-
-
-    const overlay =
-        L.DomUtil.create(
-            "div",
-            "precipitation-overlay",
-            forecastMap
-            .getPanes()
-            .overlayPane
-        );
-
-
-    overlay.style.position = "absolute";
-    overlay.style.pointerEvents = "none";
-    overlay.style.zIndex = "450";
-
-    overlay.appendChild(canvas);
-
-    forecastCanvas = overlay;
-
-
-    function render(){
-
-        const nw =
-            forecastMap
-            .latLngToLayerPoint(
-                bounds.getNorthWest()
-            );
-
-
-        const se =
-            forecastMap
-            .latLngToLayerPoint(
-                bounds.getSouthEast()
-            );
-
-
-        const width =
-            Math.max(
-                1,
-                se.x - nw.x
-            );
-
-
-        const height =
-            Math.max(
-                1,
-                se.y - nw.y
-            );
-
-
-        overlay.style.left =
-            nw.x + "px";
-
-        overlay.style.top =
-            nw.y + "px";
-
-        overlay.style.width =
-            width + "px";
-
-        overlay.style.height =
-            height + "px";
-
-
-        canvas.style.width =
-            width + "px";
-
-        canvas.style.height =
-            height + "px";
-
-
-        const ctx =
-            canvas.getContext("2d");
-
-
-        const image =
-            ctx.createImageData(
-                canvas.width,
-                canvas.height
-            );
-
-
-        const pixels =
-            image.data;
-
-
-        function valueAt(gx,gy){
-
-            gx =
-                Math.max(
-                    0,
-                    Math.min(
-                        gridCols-1,
-                        gx
-                    )
-                );
-
-
-            gy =
-                Math.max(
-                    0,
-                    Math.min(
-                        gridRows-1,
-                        gy
-                    )
-                );
-
-
-            const x0 =
-                Math.floor(gx);
-
-            const y0 =
-                Math.floor(gy);
-
-            const x1 =
-                Math.min(
-                    x0+1,
-                    gridCols-1
-                );
-
-            const y1 =
-                Math.min(
-                    y0+1,
-                    gridRows-1
-                );
-
-
-            const a =
-                gridData[
-                    y0*gridCols+x0
-                ]?.precipitation;
-
-            const b =
-                gridData[
-                    y0*gridCols+x1
-                ]?.precipitation;
-
-            const c =
-                gridData[
-                    y1*gridCols+x0
-                ]?.precipitation;
-
-            const d =
-                gridData[
-                    y1*gridCols+x1
-                ]?.precipitation;
-
-
-            if(
-                [a,b,c,d].some(
-                    v =>
-                    v === null ||
-                    v === undefined ||
-                    !isFinite(v)
-                )
-            ){
-
-                return null;
-
-            }
-
-
-            const fx = gx-x0;
-            const fy = gy-y0;
-
-
-            const top =
-                a+(b-a)*fx;
-
-            const bottom =
-                c+(d-c)*fx;
-
-
-            return top+
-                (bottom-top)*fy;
-
-        }
-
-
-        for(
-            let y=0;
-            y<canvas.height;
-            y++
-        ){
-
-            for(
-                let x=0;
-                x<canvas.width;
-                x++
-            ){
-
-                const gx =
-                    x/
-                    (canvas.width-1)*
-                    (gridCols-1);
-
-
-                const gy =
-                    y/
-                    (canvas.height-1)*
-                    (gridRows-1);
-
-
-                const value =
-                    valueAt(gx,gy);
-
-
-                const color =
-                    precipitationColor(value);
-
-
-                const index =
-                    (y*canvas.width+x)*4;
-
-
-                pixels[index] =
-                    color[0];
-
-                pixels[index+1] =
-                    color[1];
-
-                pixels[index+2] =
-                    color[2];
-
-                pixels[index+3] =
-                    color[3];
-
-            }
-
-        }
-
-
-        ctx.putImageData(
-            image,
-            0,
-            0
-        );
-
-    }
-
-
-    forecastMap.on(
-        "zoom move resize",
-        render
-    );
-
-
-    render();
-
-}
-
-
-/* =========================================
-   LOAD ICON GRID
-========================================= */
-
-async function loadForecastGrid(){
-
-    const token =
-        ++renderToken;
-
-    showMapLoading(true);
-
-
-    const center =
-        forecastMap.getCenter();
-
-
-    const zoom =
-        forecastMap.getZoom();
-
-
-    let latSpan;
-    let lonSpan;
-
-
-    if(zoom<=4){
-
-        latSpan=10;
-        lonSpan=15;
-
-    }
-    else if(zoom===5){
-
-        latSpan=7;
-        lonSpan=11;
-
-    }
-    else if(zoom===6){
-
-        latSpan=4.5;
-        lonSpan=7;
-
-    }
-    else{
-
-        latSpan=3;
-        lonSpan=4.5;
-
-    }
-
-
-    const latMin =
-        center.lat-latSpan/2;
-
-    const latMax =
-        center.lat+latSpan/2;
-
-    const lonMin =
-        center.lng-lonSpan/2;
-
-    const lonMax =
-        center.lng+lonSpan/2;
-
-
-    const rows=15;
-    const cols=15;
-
-    const locations=[];
-
-
-    for(
-        let y=0;
-        y<rows;
-        y++
-    ){
-
-        const lat =
-            latMin+
-            (latMax-latMin)*
-            y/(rows-1);
-
-
-        for(
-            let x=0;
-            x<cols;
-            x++
-        ){
-
-            const lon =
-                lonMin+
-                (lonMax-lonMin)*
-                x/(cols-1);
-
-
-            locations.push({
-                lat,
-                lon
-            });
-
-        }
-
-    }
-
-
-    const chunkSize=30;
-    const allResults=[];
-
-
-    try{
-
-        for(
-            let start=0;
-            start<locations.length;
-            start+=chunkSize
-        ){
-
-            if(
-                token!==renderToken
-            ){
-
-                return;
-
-            }
-
-
-            const chunk =
-                locations.slice(
-                    start,
-                    start+chunkSize
-                );
-
-
-            const latitudes =
-                chunk
-                .map(
-                    p=>p.lat.toFixed(4)
-                )
-                .join(",");
-
-
-            const longitudes =
-                chunk
-                .map(
-                    p=>p.lon.toFixed(4)
-                )
-                .join(",");
-
-
-            const url =
-                "https://api.open-meteo.com/v1/dwd-icon"+
-                "?latitude="+
-                encodeURIComponent(latitudes)+
-                "&longitude="+
-                encodeURIComponent(longitudes)+
-                "&hourly=precipitation"+
-                "&forecast_hours=1"+
-                "&timezone=GMT";
-
-
-            const response =
-                await fetch(url);
-
-
-            if(!response.ok){
-
-                throw new Error(
-                    "ICON HTTP "+
-                    response.status
-                );
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            const results =
-                Array.isArray(data)
-                ? data
-                : [data];
-
-
-            allResults.push(
-                ...results
-            );
-
-        }
-
-
-        if(
-            token!==renderToken
-        ){
-
-            return;
-
-        }
-
-
-        gridData =
-            allResults.map(
-                item => ({
-
-                    precipitation:
-                        item.hourly &&
-                        item.hourly.precipitation
-                        ? item.hourly.precipitation[0]
-                        : 0
-
-                })
-            );
-
-
-        gridRows=rows;
-        gridCols=cols;
-
-
-        gridMeta={
-
-            latMin,
-            latMax,
-            lonMin,
-            lonMax
-
-        };
-
-
-        drawPrecipitation();
-
-    }
-    catch(error){
-
-        console.error(
-            "ICON ERROR:",
-            error
-        );
-
-    }
-    finally{
-
-        if(
-            token===renderToken
-        ){
-
-            showMapLoading(false);
-
-        }
-
-    }
-
-}
-
-
-/* =========================================
-   LAYER
-========================================= */
-
-function setLayer(layer){
-
-    selectedLayer=layer;
-
-
-    document
-    .querySelectorAll(".layer")
-    .forEach(
-        button =>
-        button.classList.remove("active")
-    );
-
-
-    document
-    .getElementById(
-        "precipitationLayer"
-    )
-    .classList
-    .add("active");
-
-
-    document
-    .getElementById(
-        "precipLegend"
-    )
-    .style.display="block";
-
-
-    if(forecastCanvas){
-
-        forecastCanvas.remove();
-
-        forecastCanvas=null;
-
-    }
-
-
-    if(
-        layer==="precipitation"
-    ){
-
-        loadForecastGrid();
-
-    }
-
-}
-
-
-/* =========================================
-   RADAR
-========================================= */
-
-const radarViewer =
-    document.getElementById(
-        "radarViewer"
-    );
-
-
-const radarStage =
-    document.getElementById(
-        "radarStage"
-    );
-
-
-const radarImage =
-    document.getElementById(
-        "radarImage"
-    );
-
-
-let radarScale=1;
-let radarRotation=0;
-let radarX=0;
-let radarY=0;
-
-
-let pointers=new Map();
-
-let gestureMode="none";
-
-let startDistance=0;
-let startAngle=0;
-
-let startScale=1;
-let startRotation=0;
-
-let startCenterX=0;
-let startCenterY=0;
-
-let startX=0;
-let startY=0;
-
-let startTranslateX=0;
-let startTranslateY=0;
-
-
-/* =========================================
-   OPEN RADAR
-========================================= */
-
-function openRadarViewer(){
-
-    radarViewer
-    .classList
-    .add("open");
-
-
-    resetRadarTransform();
-
-    loadRadarGif();
-
-}
-
-
-/* =========================================
-   CLOSE RADAR
-========================================= */
-
-function closeRadarViewer(){
-
-    radarViewer
-    .classList
-    .remove("open");
-
-}
-
-
-/* =========================================
-   LOAD RADAR GIF
-========================================= */
-
-function loadRadarGif(){
-
-    radarImage.src =
-        "https://meteoinfo.ru/hmc-output/rmap/phenomena.gif?"+
-        Date.now();
-
-}
-
-
-setInterval(
-    function(){
-
-        if(
-            radarViewer
-            .classList
-            .contains("open")
-        ){
-
-            /*
-             * При обновлении GIF
-             * трансформация НЕ сбрасывается.
-             */
-
-            const currentScale =
-                radarScale;
-
-            const currentRotation =
-                radarRotation;
-
-            const currentX =
-                radarX;
-
-            const currentY =
-                radarY;
-
-
-            radarImage.src =
-                "https://meteoinfo.ru/hmc-output/rmap/phenomena.gif?"+
-                Date.now();
-
-
-            radarScale =
-                currentScale;
-
-            radarRotation =
-                currentRotation;
-
-            radarX =
-                currentX;
-
-            radarY =
-                currentY;
-
-
-            updateRadarTransform();
-
-        }
-
-    },
-    4*60*1000
-);
-
-
-/* =========================================
-   RADAR TRANSFORM
-========================================= */
-
-function updateRadarTransform(){
-
-    radarStage.style.transform =
-        "translate3d(-50%,-50%,0)"+
-        "translate3d("+
-        radarX+
-        "px,"+
-        radarY+
-        "px,0)"+
-        "rotate("+
-        radarRotation+
-        "deg)"+
-        "scale("+
-        radarScale+
-        ")";
-
-}
-
-
-/* =========================================
-   ZOOM
-========================================= */
-
-function radarZoom(factor){
-
-    radarScale *= factor;
-
-
-    radarScale =
-        Math.max(
-            0.15,
-            Math.min(
-                20,
-                radarScale
-            )
-        );
-
-
-    updateRadarTransform();
-
-}
-
-
-/* =========================================
-   ROTATE
-========================================= */
-
-function radarRotate(deg){
-
-    radarRotation += deg;
-
-    updateRadarTransform();
-
-}
-
-
-/* =========================================
-   RESET
-========================================= */
-
-function resetRadarTransform(){
-
-    radarScale=1;
-
-    radarRotation=0;
-
-    radarX=0;
-
-    radarY=0;
-
-    updateRadarTransform();
-
-}
-
-
-/* =========================================
-   POINTER HELPERS
-========================================= */
-
-function distance(a,b){
-
-    const dx =
-        b.x-a.x;
-
-    const dy =
-        b.y-a.y;
-
-
-    return Math.sqrt(
-        dx*dx+
-        dy*dy
-    );
-
-}
-
-
-function angle(a,b){
-
-    return Math.atan2(
-        b.y-a.y,
-        b.x-a.x
-    )*
-    180/
-    Math.PI;
-
-}
-
-
-function center(a,b){
-
-    return {
-
-        x:(a.x+b.x)/2,
-
-        y:(a.y+b.y)/2
-
-    };
-
-}
-
-
-/* =========================================
-   POINTER DOWN
-========================================= */
-
-radarViewer.addEventListener(
-    "pointerdown",
-    function(e){
-
-        e.preventDefault();
-
-
-        pointers.set(
-            e.pointerId,
-            {
-                x:e.clientX,
-                y:e.clientY
-            }
-        );
-
-
-        /*
-         * Один палец.
-         */
-
-        if(
-            pointers.size===1
-        ){
-
-            gestureMode="pan";
-
-
-            startX=e.clientX;
-            startY=e.clientY;
-
-
-            startTranslateX=
-                radarX;
-
-            startTranslateY=
-                radarY;
-
-        }
-
-
-        /*
-         * Второй палец.
-         */
-
-        if(
-            pointers.size===2
-        ){
-
-            const pts =
-                Array.from(
-                    pointers.values()
-                );
-
-
-            startDistance =
-                distance(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            startAngle =
-                angle(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            const c =
-                center(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            startCenterX=c.x;
-            startCenterY=c.y;
-
-
-            startScale=
-                radarScale;
-
-            startRotation=
-                radarRotation;
-
-
-            startTranslateX=
-                radarX;
-
-            startTranslateY=
-                radarY;
-
-
-            gestureMode=
-                "transform";
-
-        }
-
-    },
-    {
-        passive:false
-    }
-);
-
-
-/* =========================================
-   POINTER MOVE
-========================================= */
-
-radarViewer.addEventListener(
-    "pointermove",
-    function(e){
-
-        if(
-            !pointers.has(
-                e.pointerId
-            )
-        ){
-
-            return;
-
-        }
-
-
-        e.preventDefault();
-
-
-        pointers.set(
-            e.pointerId,
-            {
-                x:e.clientX,
-                y:e.clientY
-            }
-        );
-
-
-        /*
-         * Один палец.
-         */
-
-        if(
-            pointers.size===1 &&
-            gestureMode==="pan"
-        ){
-
-            radarX =
-                startTranslateX+
-                (
-                    e.clientX-
-                    startX
-                );
-
-
-            radarY =
-                startTranslateY+
-                (
-                    e.clientY-
-                    startY
-                );
-
-
-            updateRadarTransform();
-
-            return;
-
-        }
-
-
-        /*
-         * Два пальца.
-         */
-
-        if(
-            pointers.size===2
-        ){
-
-            const pts =
-                Array.from(
-                    pointers.values()
-                );
-
-
-            const currentDistance =
-                distance(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            const currentAngle =
-                angle(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            const currentCenter =
-                center(
-                    pts[0],
-                    pts[1]
-                );
-
-
-            /*
-             * Масштаб.
-             */
-
-            const scaleFactor =
-                currentDistance/
-                startDistance;
-
-
-            radarScale =
-                startScale*
-                scaleFactor;
-
-
-            radarScale =
-                Math.max(
-                    0.15,
-                    Math.min(
-                        20,
-                        radarScale
-                    )
-                );
-
-
-            /*
-             * Вращение.
-             */
-
-            radarRotation =
-                startRotation+
-                (
-                    currentAngle-
-                    startAngle
-                );
-
-
-            /*
-             * Перемещение центра.
-             */
-
-            radarX =
-                startTranslateX+
-                (
-                    currentCenter.x-
-                    startCenterX
-                );
-
-
-            radarY =
-                startTranslateY+
-                (
-                    currentCenter.y-
-                    startCenterY
-                );
-
-
-            updateRadarTransform();
-
-        }
-
-    },
-    {
-        passive:false
-    }
-);
-
-
-/* =========================================
-   POINTER UP
-========================================= */
-
-radarViewer.addEventListener(
-    "pointerup",
-    function(e){
-
-        e.preventDefault();
-
-
-        pointers.delete(
-            e.pointerId
-        );
-
-
-        /*
-         * ВАЖНО:
-         *
-         * Никакие значения трансформации
-         * здесь не сбрасываются.
-         *
-         * Поэтому после отпускания
-         * пальцев GIF остаётся там,
-         * где пользователь её оставил.
-         */
-
-        if(
-            pointers.size===0
-        ){
-
-            gestureMode="none";
-
-            return;
-
-        }
-
-
-        /*
-         * Если остался один палец,
-         * продолжаем pan без скачка.
-         */
-
-        if(
-            pointers.size===1
-        ){
-
-            const remaining =
-                Array.from(
-                    pointers.values()
-                )[0];
-
-
-            gestureMode="pan";
-
-
-            startX=
-                remaining.x;
-
-            startY=
-                remaining.y;
-
-
-            startTranslateX=
-                radarX;
-
-            startTranslateY=
-                radarY;
-
-        }
-
-    },
-    {
-        passive:false
-    }
-);
-
-
-/* =========================================
-   POINTER CANCEL
-========================================= */
-
-radarViewer.addEventListener(
-    "pointercancel",
-    function(e){
-
-        pointers.delete(
-            e.pointerId
-        );
-
-
-        /*
-         * Ничего не сбрасываем.
-         */
-
-        if(
-            pointers.size===0
-        ){
-
-            gestureMode="none";
-
-        }
-
-    },
-    {
-        passive:false
-    }
-);
-
-
-/* =========================================
-   DOUBLE TAP RESET
-========================================= */
-
-let lastTap=0;
-
-
-radarViewer.addEventListener(
-    "pointerup",
-    function(){
-
-        const now=Date.now();
-
-
-        if(
-            now-lastTap<300 &&
-            pointers.size===0
-        ){
-
-            resetRadarTransform();
-
-        }
-
-
-        lastTap=now;
-
-    }
-);
-
-
-/* =========================================
+/* =====================================================
    SEARCH
-========================================= */
+===================================================== */
 
 async function searchCity(){
 
-    const city =
-        document
-        .getElementById("cityInput")
-        .value
-        .trim();
+    const input=
+        document.getElementById(
+            "cityInput"
+        );
 
+    const city=
+        input.value.trim();
 
     if(!city)
         return;
 
 
-    showLoading();
+    document.getElementById(
+        "error"
+    ).style.display="none";
+
+
+    document.getElementById(
+        "weather"
+    ).innerHTML=`
+
+        <div style="
+            padding:30px;
+            text-align:center;
+            color:#8496a9;
+        ">
+            Загрузка прогноза...
+        </div>
+
+    `;
 
 
     try{
 
-        const response =
+        const response=
             await fetch(
                 "https://geocoding-api.open-meteo.com/v1/search"+
                 "?name="+
@@ -2537,11 +1615,7 @@ async function searchCity(){
             );
 
 
-        if(!response.ok)
-            throw new Error();
-
-
-        const data =
+        const data=
             await response.json();
 
 
@@ -2550,12 +1624,14 @@ async function searchCity(){
             !data.results.length
         ){
 
-            throw new Error();
+            throw new Error(
+                "Город не найден"
+            );
 
         }
 
 
-        const place =
+        const place=
             data.results[0];
 
 
@@ -2566,20 +1642,20 @@ async function searchCity(){
             place.longitude;
 
 
+        document.getElementById(
+            "locationStatus"
+        ).textContent=
+            place.name;
+
+
         previewMap.setView(
-            [
-                latitude,
-                longitude
-            ],
+            [latitude,longitude],
             6
         );
 
 
         forecastMap.setView(
-            [
-                latitude,
-                longitude
-            ],
+            [latitude,longitude],
             6
         );
 
@@ -2588,46 +1664,43 @@ async function searchCity(){
 
 
         await loadWeather(
-            latitude,
-            longitude,
             place.name
         );
 
     }
     catch(error){
 
-        document
-        .getElementById(
+        document.getElementById(
             "locationStatus"
-        )
-        .textContent=
+        ).textContent=
             "Город не выбран";
 
 
-        showError(
-            "Город не найден"
-        );
+        document.getElementById(
+            "error"
+        ).textContent=
+            "Не удалось найти город";
+
+
+        document.getElementById(
+            "error"
+        ).style.display="block";
 
     }
 
 }
 
 
-/* =========================================
+/* =====================================================
    LOAD WEATHER
-========================================= */
+===================================================== */
 
-async function loadWeather(
-    lat,
-    lon,
-    city
-){
+async function loadWeather(city){
 
-    const url =
+    const url=
         "https://api.open-meteo.com/v1/dwd-icon"+
-        "?latitude="+lat+
-        "&longitude="+lon+
-
+        "?latitude="+latitude+
+        "&longitude="+longitude+
         "&current="+
         "temperature_2m,"+
         "relative_humidity_2m,"+
@@ -2637,20 +1710,18 @@ async function loadWeather(
         "pressure_msl,"+
         "wind_speed_10m,"+
         "wind_direction_10m"+
-
         "&daily="+
         "weather_code,"+
         "temperature_2m_max,"+
         "temperature_2m_min,"+
         "precipitation_probability_max"+
-
         "&forecast_days=7"+
         "&timezone=auto";
 
 
     try{
 
-        const response =
+        const response=
             await fetch(url);
 
 
@@ -2658,16 +1729,8 @@ async function loadWeather(
             throw new Error();
 
 
-        const data =
+        const data=
             await response.json();
-
-
-        document
-        .getElementById(
-            "locationStatus"
-        )
-        .textContent=
-            city;
 
 
         renderWeather(
@@ -2676,30 +1739,25 @@ async function loadWeather(
         );
 
     }
-    catch(error){
+    catch(e){
 
-        console.error(error);
+        document.getElementById(
+            "error"
+        ).textContent=
+            "Прогноз временно недоступен";
 
-        document
-        .getElementById(
-            "locationStatus"
-        )
-        .textContent=
-            "Город не выбран";
-
-
-        showError(
-            "Не удалось загрузить прогноз"
-        );
+        document.getElementById(
+            "error"
+        ).style.display="block";
 
     }
 
 }
 
 
-/* =========================================
+/* =====================================================
    RENDER WEATHER
-========================================= */
+===================================================== */
 
 function renderWeather(
     data,
@@ -2709,172 +1767,153 @@ function renderWeather(
     const c=data.current;
     const d=data.daily;
 
-    const weather =
+    const w=
         getWeather(
             c.weather_code
         );
 
 
-    const windDirection =
-        getWindDirection(
-            c.wind_direction_10m
-        );
-
-
     let html=`
 
-    <div class="current">
+        <div class="current">
 
-        <div class="current-top">
+            <div class="current-top">
 
-            <div>
+                <div>
 
-                <div class="city">
-                    ${city}
+                    <div class="city">
+                        ${city}
+                    </div>
+
+                    <div class="date">
+                        ${new Date().toLocaleDateString(
+                            "ru-RU",
+                            {
+                                weekday:"long",
+                                day:"numeric",
+                                month:"long"
+                            }
+                        )}
+                    </div>
+
                 </div>
 
-                <div class="date">
-                    ${formatDate(new Date())}
-                </div>
-
-            </div>
-
-            <div class="weather-icon">
-                ${weather[0]}
-            </div>
-
-        </div>
-
-
-        <div class="temperature">
-            ${Math.round(c.temperature_2m)}°
-        </div>
-
-
-        <div class="description">
-            ${weather[1]}
-        </div>
-
-
-        <div class="details">
-
-            <div class="detail">
-
-                <div class="detail-title">
-                    Ощущается
-                </div>
-
-                <div class="detail-value">
-                    ${Math.round(c.apparent_temperature)}°
+                <div class="weather-icon">
+                    ${w[0]}
                 </div>
 
             </div>
 
 
-            <div class="detail">
-
-                <div class="detail-title">
-                    Влажность
-                </div>
-
-                <div class="detail-value">
-                    ${c.relative_humidity_2m}%
-                </div>
-
+            <div class="temperature">
+                ${Math.round(c.temperature_2m)}°
             </div>
 
 
-            <div class="detail">
-
-                <div class="detail-title">
-                    Ветер
-                </div>
-
-                <div class="detail-value">
-                    ${windDirection}
-                    ${Math.round(c.wind_speed_10m)} км/ч
-                </div>
-
+            <div class="description">
+                ${w[1]}
             </div>
 
 
-            <div class="detail">
+            <div class="details">
 
-                <div class="detail-title">
-                    Направление
+                <div class="detail">
+                    <div class="detail-title">
+                        Ощущается
+                    </div>
+                    <div class="detail-value">
+                        ${Math.round(c.apparent_temperature)}°
+                    </div>
                 </div>
 
-                <div class="detail-value">
-                    ${Math.round(c.wind_direction_10m)}°
+
+                <div class="detail">
+                    <div class="detail-title">
+                        Влажность
+                    </div>
+                    <div class="detail-value">
+                        ${c.relative_humidity_2m}%
+                    </div>
                 </div>
 
-            </div>
 
-
-            <div class="detail">
-
-                <div class="detail-title">
-                    Давление
+                <div class="detail">
+                    <div class="detail-title">
+                        Ветер
+                    </div>
+                    <div class="detail-value">
+                        ${Math.round(c.wind_speed_10m)} км/ч
+                    </div>
                 </div>
 
-                <div class="detail-value">
-                    ${Math.round(c.pressure_msl)} hPa
+
+                <div class="detail">
+                    <div class="detail-title">
+                        Направление
+                    </div>
+                    <div class="detail-value">
+                        ${getWindDirection(
+                            c.wind_direction_10m
+                        )}
+                        ${Math.round(
+                            c.wind_direction_10m
+                        )}°
+                    </div>
                 </div>
 
-            </div>
 
-
-            <div class="detail">
-
-                <div class="detail-title">
-                    Осадки
+                <div class="detail">
+                    <div class="detail-title">
+                        Давление
+                    </div>
+                    <div class="detail-value">
+                        ${Math.round(c.pressure_msl)} hPa
+                    </div>
                 </div>
 
-                <div class="detail-value">
-                    ${c.precipitation} мм
+
+                <div class="detail">
+                    <div class="detail-title">
+                        Осадки
+                    </div>
+                    <div class="detail-value">
+                        ${c.precipitation} мм
+                    </div>
                 </div>
 
-            </div>
 
-
-            <div class="detail">
-
-                <div class="detail-title">
-                    Максимум
+                <div class="detail">
+                    <div class="detail-title">
+                        Максимум
+                    </div>
+                    <div class="detail-value">
+                        ${Math.round(
+                            d.temperature_2m_max[0]
+                        )}°
+                    </div>
                 </div>
 
-                <div class="detail-value">
-                    ${Math.round(
-                        d.temperature_2m_max[0]
-                    )}°
-                </div>
 
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-title">
-                    Вероятность осадков
-                </div>
-
-                <div class="detail-value">
-                    ${d.precipitation_probability_max[0]}%
+                <div class="detail">
+                    <div class="detail-title">
+                        Осадки
+                    </div>
+                    <div class="detail-value">
+                        ${d.precipitation_probability_max[0]}%
+                    </div>
                 </div>
 
             </div>
 
         </div>
 
-    </div>
 
+        <div class="section-title">
+            Прогноз на 7 дней
+        </div>
 
-    <div class="section-title">
-        Прогноз на 7 дней
-    </div>
+        <div class="forecast">
 
-
-    <div class="forecast">
     `;
 
 
@@ -2884,19 +1923,19 @@ function renderWeather(
         i++
     ){
 
-        const date =
+        const date=
             new Date(
                 d.time[i]+"T12:00:00"
             );
 
 
-        const dayWeather =
+        const dw=
             getWeather(
                 d.weather_code[i]
             );
 
 
-        const name =
+        const name=
             i===0
             ? "Сегодня"
             : date.toLocaleDateString(
@@ -2909,32 +1948,32 @@ function renderWeather(
 
         html+=`
 
-        <div class="day">
+            <div class="day">
 
-            <div class="day-name">
-                ${name}
+                <div class="day-name">
+                    ${name}
+                </div>
+
+                <div class="day-icon">
+                    ${dw[0]}
+                </div>
+
+                <div class="day-temp">
+                    ${Math.round(
+                        d.temperature_2m_max[i]
+                    )}°
+                    /
+                    ${Math.round(
+                        d.temperature_2m_min[i]
+                    )}°
+                </div>
+
+                <div class="day-rain">
+                    💧
+                    ${d.precipitation_probability_max[i]}%
+                </div>
+
             </div>
-
-            <div class="day-icon">
-                ${dayWeather[0]}
-            </div>
-
-            <div class="day-temp">
-                ${Math.round(
-                    d.temperature_2m_max[i]
-                )}°
-                /
-                ${Math.round(
-                    d.temperature_2m_min[i]
-                )}°
-            </div>
-
-            <div class="day-rain">
-                💧
-                ${d.precipitation_probability_max[i]}%
-            </div>
-
-        </div>
 
         `;
 
@@ -2942,133 +1981,39 @@ function renderWeather(
 
 
     html+=`
-    </div>
-    `;
-
-
-    document
-    .getElementById("weather")
-    .innerHTML=html;
-
-}
-
-
-/* =========================================
-   WIND
-========================================= */
-
-function getWindDirection(deg){
-
-    const directions=[
-        "С",
-        "СВ",
-        "В",
-        "ЮВ",
-        "Ю",
-        "ЮЗ",
-        "З",
-        "СЗ"
-    ];
-
-
-    return directions[
-        Math.round(deg/45)%8
-    ];
-
-}
-
-
-/* =========================================
-   DATE
-========================================= */
-
-function formatDate(date){
-
-    return date.toLocaleDateString(
-        "ru-RU",
-        {
-            weekday:"long",
-            day:"numeric",
-            month:"long"
-        }
-    );
-
-}
-
-
-/* =========================================
-   LOADING
-========================================= */
-
-function showLoading(){
-
-    document
-    .getElementById("error")
-    .style.display="none";
-
-
-    document
-    .getElementById("weather")
-    .innerHTML=`
-
-        <div style="
-            padding:30px;
-            text-align:center;
-            color:#8799ad;
-        ">
-
-            Загрузка прогноза...
 
         </div>
 
     `;
 
-}
 
-
-function showError(message){
-
-    const error =
-        document.getElementById(
-            "error"
-        );
-
-
-    error.textContent=message;
-
-    error.style.display="block";
-
-
-    document
-    .getElementById("weather")
-    .innerHTML="";
+    document.getElementById(
+        "weather"
+    ).innerHTML=html;
 
 }
 
 
-/* =========================================
+/* =====================================================
    ENTER
-========================================= */
+===================================================== */
 
-document
-.getElementById("cityInput")
-.addEventListener(
+document.getElementById(
+    "cityInput"
+).addEventListener(
     "keydown",
     function(e){
 
-        if(e.key==="Enter"){
-
+        if(e.key==="Enter")
             searchCity();
-
-        }
 
     }
 );
 
 
-/* =========================================
+/* =====================================================
    START
-========================================= */
+===================================================== */
 
 createMaps();
 
