@@ -2,17 +2,16 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
       content="width=device-width,
-               initial-scale=1,
-               maximum-scale=1,
-               user-scalable=no">
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no">
 
 <title>Метео</title>
 
 <link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
 *{
@@ -25,16 +24,12 @@ html,body{
     width:100%;
     min-height:100%;
     background:#050a10;
-    color:#fff;
+    color:white;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 }
 
 body{
     overflow-x:hidden;
-}
-
-button,input{
-    font-family:inherit;
 }
 
 .app{
@@ -45,8 +40,8 @@ button,input{
 
 header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     margin-bottom:14px;
 }
 
@@ -73,22 +68,22 @@ header{
 .search input{
     flex:1;
     height:50px;
-    padding:0 15px;
-    border:none;
-    outline:none;
+    border:0;
+    outline:0;
     border-radius:15px;
     background:#101a26;
-    color:#fff;
+    color:white;
+    padding:0 15px;
     font-size:16px;
 }
 
 .search button{
     width:52px;
     height:50px;
-    border:none;
+    border:0;
     border-radius:15px;
     background:#268cff;
-    color:#fff;
+    color:white;
     font-size:23px;
 }
 
@@ -238,10 +233,10 @@ header{
     right:10px;
     bottom:10px;
     padding:13px 17px;
-    border:none;
+    border:0;
     border-radius:13px;
     background:rgba(4,9,15,.96);
-    color:#fff;
+    color:white;
     font-size:14px;
     font-weight:650;
 }
@@ -293,7 +288,7 @@ header{
 .layer{
     flex-shrink:0;
     padding:9px 12px;
-    border:none;
+    border:0;
     border-radius:9px;
     background:#111d2b;
     color:#aab9c9;
@@ -301,15 +296,15 @@ header{
 
 .layer.active{
     background:#268cff;
-    color:#fff;
+    color:white;
 }
 
 .close-map{
     padding:10px 12px;
-    border:none;
+    border:0;
     border-radius:11px;
     background:rgba(4,9,15,.95);
-    color:#fff;
+    color:white;
     pointer-events:auto;
 }
 
@@ -435,10 +430,10 @@ header{
 
 .radar-close{
     padding:10px 13px;
-    border:none;
+    border:0;
     border-radius:11px;
     background:rgba(3,8,14,.95);
-    color:#fff;
+    color:white;
     font-weight:650;
     pointer-events:auto;
 }
@@ -452,20 +447,17 @@ header{
     display:flex;
     flex-direction:column;
     gap:8px;
-    pointer-events:auto;
 }
 
 .radar-control{
     width:53px;
     height:53px;
-    border:none;
+    border:0;
     border-radius:15px;
     background:rgba(3,8,14,.95);
-    color:#fff;
+    color:white;
     font-size:23px;
     font-weight:600;
-    box-shadow:0 4px 16px rgba(0,0,0,.4);
-    -webkit-tap-highlight-color:transparent;
 }
 
 .radar-help{
@@ -527,9 +519,7 @@ header{
         value="Уфа"
         placeholder="Введите город">
 
-    <button onclick="searchCity()">
-        ⌕
-    </button>
+    <button onclick="searchCity()">⌕</button>
 
 </div>
 
@@ -540,8 +530,7 @@ header{
     <div style="
         padding:30px;
         text-align:center;
-        color:#8496a9;
-    ">
+        color:#8496a9;">
         Загрузка...
     </div>
 
@@ -562,9 +551,7 @@ header{
     <button
         class="open-map"
         onclick="openForecastMap()">
-
         Открыть карту
-
     </button>
 
 </div>
@@ -576,9 +563,7 @@ header{
      FULL MAP
 ========================= -->
 
-<div
-    id="fullscreenMap"
-    class="fullscreen-map">
+<div id="fullscreenMap" class="fullscreen-map">
 
     <div id="forecastMap"></div>
 
@@ -590,17 +575,13 @@ header{
                 id="operaLayerButton"
                 class="layer active"
                 onclick="showOperaLayer()">
-
                 🌧 Осадки • OPERA / LibreWXR
-
             </button>
 
             <button
                 class="layer"
                 onclick="openRadarViewer()">
-
                 📡 Радарная-GIF
-
             </button>
 
         </div>
@@ -608,19 +589,13 @@ header{
         <button
             class="close-map"
             onclick="closeForecastMap()">
-
             Закрыть
-
         </button>
 
     </div>
 
-    <div
-        id="radarStatus"
-        class="radar-status">
-
-        Карта готова
-
+    <div id="radarStatus" class="radar-status">
+        Подготовка данных...
     </div>
 
     <div class="legend">
@@ -645,16 +620,11 @@ header{
 
 <!-- =========================
      GIF VIEWER
-     НЕ ТРОГАЛ
 ========================= -->
 
-<div
-    id="radarViewer"
-    class="radar-viewer">
+<div id="radarViewer" class="radar-viewer">
 
-    <div
-        id="radarStage"
-        class="radar-stage">
+    <div id="radarStage" class="radar-stage">
 
         <img
             id="radarImage"
@@ -673,9 +643,7 @@ header{
         <button
             class="radar-close"
             onclick="closeRadarViewer()">
-
             Закрыть
-
         </button>
 
     </div>
@@ -748,7 +716,7 @@ const LIBRE_METADATA =
 
 
 /* =====================================================
-   FAST CACHE
+   CACHE
 ===================================================== */
 
 const CACHE_KEY =
@@ -758,14 +726,13 @@ const CACHE_TIME_KEY =
     "librewxr_timestamp_time";
 
 const CACHE_MAX_AGE =
-    10 * 60 * 1000;
+    30 * 60 * 1000;
 
 
 /*
-    Берём сохранённый timestamp.
-
-    Это позволяет сразу создать
-    слой, не ожидая metadata.
+    В кэш сохраняется только timestamp.
+    Сам Leaflet tile cache браузер
+    хранит самостоятельно.
 */
 
 function getCachedTimestamp(){
@@ -779,28 +746,17 @@ function getCachedTimestamp(){
                 )
             );
 
-        const savedAt =
-            Number(
-                localStorage.getItem(
-                    CACHE_TIME_KEY
-                )
-            );
+        if(!timestamp)
+            return null;
 
-        if(
-            timestamp &&
-            savedAt &&
-            Date.now() - savedAt <
-            CACHE_MAX_AGE
-        ){
+        return timestamp;
 
-            return timestamp;
+    }catch(e){
 
-        }
+        return null;
 
     }
-    catch(e){}
 
-    return null;
 }
 
 
@@ -818,8 +774,7 @@ function cacheTimestamp(timestamp){
             String(Date.now())
         );
 
-    }
-    catch(e){}
+    }catch(e){}
 
 }
 
@@ -836,7 +791,14 @@ function createMaps(){
             {
                 zoomControl:false,
                 attributionControl:false,
-                preferCanvas:true
+                preferCanvas:true,
+
+                /*
+                    Плавное поведение Leaflet
+                */
+                zoomAnimation:true,
+                fadeAnimation:true,
+                markerZoomAnimation:true
             }
         )
         .setView(
@@ -849,9 +811,20 @@ function createMaps(){
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
             subdomains:"abcd",
+
             maxZoom:20,
-            updateWhenIdle:true,
-            keepBuffer:1
+
+            /*
+                Оставляем соседние тайлы,
+                чтобы при zoom карта
+                не становилась пустой.
+            */
+            keepBuffer:2,
+
+            updateWhenIdle:false,
+            updateWhenZooming:true,
+
+            reuseTiles:true
         }
     ).addTo(previewMap);
 
@@ -862,9 +835,15 @@ function createMaps(){
             {
                 zoomControl:true,
                 preferCanvas:true,
-                zoomAnimation:false,
-                fadeAnimation:false,
-                markerZoomAnimation:false
+
+                /*
+                    НЕ отключаем анимации.
+                */
+                zoomAnimation:true,
+                fadeAnimation:true,
+                markerZoomAnimation:true,
+
+                zoomAnimationThreshold:4
             }
         )
         .setView(
@@ -877,9 +856,20 @@ function createMaps(){
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
             subdomains:"abcd",
+
             maxZoom:20,
-            updateWhenIdle:true,
-            keepBuffer:1,
+
+            /*
+                Было важно не уменьшать это
+                слишком сильно.
+            */
+            keepBuffer:2,
+
+            updateWhenIdle:false,
+            updateWhenZooming:true,
+
+            reuseTiles:true,
+
             attribution:
                 "© OpenStreetMap © CARTO"
         }
@@ -894,11 +884,18 @@ function createMaps(){
 
 function updateMarker(){
 
+    if(!forecastMap)
+        return;
+
+
     if(marker){
 
-        forecastMap.removeLayer(marker);
+        forecastMap.removeLayer(
+            marker
+        );
 
     }
+
 
     marker =
         L.circleMarker(
@@ -910,7 +907,10 @@ function updateMarker(){
                 fillColor:"#268cff",
                 fillOpacity:1
             }
-        ).addTo(forecastMap);
+        )
+        .addTo(
+            forecastMap
+        );
 
 }
 
@@ -921,22 +921,29 @@ function updateMarker(){
 
 function openForecastMap(){
 
-    document
-        .getElementById("fullscreenMap")
-        .classList.add("open");
+    const container =
+        document.getElementById(
+            "fullscreenMap"
+        );
+
+
+    container.classList.add(
+        "open"
+    );
 
 
     /*
-        ВАЖНО:
-
-        Сначала показываем карту.
-
-        Не ждём API.
+        Сначала показываем уже существующий
+        слой. Никакого ожидания API.
     */
 
     setTimeout(function(){
 
-        forecastMap.invalidateSize(false);
+        forecastMap.invalidateSize({
+            pan:false,
+            animate:false
+        });
+
 
         forecastMap.setView(
             [latitude,longitude],
@@ -946,12 +953,13 @@ function openForecastMap(){
             }
         );
 
+
         updateMarker();
 
+
         /*
-            Сначала мгновенно пробуем
-            использовать кэшированный
-            timestamp.
+            Мгновенно пробуем последний
+            известный кадр.
         */
 
         const cached =
@@ -969,13 +977,17 @@ function openForecastMap(){
 
 
         /*
-            Metadata загружается
-            уже после отображения карты.
+            Новый timestamp запрашивается
+            после отображения карты.
         */
 
-        refreshLibreWXR();
+        setTimeout(
+            refreshLibreWXR,
+            50
+        );
 
-    },80);
+
+    },60);
 
 }
 
@@ -987,14 +999,18 @@ function openForecastMap(){
 function closeForecastMap(){
 
     document
-        .getElementById("fullscreenMap")
-        .classList.remove("open");
+        .getElementById(
+            "fullscreenMap"
+        )
+        .classList.remove(
+            "open"
+        );
 
 }
 
 
 /* =====================================================
-   METADATA
+   LIBRE METADATA
 ===================================================== */
 
 async function getLibreTimestamp(){
@@ -1002,10 +1018,13 @@ async function getLibreTimestamp(){
     const controller =
         new AbortController();
 
+
     const timeout =
         setTimeout(
-            () => controller.abort(),
-            7000
+            function(){
+                controller.abort();
+            },
+            5000
         );
 
 
@@ -1014,10 +1033,9 @@ async function getLibreTimestamp(){
         const response =
             await fetch(
                 LIBRE_METADATA +
-                "?t=" +
+                "?_=" +
                 Date.now(),
                 {
-                    method:"GET",
                     cache:"no-store",
                     signal:controller.signal
                 }
@@ -1077,33 +1095,38 @@ async function getLibreTimestamp(){
 
         const timestamps =
             frames
-            .map(function(frame){
+            .map(
+                function(frame){
 
-                if(
-                    typeof frame === "number"
-                ){
+                    if(
+                        typeof frame ===
+                        "number"
+                    ){
 
-                    return frame;
+                        return frame;
+
+                    }
+
+                    return (
+                        frame.time ??
+                        frame.timestamp ??
+                        frame.ts
+                    );
 
                 }
-
-                return (
-                    frame.time ??
-                    frame.timestamp ??
-                    frame.ts
-                );
-
-            })
+            )
             .map(Number)
             .filter(
                 Number.isFinite
             );
 
 
-        if(!timestamps.length){
+        if(
+            !timestamps.length
+        ){
 
             throw new Error(
-                "Timestamp not found"
+                "No radar timestamp"
             );
 
         }
@@ -1116,7 +1139,9 @@ async function getLibreTimestamp(){
     }
     finally{
 
-        clearTimeout(timeout);
+        clearTimeout(
+            timeout
+        );
 
     }
 
@@ -1124,7 +1149,7 @@ async function getLibreTimestamp(){
 
 
 /* =====================================================
-   CREATE LIBREWXR LAYER
+   LIBRE LAYER
 ===================================================== */
 
 function createLibreLayer(
@@ -1137,13 +1162,16 @@ function createLibreLayer(
 
 
     /*
-        Не пересоздаём слой,
-        если это тот же кадр.
+        Тот же кадр?
+
+        Ничего не делаем.
+        Это экономит запросы тайлов.
     */
 
     if(
         libreRadarLayer &&
-        libreRadarTimestamp === timestamp
+        libreRadarTimestamp ===
+        timestamp
     ){
 
         if(
@@ -1163,32 +1191,21 @@ function createLibreLayer(
     }
 
 
-    if(libreRadarLayer){
-
-        forecastMap.removeLayer(
-            libreRadarLayer
-        );
-
-        libreRadarLayer = null;
-
-    }
-
-
-    libreRadarTimestamp =
-        timestamp;
-
-
     /*
-        LibreWXR RainViewer-compatible
-        radar tile endpoint.
+        Новый кадр.
 
-        Используем 256px:
-        для мобильного сайта это
-        обычно быстрее, чем 512px.
-
-        maxNativeZoom ограничивает
-        лишние запросы.
+        Старый слой удаляем только
+        после того, как новый слой
+        будет создан.
     */
+
+    const oldLayer =
+        libreRadarLayer;
+
+
+    const oldTimestamp =
+        libreRadarTimestamp;
+
 
     const tileURL =
         LIBRE_API +
@@ -1197,7 +1214,7 @@ function createLibreLayer(
         "/256/{z}/{x}/{y}/10/1_1.png";
 
 
-    libreRadarLayer =
+    const newLayer =
         L.tileLayer(
             tileURL,
             {
@@ -1205,15 +1222,21 @@ function createLibreLayer(
 
                 opacity:.88,
 
-                maxZoom:18,
+                maxZoom:20,
 
-                maxNativeZoom:12,
+                /*
+                    Не ограничиваем слишком сильно
+                    native zoom, чтобы Leaflet
+                    корректно масштабировал тайлы.
+                */
+                maxNativeZoom:14,
 
-                updateWhenIdle:true,
+                keepBuffer:2,
 
-                updateWhenZooming:false,
+                updateWhenIdle:false,
+                updateWhenZooming:true,
 
-                keepBuffer:1,
+                reuseTiles:true,
 
                 crossOrigin:true,
 
@@ -1225,8 +1248,52 @@ function createLibreLayer(
         );
 
 
-    libreRadarLayer.addTo(
+    /*
+        Сначала добавляем новый слой.
+        Только после этого старый убираем.
+
+        Поэтому не возникает пустого
+        промежутка при обновлении.
+    */
+
+    newLayer.addTo(
         forecastMap
+    );
+
+
+    libreRadarLayer =
+        newLayer;
+
+    libreRadarTimestamp =
+        timestamp;
+
+
+    if(oldLayer){
+
+        setTimeout(
+            function(){
+
+                if(
+                    forecastMap.hasLayer(
+                        oldLayer
+                    )
+                ){
+
+                    forecastMap.removeLayer(
+                        oldLayer
+                    );
+
+                }
+
+            },
+            300
+        );
+
+    }
+
+
+    cacheTimestamp(
+        timestamp
     );
 
 
@@ -1236,40 +1303,45 @@ function createLibreLayer(
         );
 
 
-    if(fromCache){
-
-        status.textContent =
-            "OPERA / LibreWXR • кэшированный кадр";
-
-    }
-    else{
-
-        const date =
-            new Date(
-                timestamp * 1000
-            );
+    const date =
+        new Date(
+            timestamp * 1000
+        );
 
 
-        status.textContent =
-            "OPERA / LibreWXR • " +
-            date.toLocaleTimeString(
-                "ru-RU",
-                {
-                    hour:"2-digit",
-                    minute:"2-digit"
-                }
-            );
-
-    }
+    status.textContent =
+        "OPERA / LibreWXR • " +
+        date.toLocaleTimeString(
+            "ru-RU",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
 
 }
 
 
 /* =====================================================
-   BACKGROUND REFRESH
+   REFRESH
 ===================================================== */
 
+let libreRefreshing = false;
+
+
 async function refreshLibreWXR(){
+
+    /*
+        Не допускаем два одновременных
+        запроса metadata.
+    */
+
+    if(libreRefreshing)
+        return;
+
+
+    libreRefreshing = true;
+
 
     try{
 
@@ -1281,17 +1353,18 @@ async function refreshLibreWXR(){
             return;
 
 
+        /*
+            Сохраняем timestamp сразу.
+        */
+
         cacheTimestamp(
             timestamp
         );
 
 
         /*
-            Если это новый кадр —
-            меняем слой.
-
-            Если старый —
-            вообще ничего не делаем.
+            Новый слой создаём только если
+            действительно появился новый кадр.
         */
 
         if(
@@ -1305,31 +1378,7 @@ async function refreshLibreWXR(){
             );
 
         }
-        else{
 
-            const status =
-                document.getElementById(
-                    "radarStatus"
-                );
-
-
-            const date =
-                new Date(
-                    timestamp * 1000
-                );
-
-
-            status.textContent =
-                "OPERA / LibreWXR • " +
-                date.toLocaleTimeString(
-                    "ru-RU",
-                    {
-                        hour:"2-digit",
-                        minute:"2-digit"
-                    }
-                );
-
-        }
 
     }
     catch(error){
@@ -1341,8 +1390,7 @@ async function refreshLibreWXR(){
 
 
         /*
-            Если кэшированный слой
-            уже есть — НЕ убираем его.
+            Старые данные НЕ удаляем.
         */
 
         if(
@@ -1354,19 +1402,15 @@ async function refreshLibreWXR(){
                     "radarStatus"
                 )
                 .textContent =
-                    "OPERA / LibreWXR • используется последний кадр";
+                    "OPERA / LibreWXR • последний доступный кадр";
 
         }
-        else{
 
-            document
-                .getElementById(
-                    "radarStatus"
-                )
-                .textContent =
-                    "Ожидание данных LibreWXR...";
+    }
+    finally{
 
-        }
+        libreRefreshing =
+            false;
 
     }
 
@@ -1374,7 +1418,7 @@ async function refreshLibreWXR(){
 
 
 /* =====================================================
-   AUTO UPDATE
+   BACKGROUND UPDATE
 ===================================================== */
 
 setInterval(
@@ -1392,14 +1436,6 @@ setInterval(
             )
         ){
 
-            /*
-                Проверяем новый кадр
-                в фоне.
-
-                Карта при этом
-                продолжает работать.
-            */
-
             refreshLibreWXR();
 
         }
@@ -1415,30 +1451,25 @@ setInterval(
 
 function showOperaLayer(){
 
-    if(!libreRadarLayer){
-
-        const cached =
-            getCachedTimestamp();
+    const cached =
+        getCachedTimestamp();
 
 
-        if(cached){
+    if(
+        !libreRadarLayer &&
+        cached
+    ){
 
-            createLibreLayer(
-                cached,
-                true
-            );
-
-        }
-
-
-        refreshLibreWXR();
-
-        return;
+        createLibreLayer(
+            cached,
+            true
+        );
 
     }
 
 
     if(
+        libreRadarLayer &&
         !forecastMap.hasLayer(
             libreRadarLayer
         )
@@ -1450,12 +1481,14 @@ function showOperaLayer(){
 
     }
 
+
+    refreshLibreWXR();
+
 }
 
 
 /* =====================================================
    GIF VIEWER
-   НИЖЕ ОСТАВЛЕНО БЕЗ ИЗМЕНЕНИЙ
 ===================================================== */
 
 const radarViewer =
@@ -1512,17 +1545,10 @@ function closeRadarViewer(){
 
 function loadRadarGIF(){
 
-    const x =
-        radar.x;
-
-    const y =
-        radar.y;
-
-    const scale =
-        radar.scale;
-
-    const rotation =
-        radar.rotation;
+    const x = radar.x;
+    const y = radar.y;
+    const scale = radar.scale;
+    const rotation = radar.rotation;
 
 
     radarImage.onload =
@@ -1670,13 +1696,21 @@ radarViewer.addEventListener(
     function(e){
 
         if(
-            e.target.closest(".radar-controls") ||
-            e.target.closest(".radar-header")
+            e.target.closest(
+                ".radar-controls"
+            ) ||
+            e.target.closest(
+                ".radar-header"
+            )
         ){
+
             return;
+
         }
 
+
         e.preventDefault();
+
 
         pointers.set(
             e.pointerId,
@@ -1724,8 +1758,10 @@ radarViewer.addEventListener(
                     pointers.values()
                 );
 
+
             const p1 = pts[0];
             const p2 = pts[1];
+
 
             const center =
                 getCenter(
@@ -1733,11 +1769,13 @@ radarViewer.addEventListener(
                     p2
                 );
 
+
             const distance =
                 getDistance(
                     p1,
                     p2
                 );
+
 
             const angle =
                 getAngle(
@@ -1749,14 +1787,15 @@ radarViewer.addEventListener(
             const dx =
                 center.x -
                 (
-                    window.innerWidth/2 +
+                    window.innerWidth / 2 +
                     radar.x
                 );
+
 
             const dy =
                 center.y -
                 (
-                    window.innerHeight/2 +
+                    window.innerHeight / 2 +
                     radar.y
                 );
 
@@ -1771,6 +1810,7 @@ radarViewer.addEventListener(
                 Math.cos(
                     rotationRad
                 );
+
 
             const sin =
                 Math.sin(
@@ -1833,8 +1873,11 @@ radarViewer.addEventListener(
                 e.pointerId
             )
         ){
+
             return;
+
         }
+
 
         e.preventDefault();
 
@@ -1893,6 +1936,7 @@ radarViewer.addEventListener(
                 Array.from(
                     pointers.values()
                 );
+
 
             const p1 = pts[0];
             const p2 = pts[1];
@@ -1958,6 +2002,7 @@ radarViewer.addEventListener(
                     rotationRad
                 );
 
+
             const sin =
                 Math.sin(
                     rotationRad
@@ -1967,8 +2012,7 @@ radarViewer.addEventListener(
             const rotatedX =
                 gesture.localX *
                 radar.scale *
-                cos
-                -
+                cos -
                 gesture.localY *
                 radar.scale *
                 sin;
@@ -1977,8 +2021,7 @@ radarViewer.addEventListener(
             const rotatedY =
                 gesture.localX *
                 radar.scale *
-                sin
-                +
+                sin +
                 gesture.localY *
                 radar.scale *
                 cos;
@@ -1986,13 +2029,13 @@ radarViewer.addEventListener(
 
             radar.x =
                 center.x -
-                window.innerWidth/2 -
+                window.innerWidth / 2 -
                 rotatedX;
 
 
             radar.y =
                 center.y -
-                window.innerHeight/2 -
+                window.innerHeight / 2 -
                 rotatedY;
 
 
@@ -2057,18 +2100,12 @@ function finishPointer(e){
 
 radarViewer.addEventListener(
     "pointerup",
-    finishPointer,
-    {
-        passive:false
-    }
+    finishPointer
 );
 
 radarViewer.addEventListener(
     "pointercancel",
-    finishPointer,
-    {
-        passive:false
-    }
+    finishPointer
 );
 
 
@@ -2118,14 +2155,8 @@ function getWeather(code){
 function getWindDirection(deg){
 
     const directions = [
-        "С",
-        "СВ",
-        "В",
-        "ЮВ",
-        "Ю",
-        "ЮЗ",
-        "З",
-        "СЗ"
+        "С","СВ","В","ЮВ",
+        "Ю","ЮЗ","З","СЗ"
     ];
 
 
@@ -2137,7 +2168,7 @@ function getWindDirection(deg){
 
 
 /* =====================================================
-   CITY
+   CITY SEARCH
 ===================================================== */
 
 async function searchCity(){
@@ -2157,19 +2188,23 @@ async function searchCity(){
 
 
     document
-        .getElementById("error")
-        .style.display="none";
+        .getElementById(
+            "error"
+        )
+        .style.display =
+        "none";
 
 
     document
-        .getElementById("weather")
-        .innerHTML=`
+        .getElementById(
+            "weather"
+        )
+        .innerHTML = `
 
 <div style="
 padding:30px;
 text-align:center;
-color:#8496a9;
-">
+color:#8496a9;">
 Загрузка прогноза...
 </div>
 
@@ -2241,6 +2276,7 @@ color:#8496a9;
 
 
         updateMarker();
+
 
         await loadWeather(
             place.name
@@ -2529,9 +2565,13 @@ ${dw[0]}
 </div>
 
 <div class="day-temp">
-${Math.round(d.temperature_2m_max[i])}°
+${Math.round(
+    d.temperature_2m_max[i]
+)}°
 /
-${Math.round(d.temperature_2m_min[i])}°
+${Math.round(
+    d.temperature_2m_min[i]
+)}°
 </div>
 
 <div class="day-rain">
@@ -2551,7 +2591,9 @@ ${Math.round(d.temperature_2m_min[i])}°
 
 
     document
-        .getElementById("weather")
+        .getElementById(
+            "weather"
+        )
         .innerHTML =
             html;
 
@@ -2563,7 +2605,9 @@ ${Math.round(d.temperature_2m_min[i])}°
 ===================================================== */
 
 document
-    .getElementById("cityInput")
+    .getElementById(
+        "cityInput"
+    )
     .addEventListener(
         "keydown",
         function(e){
