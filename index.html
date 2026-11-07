@@ -3,20 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Глобус восходящих потоков</title>
+  <title>Карта восходящих потоков</title>
 
-  <!-- MapLibre GL JS подключаем с CDN: никакой установки не нужно -->
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
-  <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+  <!-- Leaflet подключаем с CDN: ничего устанавливать не нужно -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Наши файлы -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Сюда MapLibre нарисует глобус -->
+  <!-- Космос рисуется на этом холсте (см. drawSpace в app.js) -->
+  <canvas id="space"></canvas>
+
+  <!-- Карта. Фон у неё прозрачный, поэтому по краям мира виден космос -->
   <div id="map"></div>
 
-  <!-- Панель: выбор спутника и легенда -->
   <aside id="panel">
     <h1>Восходящие потоки по ИК-снимкам</h1>
 
@@ -25,8 +26,13 @@
       <select id="satellite">
         <option value="GOES-East_ABI_Band13_Clean_Infrared">GOES-East (Америка, Атлантика)</option>
         <option value="GOES-West_ABI_Band13_Clean_Infrared">GOES-West (восток Тихого океана)</option>
-        <option value="Himawari_AHI_Band13_Clean_Infrared">Himawari (Азия, Австралия, запад Тихого)</option>
+        <option value="Himawari_AHI_Band13_Clean_Infrared" selected>Himawari (Азия, Австралия, запад Тихого)</option>
       </select>
+    </label>
+
+    <label class="row">
+      Прозрачность ИК-слоя
+      <input id="opacity" type="range" min="0.2" max="1" step="0.05" value="0.85">
     </label>
 
     <div id="legend">
