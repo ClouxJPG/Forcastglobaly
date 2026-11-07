@@ -1,7 +1,6 @@
 :root {
   --panel: rgba(10, 14, 28, 0.84);
-  --line: #28325261;
-  --line-solid: #283252;
+  --line: #283252;
   --text: #e8ecf8;
   --muted: #8f9ab5;
 }
@@ -16,7 +15,7 @@ html, body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Слой 0: космос. Слой 1: карта. Слой 2: панель. */
+/* Слой 0: космос. Слой 1: глобус. Слой 2: панель. */
 #space {
   position: fixed;
   inset: 0;
@@ -32,22 +31,20 @@ html, body {
   background: transparent;
 }
 
-.leaflet-container {
-  background: transparent;
-  font-family: inherit;
-  cursor: crosshair;
-}
+.maplibregl-canvas { cursor: crosshair; }
 
 /* ---------- Панель ---------- */
 #panel {
   position: absolute;
   top: 12px;
   left: 12px;
-  z-index: 1100;
+  z-index: 2;
   width: min(320px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow: auto;
   padding: 14px 16px;
   background: var(--panel);
-  border: 1px solid var(--line-solid);
+  border: 1px solid var(--line);
   border-radius: 10px;
   backdrop-filter: blur(8px);
   font-size: 14px;
@@ -58,6 +55,14 @@ html, body {
 
 .row { display: block; color: var(--muted); margin-bottom: 12px; }
 
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
 select {
   display: block;
   width: 100%;
@@ -65,7 +70,7 @@ select {
   padding: 6px 8px;
   color: var(--text);
   background: #0b1020;
-  border: 1px solid var(--line-solid);
+  border: 1px solid var(--line);
   border-radius: 6px;
   font: inherit;
 }
@@ -83,7 +88,7 @@ select:focus-visible, input:focus-visible {
 #legend-bar {
   height: 12px;
   border-radius: 3px;
-  border: 1px solid var(--line-solid);
+  border: 1px solid var(--line);
 }
 
 #legend-ticks {
@@ -109,7 +114,7 @@ select:focus-visible, input:focus-visible {
 .disclaimer {
   margin: 12px 0 0;
   padding-top: 10px;
-  border-top: 1px solid var(--line-solid);
+  border-top: 1px solid var(--line);
   font-size: 12px;
   color: var(--muted);
 }
@@ -117,33 +122,34 @@ select:focus-visible, input:focus-visible {
 #status { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
 #status.error { color: #ff9a8f; }
 
-/* ---------- Элементы Leaflet в тёмной теме ---------- */
-.leaflet-control-layers,
-.leaflet-bar a,
-.leaflet-control-attribution {
-  background: var(--panel) !important;
-  color: var(--text) !important;
-  border-color: var(--line-solid) !important;
+/* ---------- Элементы MapLibre в тёмной теме ---------- */
+.maplibregl-ctrl-group { background: var(--panel); border: 1px solid var(--line); }
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(1); }
+
+.maplibregl-ctrl-attrib {
+  background: rgba(10, 14, 28, 0.7) !important;
+  color: var(--muted) !important;
 }
+.maplibregl-ctrl-attrib a { color: #9db8ff !important; }
 
-.leaflet-control-layers {
-  border: 1px solid var(--line-solid);
-  border-radius: 10px;
-  backdrop-filter: blur(8px);
-}
-
-.leaflet-control-attribution { font-size: 11px; color: var(--muted) !important; }
-.leaflet-control-attribution a { color: #9db8ff !important; }
-
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip {
+.maplibregl-popup-content {
   background: #0d1325;
   color: var(--text);
-  border: 1px solid var(--line-solid);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
 }
-
-.leaflet-popup-content { margin: 10px 14px; font-size: 14px; line-height: 1.4; }
-.leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip { border-bottom-color: #0d1325; }
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { border-top-color: #0d1325; }
+.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: #0d1325; }
+.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: #0d1325; }
+.maplibregl-popup-close-button { color: var(--muted); }
 
 .popup-temp { font-size: 20px; font-weight: 600; }
 .popup-note { margin-top: 4px; font-size: 12px; color: var(--muted); }
@@ -156,8 +162,6 @@ select:focus-visible, input:focus-visible {
     left: 8px;
     right: 8px;
     width: auto;
-    max-height: 48vh;
-    overflow: auto;
+    max-height: 45vh;
   }
-  .leaflet-control-zoom { display: none; } /* на телефоне масштабируем щипком */
 }
