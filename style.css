@@ -1,0 +1,143 @@
+/* Цвета лежат в одном месте — так проще менять оформление */
+:root {
+  --bg: #0a0d14;
+  --panel: rgba(16, 22, 36, 0.88);
+  --line: #26304a;
+  --text: #e6eaf2;
+  --muted: #8b95a8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Карта занимает весь экран */
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+/* Панель поверх карты */
+#panel {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: min(320px, calc(100vw - 24px));
+  padding: 14px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  font-size: 14px;
+  line-height: 1.45;
+  z-index: 2;
+}
+
+#panel h1 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.row {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  color: var(--text);
+  background: #0e1422;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+
+select:focus-visible {
+  outline: 2px solid #6aa8ff;
+  outline-offset: 1px;
+}
+
+/* Легенда */
+.legend-title { color: var(--muted); margin-bottom: 6px; }
+
+#legend-bar {
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+}
+
+#legend-ticks {
+  position: relative;
+  height: 18px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#legend-ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+#legend-cats {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+#legend-cats li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3px 0;
+}
+
+#legend-cats i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.disclaimer {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#status {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+#status.error { color: #ff8a80; }
+
+/* Всплывающее окно по клику */
+.maplibregl-popup-content {
+  background: #101624;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.maplibregl-popup-tip { border-top-color: #101624 !important; border-bottom-color: #101624 !important; }
+.maplibregl-popup-close-button { color: var(--muted); }
+.popup-temp { font-size: 20px; font-weight: 600; }
+.popup-note { margin-top: 4px; font-size: 12px; color: var(--muted); }
