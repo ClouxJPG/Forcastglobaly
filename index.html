@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Карта восходящих потоков</title>
+  <title>Глобус восходящих потоков</title>
 
-  <!-- Leaflet подключаем с CDN: ничего устанавливать не нужно -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- MapLibre GL JS (рисует глобус) подключаем с CDN: ставить ничего не нужно -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+  <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,7 +15,7 @@
   <!-- Космос рисуется на этом холсте (см. drawSpace в app.js) -->
   <canvas id="space"></canvas>
 
-  <!-- Карта. Фон у неё прозрачный, поэтому по краям мира виден космос -->
+  <!-- Глобус. Вокруг шара фон прозрачный, поэтому виден космос -->
   <div id="map"></div>
 
   <aside id="panel">
@@ -29,6 +29,16 @@
         <option value="Himawari_AHI_Band13_Clean_Infrared" selected>Himawari (Азия, Австралия, запад Тихого)</option>
       </select>
     </label>
+
+    <label class="row">
+      Подложка
+      <select id="basemap">
+        <option value="sat" selected>Спутниковые снимки (Esri)</option>
+        <option value="dark">Тёмная карта (Esri)</option>
+      </select>
+    </label>
+
+    <label class="check"><input id="labels" type="checkbox" checked> Подписи стран и городов</label>
 
     <label class="row">
       Прозрачность ИК-слоя
