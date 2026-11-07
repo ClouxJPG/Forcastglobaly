@@ -1,10 +1,9 @@
-/* Цвета лежат в одном месте — так проще менять оформление */
 :root {
-  --bg: #0a0d14;
-  --panel: rgba(16, 22, 36, 0.88);
-  --line: #26304a;
-  --text: #e6eaf2;
-  --muted: #8b95a8;
+  --panel: rgba(10, 14, 28, 0.84);
+  --line: #28325261;
+  --line-solid: #283252;
+  --text: #e8ecf8;
+  --muted: #8f9ab5;
 }
 
 * { box-sizing: border-box; }
@@ -12,44 +11,52 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: var(--bg);
+  background: #04050c;
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Карта занимает весь экран */
+/* Слой 0: космос. Слой 1: карта. Слой 2: панель. */
+#space {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
 #map {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  background: transparent;
 }
 
-/* Панель поверх карты */
+.leaflet-container {
+  background: transparent;
+  font-family: inherit;
+  cursor: crosshair;
+}
+
+/* ---------- Панель ---------- */
 #panel {
   position: absolute;
   top: 12px;
   left: 12px;
+  z-index: 1100;
   width: min(320px, calc(100vw - 24px));
   padding: 14px 16px;
   background: var(--panel);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-solid);
   border-radius: 10px;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   font-size: 14px;
   line-height: 1.45;
-  z-index: 2;
 }
 
-#panel h1 {
-  margin: 0 0 10px;
-  font-size: 16px;
-  font-weight: 600;
-}
+#panel h1 { margin: 0 0 10px; font-size: 16px; font-weight: 600; }
 
-.row {
-  display: block;
-  color: var(--muted);
-  margin-bottom: 14px;
-}
+.row { display: block; color: var(--muted); margin-bottom: 12px; }
 
 select {
   display: block;
@@ -57,24 +64,26 @@ select {
   margin-top: 4px;
   padding: 6px 8px;
   color: var(--text);
-  background: #0e1422;
-  border: 1px solid var(--line);
+  background: #0b1020;
+  border: 1px solid var(--line-solid);
   border-radius: 6px;
   font: inherit;
 }
 
-select:focus-visible {
+input[type="range"] { display: block; width: 100%; margin-top: 6px; }
+
+select:focus-visible, input:focus-visible {
   outline: 2px solid #6aa8ff;
   outline-offset: 1px;
 }
 
-/* Легенда */
+/* ---------- Легенда ---------- */
 .legend-title { color: var(--muted); margin-bottom: 6px; }
 
 #legend-bar {
   height: 12px;
   border-radius: 3px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-solid);
 }
 
 #legend-ticks {
@@ -91,53 +100,64 @@ select:focus-visible {
   white-space: nowrap;
 }
 
-#legend-cats {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-  font-size: 13px;
-}
+#legend-cats { list-style: none; margin: 8px 0 0; padding: 0; font-size: 13px; }
 
-#legend-cats li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 3px 0;
-}
+#legend-cats li { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
 
-#legend-cats i {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex: none;
-}
+#legend-cats i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 
 .disclaimer {
   margin: 12px 0 0;
   padding-top: 10px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line-solid);
   font-size: 12px;
   color: var(--muted);
 }
 
-#status {
-  margin: 8px 0 0;
-  font-size: 12px;
-  color: var(--muted);
-}
-#status.error { color: #ff8a80; }
+#status { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+#status.error { color: #ff9a8f; }
 
-/* Всплывающее окно по клику */
-.maplibregl-popup-content {
-  background: #101624;
+/* ---------- Элементы Leaflet в тёмной теме ---------- */
+.leaflet-control-layers,
+.leaflet-bar a,
+.leaflet-control-attribution {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line-solid) !important;
+}
+
+.leaflet-control-layers {
+  border: 1px solid var(--line-solid);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.leaflet-control-attribution { font-size: 11px; color: var(--muted) !important; }
+.leaflet-control-attribution a { color: #9db8ff !important; }
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #0d1325;
   color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 14px;
-  line-height: 1.4;
+  border: 1px solid var(--line-solid);
 }
-.maplibregl-popup-tip { border-top-color: #101624 !important; border-bottom-color: #101624 !important; }
-.maplibregl-popup-close-button { color: var(--muted); }
+
+.leaflet-popup-content { margin: 10px 14px; font-size: 14px; line-height: 1.4; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+
 .popup-temp { font-size: 20px; font-weight: 600; }
 .popup-note { margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+/* ---------- Телефоны: панель уходит вниз ---------- */
+@media (max-width: 600px) {
+  #panel {
+    top: auto;
+    bottom: 30px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-height: 48vh;
+    overflow: auto;
+  }
+  .leaflet-control-zoom { display: none; } /* на телефоне масштабируем щипком */
+}
