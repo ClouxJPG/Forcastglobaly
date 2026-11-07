@@ -1,11 +1,18 @@
 'use strict';
 
-/* Если Leaflet не загрузился с CDN — говорим об этом прямо на странице */
-if (typeof L === 'undefined') {
-  document.getElementById('status').textContent =
-    'Не загрузилась библиотека Leaflet (unpkg.com). Проверьте интернет и обновите страницу.';
-  document.getElementById('status').classList.add('error');
-  throw new Error('Leaflet is not loaded');
+const statusEl = document.getElementById('status');
+function setStatus(text, isError = false) {
+  statusEl.textContent = text;
+  statusEl.classList.toggle('error', isError);
+}
+
+/* Любую неожиданную ошибку показываем прямо на странице */
+window.addEventListener('error', (e) => setStatus('Ошибка: ' + (e.message || 'см. консоль (F12)'), true));
+window.addEventListener('unhandledrejection', (e) => console.error(e.reason));
+
+if (typeof maplibregl === 'undefined') {
+  setStatus('Не загрузилась библиотека MapLibre (unpkg.com). Проверьте интернет и обновите страницу.', true);
+  throw new Error('MapLibre is not loaded');
 }
 
 /* =====================================================================
@@ -23,6 +30,13 @@ const PROBE = {
   'GOES-East_ABI_Band13_Clean_Infrared': [3, 2, 3],
   'GOES-West_ABI_Band13_Clean_Infrared': [3, 1, 3],
   'Himawari_AHI_Band13_Clean_Infrared':  [3, 7, 3],
+};
+
+// Куда повернуть глобус при выборе спутника: [долгота, широта]
+const VIEW = {
+  'GOES-East_ABI_Band13_Clean_Infrared': [-75, 10],
+  'GOES-West_ABI_Band13_Clean_Infrared': [-135, 10],
+  'Himawari_AHI_Band13_Clean_Infrared':  [130, 15],
 };
 
 // Цветовая шкала: [температура °C, [R, G, B]]
@@ -72,7 +86,6 @@ function drawSpace() {
   const rnd = mulberry32(20261107);
   const big = Math.max(w, h);
 
-  // Основной фон
   let g = ctx.createLinearGradient(0, 0, 0, h);
   g.addColorStop(0, '#04050c');
   g.addColorStop(1, '#0a0b1a');
@@ -124,7 +137,6 @@ function drawSpace() {
   }
   ctx.restore();
 
-  // Остальные звёзды
   const count = Math.round((w * h) / 2200);
   for (let i = 0; i < count; i++) star(rnd() * w, rnd() * h);
 }
@@ -198,14 +210,10 @@ async function buildLookup(layer) {
 }
 
 /* =====================================================================
-   4. ТАЙЛЫ NASA: загрузка, поиск свежего снимка, перекраска
+   4. ТАЙЛЫ NASA: поиск свежего снимка, загрузка, перекраска
    ===================================================================== */
 
-const state = {
-  layer: null, time: null, lookup: null,
-  irLayer: null,
-  cors: 'unknown', // 'ok' — можно читать пиксели, 'broken' — браузер не даёт (тогда без перекраски)
-};
+const state = { layer: null, time: null, lookup: null };
 
 const isoTime = (ms) => new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z');
 
@@ -218,32 +226,11 @@ function tileUrl(layer, time, z, x, y) {
 function loadImage(url, withCors) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    if (withCors) img.crossOrigin = 'anonymous';
+    if (withCors) img.crossOrigin = 'anonymous'; // разрешение читать пиксели картинки
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = url;
   });
-}
-
-// Загружаем тайл. Сначала с разрешением читать пиксели (CORS).
-// Если сервер не разрешил — показываем картинку как есть, без перекраски.
-async function loadTileImage(url) {
-  if (state.cors !== 'broken') {
-    try {
-      const img = await loadImage(url, true);
-      state.cors = 'ok';
-      return { img, cors: true };
-    } catch (e) {
-      if (state.cors === 'ok') return null; // CORS работает, значит тайла просто нет
-    }
-  }
-  try {
-    const img = await loadImage(url, false);
-    if (state.cors === 'unknown') state.cors = 'broken';
-    return { img, cors: false };
-  } catch (e) {
-    return null;
-  }
 }
 
 // Ищем самый свежий снимок, который уже есть на сервере (идём назад с шагом 10 минут)
@@ -260,7 +247,6 @@ async function findTime(layer) {
   return null;
 }
 
-// Цвет по нашей шкале
 function scaleColor(T) {
   if (T <= SCALE[SCALE.length - 1][0]) return SCALE[SCALE.length - 1][1];
   for (let i = 0; i < SCALE.length - 1; i++) {
@@ -292,29 +278,30 @@ function recolor(data, lookup) {
   }
 }
 
-// Свой слой Leaflet: каждый тайл — это холст, на который мы рисуем перекрашенный снимок
-const IRLayer = L.GridLayer.extend({
-  createTile(coords, done) {
-    const o = this.options;
-    const tile = document.createElement('canvas');
-    tile.width = tile.height = 256;
-    const ctx = tile.getContext('2d', { willReadFrequently: true });
+// Свой «адрес» тайлов для MapLibre: ir://слой/время/z/x/y
+// MapLibre просит такой тайл, мы скачиваем снимок NASA, перекрашиваем и отдаём.
+// Используем обычный <canvas> (не OffscreenCanvas): он работает во всех браузерах, включая iPhone.
+maplibregl.addProtocol('ir', async (params) => {
+  const [layer, time, z, x, y] = params.url.replace('ir://', '').split('/');
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 256;
 
-    loadTileImage(tileUrl(o.satellite, o.time, coords.z, coords.x, coords.y))
-      .then((res) => {
-        if (res) {
-          ctx.drawImage(res.img, 0, 0, 256, 256);
-          if (res.cors && o.lookup) {
-            const img = ctx.getImageData(0, 0, 256, 256);
-            recolor(img.data, o.lookup);
-            ctx.putImageData(img, 0, 0);
-          }
-        }
-        done(null, tile);
-      })
-      .catch(() => done(null, tile)); // при любой ошибке — просто пустой тайл
-    return tile;
-  },
+  try {
+    const lookup = await getLookup(layer).catch(() => null);
+    const img = await loadImage(tileUrl(layer, time, +z, +x, +y), true);
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, 256, 256);
+    if (lookup) {
+      const data = ctx.getImageData(0, 0, 256, 256);
+      recolor(data.data, lookup);
+      ctx.putImageData(data, 0, 0);
+    }
+  } catch (e) {
+    /* тайла нет или он недоступен — отдаём прозрачный */
+  }
+
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+  return { data: await blob.arrayBuffer() };
 });
 
 /* =====================================================================
@@ -329,15 +316,19 @@ async function temperatureAt(lng, lat) {
   const fy = ((1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2) * n;
   const x = Math.floor(fx), y = Math.floor(fy);
 
-  const res = await loadTileImage(tileUrl(state.layer, state.time, CLICK_ZOOM, x, y));
-  if (!res) return { status: 'empty' };
-  if (!res.cors || !state.lookup) return { status: 'nocors' };
+  let img;
+  try {
+    img = await loadImage(tileUrl(state.layer, state.time, CLICK_ZOOM, x, y), true);
+  } catch (e) {
+    return { status: 'empty' };
+  }
+  if (!state.lookup) return { status: 'nopalette' };
 
   const canvas = document.createElement('canvas');
-  canvas.width = res.img.width;
-  canvas.height = res.img.height;
+  canvas.width = img.width;
+  canvas.height = img.height;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(res.img, 0, 0);
+  ctx.drawImage(img, 0, 0);
   const px = Math.floor((fx - x) * canvas.width);
   const py = Math.floor((fy - y) * canvas.height);
   const [r, g, b, a] = ctx.getImageData(px, py, 1, 1).data;
@@ -351,80 +342,57 @@ const categoryFor = (T) => CATEGORIES.find((c) => T <= c.t);
 const fmt = (T) => String(Math.round(T)).replace('-', '−');
 
 /* =====================================================================
-   6. КАРТА
+   6. ГЛОБУС
    ===================================================================== */
 
-const WORLD = L.latLngBounds([-85.05, -180], [85.05, 180]);
+const esri = (path) => `https://server.arcgisonline.com/ArcGIS/rest/services/${path}/MapServer/tile/{z}/{y}/{x}`;
 
-const map = L.map('map', {
-  zoomControl: false,
-  zoomSnap: 0.25,
-  maxZoom: 9,
-  worldCopyJump: false,
-  maxBounds: WORLD.pad(0.35),
-  maxBoundsViscosity: 0.7,
-});
-L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-// Слои-«этажи»: подложка (200) → ИК (250) → подписи (300)
-map.createPane('ir').style.zIndex = 250;
-const labelsPane = map.createPane('labels');
-labelsPane.style.zIndex = 300;
-labelsPane.style.pointerEvents = 'none';
-
-const carto = (name, options) =>
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${name}/{z}/{x}/{y}.png`,
-    { subdomains: 'abcd', noWrap: true, maxZoom: 9, ...options });
-
-const darkMap = carto('dark_nolabels', { attribution: '© OpenStreetMap contributors © CARTO' });
-
-const satMap = L.tileLayer(
-  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  { noWrap: true, maxZoom: 9, attribution: 'Esri, Maxar, Earthstar Geographics' }
-);
-
-const labels = carto('dark_only_labels', { pane: 'labels' });
-
-darkMap.addTo(map);
-labels.addTo(map);
-
-// Переключатель подложек (справа вверху)
-L.control.layers(
-  { 'Тёмная карта': darkMap, 'Спутниковые снимки (Esri)': satMap },
-  { 'Подписи': labels },
-  { collapsed: window.innerWidth < 600, position: 'topright' }
-).addTo(map);
-
-// Тонкая рамка по краю мира — чтобы карта выглядела как «планшет» в космосе
-L.rectangle(WORLD, { color: '#7fa6ff', weight: 1, opacity: 0.35, fill: false, interactive: false }).addTo(map);
-
-// Не даём отдалиться дальше, чем «весь мир чуть-чуть с запасом»
-function fitWorld(initial) {
-  map.invalidateSize();
-  const z = map.getBoundsZoom(WORLD, false) - 0.4;
-  map.setMinZoom(Math.max(z, 0));
-  if (initial) map.fitBounds(WORLD, { padding: [30, 30] });
-  else if (map.getZoom() < z) map.setZoom(z);
+let map;
+try {
+  map = new maplibregl.Map({
+    container: 'map',
+    center: VIEW['Himawari_AHI_Band13_Clean_Infrared'],
+    zoom: 1.6,
+    maxZoom: 9,
+    attributionControl: { compact: true },
+    style: {
+      version: 8,
+      projection: { type: 'globe' }, // вот что превращает карту в глобус
+      sources: {
+        sat:  { type: 'raster', tileSize: 256, maxzoom: 10, tiles: [esri('World_Imagery')],
+                attribution: 'Esri, Maxar, Earthstar Geographics' },
+        dark: { type: 'raster', tileSize: 256, maxzoom: 10, tiles: [esri('Canvas/World_Dark_Gray_Base')],
+                attribution: 'Esri, HERE, Garmin' },
+        refs: { type: 'raster', tileSize: 256, maxzoom: 10, tiles: [esri('Reference/World_Boundaries_and_Places')] },
+      },
+      layers: [
+        { id: 'sat',  type: 'raster', source: 'sat' },
+        { id: 'dark', type: 'raster', source: 'dark', layout: { visibility: 'none' } },
+        // слой «ir» вставляется перед «refs», чтобы подписи были поверх снимка
+        { id: 'refs', type: 'raster', source: 'refs', paint: { 'raster-opacity': 0.9 } },
+      ],
+    },
+  });
+} catch (err) {
+  console.error(err);
+  setStatus('Не удалось запустить глобус: браузеру нужен WebGL. Попробуйте другой браузер.', true);
+  throw err;
 }
-fitWorld(true);
-window.addEventListener('resize', () => fitWorld(false));
+
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+map.on('error', (e) => console.warn('MapLibre:', e && e.error ? e.error.message : e));
 
 /* =====================================================================
-   7. ПАНЕЛЬ: спутник, прозрачность, обновление
+   7. ПАНЕЛЬ: спутник, подложка, подписи, прозрачность
    ===================================================================== */
 
-const statusEl = document.getElementById('status');
-const selectEl = document.getElementById('satellite');
+const selectEl  = document.getElementById('satellite');
+const baseEl    = document.getElementById('basemap');
+const labelsEl  = document.getElementById('labels');
 const opacityEl = document.getElementById('opacity');
-let baseStatus = '';
 let seq = 0; // номер запроса — чтобы старый ответ не затёр новый
 
-function setStatus(text, isError = false) {
-  statusEl.textContent = text;
-  statusEl.classList.toggle('error', isError);
-}
-
-async function setSatellite(layer) {
+async function setSatellite(layer, recenter) {
   const mySeq = ++seq;
   setStatus('Ищу свежий снимок…');
 
@@ -435,64 +403,76 @@ async function setSatellite(layer) {
   if (mySeq !== seq) return; // пока ждали, выбрали другой спутник
 
   const usedTime = time || isoTime(Math.floor((Date.now() - LAG_MINUTES * 60000) / 600000) * 600000);
-
-  if (state.irLayer) map.removeLayer(state.irLayer);
   state.layer = layer;
   state.time = usedTime;
   state.lookup = lookup;
 
-  state.irLayer = new IRLayer({
-    satellite: layer,
-    time: usedTime,
-    lookup,
-    pane: 'ir',
-    maxNativeZoom: 6, // детальнее 6-го уровня у NASA нет — дальше картинка увеличивается
-    noWrap: true,
-    opacity: +opacityEl.value,
-    attribution: 'Снимки: NASA GIBS (NOAA, JMA)',
-  }).addTo(map);
+  if (map.getLayer('ir')) map.removeLayer('ir');
+  if (map.getSource('ir')) map.removeSource('ir');
 
-  baseStatus = `Снимок на ${usedTime.slice(11, 16)} UTC (${usedTime.slice(0, 10)}). Нажмите на карту, чтобы узнать температуру.`;
+  map.addSource('ir', {
+    type: 'raster',
+    tiles: [`ir://${layer}/${usedTime}/{z}/{x}/{y}`],
+    tileSize: 256,
+    maxzoom: 6, // детальнее 6-го уровня у NASA нет — дальше картинка увеличивается
+    attribution: 'Снимки: NASA GIBS (NOAA, JMA)',
+  });
+  map.addLayer({
+    id: 'ir', type: 'raster', source: 'ir',
+    paint: { 'raster-opacity': +opacityEl.value, 'raster-fade-duration': 0 },
+  }, 'refs');
+
+  if (recenter) map.easeTo({ center: VIEW[layer] || [0, 0], duration: 1200 });
+
+  const base = `Снимок на ${usedTime.slice(11, 16)} UTC (${usedTime.slice(0, 10)}). Нажмите на глобус, чтобы узнать температуру.`;
   if (!time) {
-    setStatus('Свежих снимков для этого спутника не нашлось — возможно, сервер NASA временно недоступен. ' + baseStatus, true);
+    setStatus('Свежих снимков для этого спутника не нашлось — возможно, сервер NASA временно недоступен. ' + base, true);
   } else if (!lookup) {
     setStatus('Палитра NASA недоступна: показаны исходные цвета без перекраски, клик не работает.', true);
   } else {
-    setStatus(baseStatus);
+    setStatus(base);
   }
-
-  // Если браузер запретил читать пиксели — предупреждаем
-  state.irLayer.on('load', () => {
-    if (state.cors === 'broken') {
-      setStatus('Браузер не разрешил читать пиксели (CORS): показаны исходные цвета NASA, клик не работает.', true);
-    }
-  });
 }
 
-selectEl.addEventListener('change', () => setSatellite(selectEl.value));
-opacityEl.addEventListener('input', () => state.irLayer && state.irLayer.setOpacity(+opacityEl.value));
-setSatellite(selectEl.value);
-setInterval(() => setSatellite(selectEl.value), REFRESH_MS);
+map.on('load', () => {
+  setSatellite(selectEl.value, false);
+  setInterval(() => setSatellite(selectEl.value, false), REFRESH_MS);
+});
 
-// Клик по карте
+selectEl.addEventListener('change', () => setSatellite(selectEl.value, true));
+
+baseEl.addEventListener('change', () => {
+  map.setLayoutProperty('sat',  'visibility', baseEl.value === 'sat'  ? 'visible' : 'none');
+  map.setLayoutProperty('dark', 'visibility', baseEl.value === 'dark' ? 'visible' : 'none');
+});
+
+labelsEl.addEventListener('change', () => {
+  map.setLayoutProperty('refs', 'visibility', labelsEl.checked ? 'visible' : 'none');
+});
+
+opacityEl.addEventListener('input', () => {
+  if (map.getLayer('ir')) map.setPaintProperty('ir', 'raster-opacity', +opacityEl.value);
+});
+
+// Клик по глобусу
 map.on('click', async (e) => {
   if (!state.layer) return;
-  const { lat, lng } = e.latlng.wrap();
+  const { lng, lat } = e.lngLat.wrap();
 
-  const popup = L.popup({ maxWidth: 260 })
-    .setLatLng(e.latlng)
-    .setContent('<div class="popup-note">Считываю…</div>')
-    .openOn(map);
+  const popup = new maplibregl.Popup({ maxWidth: '260px' })
+    .setLngLat(e.lngLat)
+    .setHTML('<div class="popup-note">Считываю…</div>')
+    .addTo(map);
 
   try {
     const r = await temperatureAt(lng, lat);
-    if (r.status === 'nocors') {
-      popup.setContent('<div>Не удалось прочитать температуру</div><div class="popup-note">Браузер не разрешил читать пиксели снимка или палитра не загрузилась.</div>');
+    if (r.status === 'nopalette') {
+      popup.setHTML('<div>Не удалось прочитать температуру</div><div class="popup-note">Палитра NASA не загрузилась.</div>');
     } else if (r.status === 'empty') {
-      popup.setContent('<div>Нет данных в этой точке</div><div class="popup-note">Точка вне зоны выбранного спутника или снимок ещё не загружен.</div>');
+      popup.setHTML('<div>Нет данных в этой точке</div><div class="popup-note">Точка вне зоны выбранного спутника или снимок ещё не загружен.</div>');
     } else {
       const cat = categoryFor(r.T);
-      popup.setContent(
+      popup.setHTML(
         `<div class="popup-temp">≈ ${fmt(r.T)} °C</div>` +
         `<div>Восходящий поток: <b style="color:${cat.color}">${cat.name}</b></div>` +
         `<div class="popup-note">Условная оценка по температуре вершины, не прямое измерение. ` +
@@ -501,7 +481,7 @@ map.on('click', async (e) => {
     }
   } catch (err) {
     console.error(err);
-    popup.setContent('<div>Не получилось считать температуру</div><div class="popup-note">Подробности в консоли браузера (F12).</div>');
+    popup.setHTML('<div>Не получилось считать температуру</div><div class="popup-note">Подробности в консоли браузера (F12).</div>');
   }
 });
 
