@@ -342,6 +342,184 @@ const categoryFor = (T) => CATEGORIES.find((c) => T <= c.t);
 const fmt = (T) => String(Math.round(T)).replace('-', '−');
 
 /* =====================================================================
+   5б. ПОИСК ОЧАГОВ КОНВЕКЦИИ
+   Скачиваем весь регион спутника целиком (уровень 4, ≈10 км на пиксель),
+   переводим цвета в температуры и ищем самые холодные «ядра» облаков.
+   ===================================================================== */
+
+const DZ = 4;                      // уровень тайлов для анализа
+const NODATA = 32767;              // «нет данных» в массиве температур
+const MAX_CELLS = 300;             // сколько очагов показывать максимум
+const SUBSAT = {                   // долгота под спутником
+  'GOES-East_ABI_Band13_Clean_Infrared': -75,
+  'GOES-West_ABI_Band13_Clean_Infrared': -137,
+  'Himawari_AHI_Band13_Clean_Infrared': 140.7,
+};
+let grid = null, cells = [], snapText = '';
+
+const thresholdEl = document.getElementById('threshold');
+const showIrEl = document.getElementById('show-ir');
+
+// Собираем регион из тайлов в один большой холст и переводим пиксели в температуры
+async function buildGrid(layer, time, lookup) {
+  const n = 2 ** DZ, c = SUBSAT[layer] ?? 0;
+  const xa = Math.floor(((c - 72 + 180) / 360) * n), xb = Math.floor(((c + 72 + 180) / 360) * n);
+  const ya = 4, yb = 11;           // примерно от 60° с.ш. до 60° ю.ш.
+  const w = (xb - xa + 1) * 256, h = (yb - ya + 1) * 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+  let ok = 0;
+  const jobs = [];
+  for (let x = xa; x <= xb; x++) for (let y = ya; y <= yb; y++) {
+    jobs.push(loadImage(tileUrl(layer, time, DZ, ((x % n) + n) % n, y), true)
+      .then((img) => { ctx.drawImage(img, (x - xa) * 256, (y - ya) * 256); ok++; }, () => {}));
+  }
+  await Promise.all(jobs);
+  if (!ok) return null;
+
+  const px = ctx.getImageData(0, 0, w, h).data;
+  const T = new Int16Array(w * h);               // температура в десятых долях °C
+  for (let i = 0, k = 0; k < T.length; i += 4, k++) {
+    if (px[i + 3] < 10) { T[k] = NODATA; continue; }
+    const t = lookup(px[i], px[i + 1], px[i + 2]);
+    T[k] = t === null ? NODATA : Math.round(t * 10);
+  }
+  return { w, h, T, gx0: xa * 256, gy0: ya * 256 };
+}
+
+// Пиксель сетки → широта и долгота
+function pixelGeo(g, i, j) {
+  const W = 256 * 2 ** DZ;
+  let lng = ((g.gx0 + i + 0.5) / W) * 360 - 180;
+  lng = ((((lng + 180) % 360) + 360) % 360) - 180;
+  const lat = (Math.atan(Math.sinh(Math.PI * (1 - (2 * (g.gy0 + j + 0.5)) / W))) * 180) / Math.PI;
+  return [lng, lat];
+}
+
+// Ищем очаги: берём самые холодные пиксели по порядку, вокруг каждого «гасим» соседей (≈60 км),
+// чтобы один большой холодный щит не превращался в сотни точек.
+function detectCells(g, thr) {
+  const { w, h, T } = g, lim = Math.round(thr * 10), LOW = -1000;
+
+  // Сортировка пикселей от самых холодных (быстрая «сортировка подсчётом»)
+  const cnt = new Uint32Array(lim - LOW + 2);
+  for (let k = 0; k < T.length; k++) { const t = T[k]; if (t !== NODATA && t <= lim && t >= LOW) cnt[t - LOW + 1]++; }
+  for (let b = 1; b < cnt.length; b++) cnt[b] += cnt[b - 1];
+  const order = new Uint32Array(cnt[cnt.length - 1]);
+  for (let k = 0; k < T.length; k++) { const t = T[k]; if (t !== NODATA && t <= lim && t >= LOW) order[cnt[t - LOW]++] = k; }
+
+  const sup = new Uint8Array(w * h), out = [];
+  for (const k of order) {
+    if (sup[k]) continue;
+    const x = k % w, y = (k / w) | 0, t = T[k] / 10;
+
+    // Холодная площадь вокруг ядра (радиус 14 пикселей) и «гашение» соседей (радиус 6)
+    let cold = 0;
+    for (let dy = -14; dy <= 14; dy++) for (let dx = -14; dx <= 14; dx++) {
+      const xx = x + dx, yy = y + dy, d2 = dx * dx + dy * dy;
+      if (xx < 0 || yy < 0 || xx >= w || yy >= h || d2 > 196) continue;
+      const v = T[yy * w + xx];
+      if (d2 <= 36) sup[yy * w + xx] = 1;
+      if (v !== NODATA && v <= lim) cold++;
+    }
+
+    // Перепад: насколько ядро холоднее кольца вокруг (8 точек на расстоянии 8 пикселей)
+    let ring = 0, rn = 0;
+    for (let a = 0; a < 8; a++) {
+      const xx = x + Math.round(8 * Math.cos((a * Math.PI) / 4)), yy = y + Math.round(8 * Math.sin((a * Math.PI) / 4));
+      if (xx >= 0 && yy >= 0 && xx < w && yy < h && T[yy * w + xx] !== NODATA) { ring += T[yy * w + xx] / 10; rn++; }
+    }
+
+    const [lng, lat] = pixelGeo(g, x, y);
+    const km = 9.784 * Math.cos((lat * Math.PI) / 180);       // километров в пикселе на этой широте
+    const cat = categoryFor(t);
+    out.push({ lng, lat, T: t, dT: rn >= 4 ? ring / rn - t : null,
+               area: Math.round(cold * km * km), cat: cat.name, color: cat.color });
+    if (out.length >= MAX_CELLS) break;
+  }
+  return out;
+}
+
+// Слои с очагами: цветные кружки (цвет и размер зависят от температуры ядра)
+function addCellLayers() {
+  map.addSource('cells', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  const color = ['interpolate', ['linear'], ['get', 'T'],
+    ...SCALE.slice().reverse().flatMap(([t, c]) => [t, `rgb(${c.join(',')})`])];
+  const size = (a, b) => ['interpolate', ['linear'], ['get', 'T'], -90, a, -30, b];
+  map.addLayer({ id: 'cells-glow', type: 'circle', source: 'cells',
+    paint: { 'circle-color': color, 'circle-radius': size(30, 12), 'circle-blur': 0.8, 'circle-opacity': 0.45 } });
+  map.addLayer({ id: 'cells', type: 'circle', source: 'cells',
+    paint: { 'circle-color': color, 'circle-radius': size(15, 5), 'circle-stroke-color': '#ffffff',
+             'circle-stroke-width': 1.2, 'circle-opacity': 0.95 } });
+  map.on('mouseenter', 'cells', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'cells', () => { map.getCanvas().style.cursor = ''; });
+}
+
+function openCellPopup(c) {
+  const kind = c.dT === null ? '' : c.dT >= 10
+    ? `Острая вершина (на ${c.dT.toFixed(0)} °C холоднее окружения): вероятно активный рост.`
+    : `Широкий холодный щит (на ${c.dT.toFixed(0)} °C холоднее окружения): возможно наковальня.`;
+  new maplibregl.Popup({ maxWidth: '280px' }).setLngLat([c.lng, c.lat]).setHTML(
+    `<div class="popup-temp">≈ ${fmt(c.T)} °C</div>` +
+    `<div>Восходящий поток: <b style="color:${c.color}">${c.cat}</b></div>` +
+    `<div class="popup-note">Холодная область вокруг: ≈ ${c.area.toLocaleString('ru-RU')} км². ${kind}</div>` +
+    `<div class="popup-note">Автоматическая оценка по ИК-снимку, не прямое измерение. ${c.lat.toFixed(2)}°, ${c.lng.toFixed(2)}°</div>`
+  ).addTo(map);
+}
+
+function renderCells(list) {
+  const src = map.getSource('cells');
+  if (src) src.setData({ type: 'FeatureCollection', features: list.map((c, i) => ({
+    type: 'Feature', properties: { ...c, i }, geometry: { type: 'Point', coordinates: [c.lng, c.lat] } })) });
+
+  const ol = document.getElementById('cells-list');
+  ol.replaceChildren();
+  list.slice(0, 8).forEach((c) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    const dot = document.createElement('i');
+    dot.style.background = c.color;
+    btn.append(dot, `${fmt(c.T)} °C · ${c.cat} · ${c.lat.toFixed(1)}°, ${c.lng.toFixed(1)}°`);
+    btn.addEventListener('click', () => { map.flyTo({ center: [c.lng, c.lat], zoom: 4.5 }); openCellPopup(c); });
+    li.append(btn);
+    ol.append(li);
+  });
+  document.getElementById('cells-count').textContent = list.length
+    ? `Найдено очагов: ${list.length >= MAX_CELLS ? MAX_CELLS + '+' : list.length}. Сильнейшие:`
+    : 'Очагов выше порога не найдено.';
+}
+
+function redetect() {
+  if (!grid) return;
+  cells = detectCells(grid, +thresholdEl.value);
+  renderCells(cells);
+  setStatus(snapText);
+}
+
+async function runAnalysis(layer, time, lookup, mySeq) {
+  grid = null; cells = [];
+  renderCells([]);
+  document.getElementById('cells-count').textContent = '';
+  if (!lookup) return;
+  setStatus('Анализирую снимок: ищу очаги конвекции…');
+  const g = await buildGrid(layer, time, lookup);
+  if (mySeq !== seq) return;
+  if (!g) { setStatus('Не удалось скачать снимок для анализа очагов.', true); return; }
+  grid = g;
+  redetect();
+}
+
+thresholdEl.addEventListener('input', () => {
+  document.getElementById('thr-label').textContent = fmt(+thresholdEl.value) + ' °C';
+});
+thresholdEl.addEventListener('change', redetect);
+showIrEl.addEventListener('change', () => {
+  if (map.getLayer('ir')) map.setLayoutProperty('ir', 'visibility', showIrEl.checked ? 'visible' : 'none');
+});
+
+/* =====================================================================
    6. ГЛОБУС
    ===================================================================== */
 
@@ -419,6 +597,7 @@ async function setSatellite(layer, recenter) {
   });
   map.addLayer({
     id: 'ir', type: 'raster', source: 'ir',
+    layout: { visibility: showIrEl.checked ? 'visible' : 'none' },
     paint: { 'raster-opacity': +opacityEl.value, 'raster-fade-duration': 0 },
   }, 'refs');
 
@@ -432,9 +611,12 @@ async function setSatellite(layer, recenter) {
   } else {
     setStatus(base);
   }
+  snapText = base;
+  runAnalysis(layer, usedTime, lookup, mySeq);
 }
 
 map.on('load', () => {
+  addCellLayers();
   setSatellite(selectEl.value, false);
   setInterval(() => setSatellite(selectEl.value, false), REFRESH_MS);
 });
@@ -457,6 +639,8 @@ opacityEl.addEventListener('input', () => {
 // Клик по глобусу
 map.on('click', async (e) => {
   if (!state.layer) return;
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['cells'] })[0];
+  if (hit) { openCellPopup(cells[hit.properties.i]); return; }
   const { lng, lat } = e.lngLat.wrap();
 
   const popup = new maplibregl.Popup({ maxWidth: '260px' })
