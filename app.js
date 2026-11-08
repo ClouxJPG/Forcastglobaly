@@ -6,6 +6,14 @@ function setStatus(text, isError = false) {
   statusEl.classList.toggle('error', isError);
 }
 
+// Строки диагностики под статусом: показывают, какой шаг сработал, а какой нет
+const diagData = {};
+function setDiag(key, text) {
+  diagData[key] = text;
+  const el = document.getElementById('diag');
+  if (el) el.textContent = Object.values(diagData).join('\n');
+}
+
 /* Любую неожиданную ошибку показываем прямо на странице */
 window.addEventListener('error', (e) => setStatus('Ошибка: ' + (e.message || 'см. консоль (F12)'), true));
 window.addEventListener('unhandledrejection', (e) => console.error(e.reason));
@@ -166,13 +174,23 @@ function getLookup(layer) {
 
 async function buildLookup(layer) {
   let xml = null;
-  for (const name of [layer, FALLBACK_LAYER]) {
+  const fails = [];
+  const urls = [];
+  for (const name of [layer, FALLBACK_LAYER]) for (const v of ['v1.3', 'v1.0']) urls.push(`${GIBS}/colormaps/${v}/${name}.xml`);
+  for (const url of urls) {
+    const short = url.split('/colormaps/')[1];
     try {
-      const resp = await fetch(`${GIBS}/colormaps/v1.3/${name}.xml`);
-      if (resp.ok) { xml = await resp.text(); break; }
-    } catch (e) { /* пробуем следующий вариант */ }
+      const resp = await fetch(url);
+      if (resp.ok) { xml = await resp.text(); setDiag('palette', 'Палитра: ' + short + ' — ок'); break; }
+      fails.push(resp.status + ' ' + short);
+    } catch (e) {
+      fails.push('нет доступа (CORS/сеть) ' + short);
+    }
   }
-  if (!xml) throw new Error('Не удалось скачать палитру NASA');
+  if (!xml) {
+    setDiag('palette', 'Палитра НЕ скачалась: ' + fails.join('; '));
+    throw new Error('Не удалось скачать палитру NASA');
+  }
 
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
   const entries = [];
@@ -377,15 +395,18 @@ async function buildGrid(layer, time, lookup) {
       .then((img) => { ctx.drawImage(img, (x - xa) * 256, (y - ya) * 256); ok++; }, () => {}));
   }
   await Promise.all(jobs);
-  if (!ok) return null;
+  if (!ok) { setDiag('match', 'Анализ: тайлы не скачались (CORS или сеть)'); return null; }
 
   const px = ctx.getImageData(0, 0, w, h).data;
   const T = new Int16Array(w * h);               // температура в десятых долях °C
+  let matched = 0, unmatched = 0;
   for (let i = 0, k = 0; k < T.length; i += 4, k++) {
     if (px[i + 3] < 10) { T[k] = NODATA; continue; }
     const t = lookup(px[i], px[i + 1], px[i + 2]);
-    T[k] = t === null ? NODATA : Math.round(t * 10);
+    if (t === null) { unmatched++; T[k] = NODATA; } else { matched++; T[k] = Math.round(t * 10); }
   }
+  setDiag('match', `Анализ: тайлов ${ok}, цветов сопоставлено ${matched} из ${matched + unmatched}` +
+    (matched + unmatched === 0 ? ' (на снимке нет данных)' : matched < unmatched ? ' — палитра не совпадает со снимком!' : ''));
   return { w, h, T, gx0: xa * 256, gy0: ya * 256 };
 }
 
@@ -580,7 +601,12 @@ async function setSatellite(layer, recenter) {
   ]);
   if (mySeq !== seq) return; // пока ждали, выбрали другой спутник
 
-  const usedTime = time || isoTime(Math.floor((Date.now() - LAG_MINUTES * 60000) / 600000) * 600000);
+  const usedTime = time || 'default';
+  setDiag('probe', time ? 'Снимок найден: ' + time : 'Снимок на ближайшие 80 минут не найден, беру «default»');
+  const [pz, pxx, pyy] = PROBE[layer] || [3, 2, 3];
+  loadImage(tileUrl(layer, usedTime, pz, pxx, pyy), true).then(
+    () => setDiag('cors', 'Чтение пикселей (CORS): ок'),
+    () => setDiag('cors', 'Чтение пикселей (CORS): НЕТ — тайл не читается'));
   state.layer = layer;
   state.time = usedTime;
   state.lookup = lookup;
@@ -603,7 +629,7 @@ async function setSatellite(layer, recenter) {
 
   if (recenter) map.easeTo({ center: VIEW[layer] || [0, 0], duration: 1200 });
 
-  const base = `Снимок на ${usedTime.slice(11, 16)} UTC (${usedTime.slice(0, 10)}). Нажмите на глобус, чтобы узнать температуру.`;
+  const base = (usedTime === 'default' ? 'Последний доступный снимок.' : `Снимок на ${usedTime.slice(11, 16)} UTC (${usedTime.slice(0, 10)}).`) + ' Нажмите на глобус, чтобы узнать температуру.';
   if (!time) {
     setStatus('Свежих снимков для этого спутника не нашлось — возможно, сервер NASA временно недоступен. ' + base, true);
   } else if (!lookup) {
