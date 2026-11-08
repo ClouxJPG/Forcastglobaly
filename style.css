@@ -187,3 +187,12 @@ select:focus-visible, input:focus-visible {
 }
 #cells-list button:hover { border-color: #4a5a8a; }
 #cells-list i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+/* ---------- Диагностика ---------- */
+#diag {
+  margin: 6px 0 0;
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
